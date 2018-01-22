@@ -1,0 +1,8 @@
+name: Replay
+version: 1.0
+main: me.jumper251.replay.ReplaySystem
+author: Jumper251
+commands:
+  replay:
+    description: Main Replay command
+    aliases: [rp]
