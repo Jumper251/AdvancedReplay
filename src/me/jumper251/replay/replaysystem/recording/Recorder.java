@@ -16,11 +16,13 @@ import com.google.common.collect.Multimap;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.api.IReplayHook;
 import me.jumper251.replay.api.ReplayAPI;
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
+import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
 import me.jumper251.replay.replaysystem.data.types.SignatureData;
@@ -73,6 +75,8 @@ public class Recorder {
 				for (String name : packetRecorder.getPacketData().keySet()) {
 					List<PacketData> list = packetRecorder.getPacketData().get(name);
 					for (PacketData packetData : list) {
+						if (packetData instanceof BlockChangeData && !ConfigManager.RECORD_BLOCKS) continue;
+						
 						ActionData actionData = new ActionData(currentTick, ActionType.PACKET, name, packetData);
 						addData(currentTick, actionData);
 					}
@@ -95,6 +99,8 @@ public class Recorder {
 				
 				
 				Recorder.this.currentTick++;
+				
+				if (Recorder.this.currentTick >= ConfigManager.MAX_LENGTH) stop(ConfigManager.SAVE_STOP);
 			}
 		};
 		

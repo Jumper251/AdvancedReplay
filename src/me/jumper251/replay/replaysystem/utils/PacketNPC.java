@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.comphenix.packetwrapper.WrapperPlayServerAnimation;
+import com.comphenix.packetwrapper.WrapperPlayServerBed;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
@@ -21,6 +22,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerNamedEntitySpawn;
 import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
@@ -46,6 +48,8 @@ public class PacketNPC implements INPC{
 	
 	private WrappedGameProfile profile;
 	
+	private Location location;
+	
 	private WrapperPlayServerNamedEntitySpawn spawnPacket;
 	
 	private float yaw, pitch;
@@ -67,6 +71,7 @@ public class PacketNPC implements INPC{
 	public void spawn(Location loc, int tabMode, Player... players) {
 		this.tabMode = tabMode;
 		this.visible = players;
+		this.location = loc;
 		NPCManager.names.add(this.name);
 		
 		this.spawnPacket.setEntityID(this.id);
@@ -88,6 +93,25 @@ public class PacketNPC implements INPC{
 			}
 		}
 		
+	}
+	
+	public void respawn() {
+		this.spawnPacket.setMetadata(this.data);
+		this.spawnPacket.setPosition(this.location.toVector());
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			this.spawnPacket.sendPacket(player);
+		}
+	}
+	
+	public void despawn() {
+		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
+		
+		destroyPacket.setEntityIds(new int[] { this.id });
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			destroyPacket.sendPacket(player);
+		}
 	}
 	
 	public void remove() {
@@ -112,6 +136,8 @@ public class PacketNPC implements INPC{
 	}
 	
 	public void teleport(Location loc, boolean onGround) {
+		this.location = loc;
+		
 		WrapperPlayServerEntityTeleport packet = new WrapperPlayServerEntityTeleport();
 
 		packet.setEntityID(this.id);
@@ -166,6 +192,19 @@ public class PacketNPC implements INPC{
 		
 		packet.setEntityID(this.id);
 		packet.setAnimation(id);
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			if (player != null) {
+				packet.sendPacket(player);
+			}
+		}
+	}
+	
+	public void sleep(Location loc) {
+		WrapperPlayServerBed packet = new WrapperPlayServerBed();
+		
+		packet.setEntityID(this.id);
+		packet.setLocation(new BlockPosition(loc.toVector()));
 		
 		for (Player player : Arrays.asList(this.visible)) {
 			if (player != null) {
@@ -260,5 +299,9 @@ public class PacketNPC implements INPC{
 	
 	public void setYaw(float yaw) {
 		this.yaw = yaw;
+	}
+	
+	public Location getLocation() {
+		return location;
 	}
 }

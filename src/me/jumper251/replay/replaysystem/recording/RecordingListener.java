@@ -11,10 +11,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -29,6 +32,7 @@ import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.types.AnimationData;
+import me.jumper251.replay.replaysystem.data.types.BedEnterData;
 import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
 import me.jumper251.replay.replaysystem.data.types.InvData;
 import me.jumper251.replay.replaysystem.data.types.ItemData;
@@ -169,11 +173,46 @@ public class RecordingListener extends AbstractListener {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
+	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onCrit(EntityDamageByEntityEvent e) {
+		if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+			Player damager = (Player) e.getDamager();
+			Player victim = (Player) e.getEntity();
+			if (recorder.getPlayers().contains(damager.getName()) && recorder.getPlayers().contains(victim.getName())) {
+				if (damager.getFallDistance() > 0.0F && !damager.isOnGround() && damager.getVehicle() == null) {
+					
+					this.packetRecorder.addData(victim.getName(), new AnimationData(4));
+				}
+			}
+		}
+	}
+	
+	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onBed(PlayerBedEnterEvent e) {
+		Player p = e.getPlayer();
+		if (recorder.getPlayers().contains(p.getName())) {
+
+			this.packetRecorder.addData(p.getName(), new BedEnterData(LocationData.fromLocation(e.getBed().getLocation())));
+		}
+		
+	}
+	
+	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onBedLeave(PlayerBedLeaveEvent e) {
+		Player p = e.getPlayer();
+		if (recorder.getPlayers().contains(p.getName())) {
+
+			this.packetRecorder.addData(p.getName(), new AnimationData(2));
+		}
+		
+	}
+	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
 		Player p = e.getPlayer();
 		if (this.recorder.getPlayers().contains(p.getName())) {
-			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEPSAWN, p.getName(), null));
+			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DESPAWN, p.getName(), null));
 			this.recorder.getPlayers().remove(p.getName());
 		}
 	}
@@ -182,7 +221,7 @@ public class RecordingListener extends AbstractListener {
 	public void onDeath(PlayerDeathEvent e) {
 		Player p = e.getEntity();
 		if (this.recorder.getPlayers().contains(p.getName())) {
-			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEPSAWN, p.getName(), null));
+			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEATH, p.getName(), null));
 		}
 	}
 	

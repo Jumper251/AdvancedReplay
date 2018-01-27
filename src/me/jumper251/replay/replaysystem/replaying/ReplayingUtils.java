@@ -1,5 +1,7 @@
 package me.jumper251.replay.replaysystem.replaying;
 
+
+
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -10,16 +12,21 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
+
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
+
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
 
 import me.jumper251.replay.ReplaySystem;
+import me.jumper251.replay.filesystem.ConfigManager;
+import me.jumper251.replay.filesystem.MessageBuilder;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.types.AnimationData;
+import me.jumper251.replay.replaysystem.data.types.BedEnterData;
 import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
 import me.jumper251.replay.replaysystem.data.types.EntityActionData;
 import me.jumper251.replay.replaysystem.data.types.InvData;
@@ -33,22 +40,34 @@ import me.jumper251.replay.replaysystem.utils.INPC;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.replaysystem.utils.PacketNPC;
+import me.jumper251.replay.replaysystem.utils.PacketNPCOld;
 import me.jumper251.replay.utils.MathUtils;
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class ReplayingUtils {
 
 	private Replayer replayer;
 	
+	private ActionData lastSpawnAction;
+	
 	public ReplayingUtils(Replayer replayer) {
 		this.replayer = replayer;
 	}
 	
-	public void handleAction(ActionData action, ReplayData data) {
-		
+	public void handleAction(ActionData action, ReplayData data, boolean reversed) {
+				
 		if (action.getType() == ActionType.SPAWN) {
-			spawnNPC(action);
+			if (!reversed) {
+				spawnNPC(action);
+			} else if (reversed && replayer.getNPCList().containsKey(action.getName())){
+				INPC npc = this.replayer.getNPCList().get(action.getName());
+				npc.remove();
+				replayer.getNPCList().remove(action.getName());
+
+			}
 		}	
-	
+		
 		if (action.getType() == ActionType.PACKET && this.replayer.getNPCList().containsKey(action.getName())) {
 			INPC npc = this.replayer.getNPCList().get(action.getName());
 
@@ -57,16 +76,16 @@ public class ReplayingUtils {
 				MovingData movingData = (MovingData) action.getPacketData();
 				npc.teleport(new Location(replayer.getWatchingPlayer().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true);
 				npc.look(movingData.getYaw(), movingData.getPitch());
-			
+		
 			}
 			
 			if (action.getPacketData() instanceof EntityActionData) {
 				EntityActionData eaData = (EntityActionData) action.getPacketData();
 				if (eaData.getAction() == PlayerAction.START_SNEAKING) {
-					data.getWatcher(action.getName()).setSneaking(true);
+					data.getWatcher(action.getName()).setSneaking(reversed ? false : true);
 					npc.setData(data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData())));
 				} else if (eaData.getAction() == PlayerAction.STOP_SNEAKING) {
-					data.getWatcher(action.getName()).setSneaking(false);
+					data.getWatcher(action.getName()).setSneaking(reversed);
 					npc.setData(data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData())));
 				}
 				npc.updateMetadata();
@@ -81,16 +100,23 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof InvData) {
 				InvData invData = (InvData) action.getPacketData();
-				for (WrapperPlayServerEntityEquipment packet : NPCManager.updateEquipment(npc.getId(), invData)) {
-					packet.sendPacket(replayer.getWatchingPlayer());
+				
+				if (!VersionUtil.isCompatible(VersionEnum.V1_8)) {
+					for (WrapperPlayServerEntityEquipment packet : NPCManager.updateEquipment(npc.getId(), invData)) {
+						packet.sendPacket(replayer.getWatchingPlayer());
+					}
+				} else {
+					for (com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet : NPCManager.updateEquipmentOld(npc.getId(), invData)) {
+						packet.sendPacket(replayer.getWatchingPlayer());
+					}
 				}
 			}
 			
 			if (action.getPacketData() instanceof MetadataUpdate) {
 				MetadataUpdate update = (MetadataUpdate) action.getPacketData();
 				
-				data.getWatcher(action.getName()).setBurning(update.isBurning());
-				data.getWatcher(action.getName()).setBlocking(update.isBlocking());
+				data.getWatcher(action.getName()).setBurning(!reversed ? update.isBurning() : false);
+				data.getWatcher(action.getName()).setBlocking(!reversed ? update.isBlocking() : false);
 		
 				WrappedDataWatcher dataWatcher = data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData()));
 				npc.setData(dataWatcher);
@@ -108,41 +134,106 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof BlockChangeData) {
 				BlockChangeData blockChange = (BlockChangeData) action.getPacketData();
-
+				
+				if (reversed) {
+					blockChange = new BlockChangeData(blockChange.getLocation(), blockChange.getAfter(), blockChange.getBefore());
+				}
+				
 				setBlockChange(blockChange, npc.getId());
+			}
+			
+			if (action.getPacketData() instanceof BedEnterData) {
+				BedEnterData bed = (BedEnterData) action.getPacketData();
+				
+				npc.sleep(LocationData.toLocation(bed.getLocation()));
 			}
 			
 
 		}
 		
-		if (action.getType() == ActionType.DEPSAWN  && replayer.getNPCList().containsKey(action.getName())) {
-			INPC npc = this.replayer.getNPCList().get(action.getName());
-			npc.remove();
-			replayer.getNPCList().remove(action.getName());
+		if (action.getType() == ActionType.DESPAWN || action.getType() == ActionType.DEATH) {
+			if (!reversed  && replayer.getNPCList().containsKey(action.getName())) {
+				INPC npc = this.replayer.getNPCList().get(action.getName());
+				npc.remove();
+				replayer.getNPCList().remove(action.getName());
+				
+				if (action.getType() == ActionType.DESPAWN) {
+					replayer.sendMessage(new MessageBuilder(ConfigManager.LEAVE_MESSAGE)
+							.set("name", action.getName())
+							.build());
+				} else {
+					replayer.sendMessage(new MessageBuilder(ConfigManager.DEATH_MESSAGE)
+							.set("name", action.getName())
+							.build());
+				}
+				
+			} else {
+
+				if (lastSpawnAction != null) {
+					spawnNPC(lastSpawnAction);
+				}
+			}
 
 		}
 	}
 	
+	public void forward() {
+		this.replayer.setPaused(true);
+		int currentTick = this.replayer.getCurrentTicks();
+		int forwardTicks = currentTick + (10 * 20);
+		int duration = this.replayer.getReplay().getData().getDuration();
+		
+		if ((forwardTicks + 2) < duration) {
+			for (int i = currentTick; i < forwardTicks; i++) {
+				this.replayer.executeTick(i, false);
+			}
+			this.replayer.setCurrentTicks(forwardTicks);
+			this.replayer.setPaused(false);
+		}
+	}
+	
+	public void backward() {
+		this.replayer.setPaused(true);
+		int currentTick = this.replayer.getCurrentTicks();
+		int backwardTicks = currentTick - (10 * 20);
+		
+		if ((backwardTicks - 2) > 0) {
+			for (int i = currentTick; i > backwardTicks; i--) {
+				
+				this.replayer.executeTick(i, true);
+			}
+			
+			this.replayer.setCurrentTicks(backwardTicks);
+			this.replayer.setPaused(false);
+		}
+	}
 	
 	private void spawnNPC(ActionData action) {
 		SpawnData spawnData = (SpawnData)action.getPacketData();
-		INPC npc = new PacketNPC(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName());
+		INPC npc = !VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketNPC(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName()) : new PacketNPCOld(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName());
 		this.replayer.getNPCList().put(action.getName(), npc);
 		this.replayer.getReplay().getData().getWatchers().put(action.getName(), new PlayerWatcher(action.getName()));
-		
+
 		int tabMode = Bukkit.getPlayer(action.getName()) != null ? 0 : 2;
 		Location spawn = LocationData.toLocation(spawnData.getLocation());
-		npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).setArrows(0).resetValue().getData());
+		
+		if(VersionUtil.isCompatible(VersionEnum.V1_8)) {
+			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).resetValue().getData());
+		} else {
+			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).setArrows(0).resetValue().getData());
 
+		}
 		if (spawnData.getSignature() != null && Bukkit.getPlayer(action.getName()) == null) {
 			WrappedGameProfile profile = new WrappedGameProfile(spawnData.getUuid(), action.getName());
 			WrappedSignedProperty signed = new WrappedSignedProperty(spawnData.getSignature().getName(), spawnData.getSignature().getValue(), spawnData.getSignature().getSignature());
 			profile.getProperties().put(spawnData.getSignature().getName(), signed);
 			npc.setProfile(profile);
 		}
-		
+
 		npc.spawn(spawn, tabMode, this.replayer.getWatchingPlayer());
 		npc.look(spawnData.getLocation().getYaw(), spawnData.getLocation().getPitch());
+
+		this.lastSpawnAction = action;
 	  
 	}
 	
@@ -182,7 +273,11 @@ public class ReplayingUtils {
 				if (id == 9) id = 8;
 				if (id == 11) id = 10;
 				
-				loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
+				if (ConfigManager.REAL_CHANGES) {
+					loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
+				} else {
+					replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
+				}
 				
 				
 			}

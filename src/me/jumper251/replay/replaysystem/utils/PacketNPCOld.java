@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 
 
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -13,12 +14,18 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.comphenix.packetwrapper.WrapperPlayServerAnimation;
+import com.comphenix.packetwrapper.WrapperPlayServerBed;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import com.comphenix.packetwrapper.old.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
 import com.comphenix.packetwrapper.old.WrapperPlayServerNamedEntitySpawn;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
@@ -46,6 +53,8 @@ public class PacketNPCOld implements INPC{
 	
 	private WrapperPlayServerNamedEntitySpawn spawnPacket;
 	
+	private Location location;
+	
 	private float yaw, pitch;
 	
 	private Player[] visible;
@@ -65,16 +74,19 @@ public class PacketNPCOld implements INPC{
 	public void spawn(Location loc, int tabMode, Player... players) {
 		this.tabMode = tabMode;
 		this.visible = players;
+		this.location = loc;
 		NPCManager.names.add(this.name);
-		
+
 		this.spawnPacket.setEntityID(this.id);
 		this.spawnPacket.setPlayerUUID(uuid);
 		this.spawnPacket.setPosition(loc.toVector());
 		this.spawnPacket.setYaw(this.yaw);
 		this.spawnPacket.setPitch(this.pitch);
 		
+
 		if(this.data != null) this.spawnPacket.setMetadata(this.data);
-		
+	
+
 		for(Player player : Arrays.asList(players)) {
 			if(tabMode != 0) {
 				getInfoAddPacket().sendPacket(player);
@@ -86,6 +98,27 @@ public class PacketNPCOld implements INPC{
 			}
 		}
 		
+	
+		
+	}
+	
+	public void respawn() {
+		this.spawnPacket.setMetadata(this.data);
+		this.spawnPacket.setPosition(this.location.toVector());
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			this.spawnPacket.sendPacket(player);
+		}
+	}
+	
+	public void despawn() {
+		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
+		
+		destroyPacket.setEntityIds(new int[] { this.id });
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			destroyPacket.sendPacket(player);
+		}
 	}
 	
 	public void remove() {
@@ -110,6 +143,8 @@ public class PacketNPCOld implements INPC{
 	}
 	
 	public void teleport(Location loc, boolean onGround) {
+		this.location = loc;
+
 		WrapperPlayServerEntityTeleport packet = new WrapperPlayServerEntityTeleport();
 
 		packet.setEntityID(this.id);
@@ -128,15 +163,63 @@ public class PacketNPCOld implements INPC{
 	}
 	
 	public void look(float yaw, float pitch) {
-		
+		  WrapperPlayServerEntityLook lookPacket = new WrapperPlayServerEntityLook();
+		  WrapperPlayServerEntityHeadRotation head = new WrapperPlayServerEntityHeadRotation();
+
+		  head.setEntityID(this.id);
+		  head.setHeadYaw(((byte)(yaw * 256 / 360)));
+		  lookPacket.setEntityID(this.id);
+		  lookPacket.setOnGround(true);
+		  lookPacket.setPitch(pitch);
+		  lookPacket.setYaw(yaw);
+		  
+		  for(Player player : Arrays.asList(this.visible)) {
+			  if(player != null) {
+				  lookPacket.sendPacket(player);
+				  head.sendPacket(player);
+			  }
+		  }
+		  
 	}
 	
+
 	public void updateMetadata() {
+		WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata();
 		
+		packet.setEntityID(this.id);
+		packet.setMetadata(this.data.getWatchableObjects());
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			if (player != null) {
+				packet.sendPacket(player);
+			}
+		}
 	}
 	
 	public void animate(int id) {
+		WrapperPlayServerAnimation packet = new WrapperPlayServerAnimation();
 		
+		packet.setEntityID(this.id);
+		packet.setAnimation(id);
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			if (player != null) {
+				packet.sendPacket(player);
+			}
+		}
+	}
+	
+	public void sleep(Location loc) {
+		WrapperPlayServerBed packet = new WrapperPlayServerBed();
+		
+		packet.setEntityID(this.id);
+		packet.setLocation(new BlockPosition(loc.toVector()));
+		
+		for (Player player : Arrays.asList(this.visible)) {
+			if (player != null) {
+				packet.sendPacket(player);
+			}
+		}
 	}
 	
 	public void addToTeam(String team) {
@@ -225,5 +308,9 @@ public class PacketNPCOld implements INPC{
 	
 	public void setYaw(float yaw) {
 		this.yaw = yaw;
+	}
+	
+	public Location getLocation() {
+		return this.location;
 	}
 }

@@ -3,6 +3,9 @@ package me.jumper251.replay.replaysystem.recording;
 import java.util.ArrayList;
 
 
+
+
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,17 +16,13 @@ import com.comphenix.packetwrapper.WrapperPlayClientEntityAction;
 import com.comphenix.packetwrapper.WrapperPlayClientLook;
 import com.comphenix.packetwrapper.WrapperPlayClientPosition;
 import com.comphenix.packetwrapper.WrapperPlayClientPositionLook;
-
-import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 
 import me.jumper251.replay.ReplaySystem;
@@ -62,10 +61,9 @@ public class PacketRecorder extends AbstractListener{
 		
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
 				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
-				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Client.USE_ITEM, PacketType.Play.Server.ENTITY_METADATA) {
+				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Client.USE_ITEM) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
-            		//Bukkit.broadcastMessage(event.getPacketType().toString());
             		
             		if (event.getPlayer() != null && recorder.getPlayers().contains(event.getPlayer().getName())) {
             			Player p = event.getPlayer();
@@ -122,19 +120,8 @@ public class PacketRecorder extends AbstractListener{
             		}
             }
             
-            @Override
-            public void onPacketSending(PacketEvent event) {
-        			if (event.getPlayer() != null && recorder.getPlayers().contains(event.getPlayer().getName())) {
-            			Player p = event.getPlayer();
+            
 
-            			if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA) {
-            				WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata(event.getPacket());
-            				WrappedDataWatcher w = new WrappedDataWatcher(packet.getMetadata());
-            				//Bukkit.broadcastMessage("value: " + w.getObject(5));
-            			
-            			}
-        			}
-            }
 		};
 		
 	    ProtocolLibrary.getProtocolManager().addPacketListener(this.packetAdapter);

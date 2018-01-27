@@ -14,6 +14,10 @@ public interface INPC {
 
 	void spawn(Location loc, int tabMode, Player... players);
 	
+	void respawn();
+	
+	void despawn();
+	
 	void remove();
 	
 	void teleport(Location loc, boolean onGround);
@@ -24,6 +28,8 @@ public interface INPC {
 	
 	void animate(int id); 
 	
+	void sleep(Location loc);
+	
 	void addToTeam(String team);
 	
 	int getId();
@@ -32,7 +38,7 @@ public interface INPC {
 	
 	UUID getUuid();
 	
-	 void setId(int id);
+	void setId(int id);
 	
 	void setName(String name);
 	
@@ -47,6 +53,8 @@ public interface INPC {
 	void setPitch(float pitch);
 	
 	void setYaw(float yaw);
+	
+	Location getLocation();
 	
 	
 	

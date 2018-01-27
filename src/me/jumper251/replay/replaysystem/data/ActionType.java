@@ -4,6 +4,7 @@ public enum ActionType {
 
 	PACKET,
 	SPAWN,
-	DEPSAWN,
+	DESPAWN,
+	DEATH,
 	CUSTOM;
 }

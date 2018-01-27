@@ -1,8 +1,8 @@
 package me.jumper251.replay.commands;
 
 import java.io.File;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -14,9 +14,11 @@ import org.bukkit.entity.Player;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.api.ReplayAPI;
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.replaysystem.Replay;
+import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.utils.ReplayManager;
 
 
@@ -42,6 +44,7 @@ public class ReplayCommand implements CommandExecutor{
 				p.sendMessage("¤6/Replay play <Name> ¤7 - Starts a recorded replay");
 				p.sendMessage("¤6/Replay delete <Name> ¤7 - Deletes a replay");
 				p.sendMessage("¤6/Replay list ¤7 - Lists all replays");
+				p.sendMessage("¤6/Replay reload ¤7 - Reloads the config");
 
 			}
 			
@@ -65,6 +68,12 @@ public class ReplayCommand implements CommandExecutor{
 					}
 					
 				}
+				
+				if (arg.equalsIgnoreCase("reload")) {
+					ConfigManager.reloadConfig();
+					p.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully reloaded the configuration.");
+				}
+				
 				if(arg.equalsIgnoreCase("start")){
 					p.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay start <Name> [<Players ...>]");
 				}
@@ -110,7 +119,7 @@ public class ReplayCommand implements CommandExecutor{
 				}
 				
 				if (arg.equalsIgnoreCase("play")) {
-					if (ReplaySaver.exists(name)) {
+					if (ReplaySaver.exists(name) && !ReplayHelper.replaySessions.containsKey(p.getName())) {
 						p.sendMessage(ReplaySystem.PREFIX + "Loading replay ¤e" + name + "¤7...");
 						Replay replay = ReplaySaver.load(args[1]);
 						p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration ¤e" + (replay.getData().getDuration() / 20) + "¤7 seconds.");

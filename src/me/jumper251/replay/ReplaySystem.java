@@ -2,8 +2,10 @@ package me.jumper251.replay;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
+import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.utils.LogUtils;
 import me.jumper251.replay.utils.ReplayManager;
 
@@ -17,7 +19,11 @@ public class ReplaySystem extends JavaPlugin{
 	
 	@Override
 	public void onDisable() {
-		LogUtils.log("Disabling Replay v" + getDescription().getVersion());
+		for (Replay replay : ReplayManager.activeReplays.values()) {
+			if (replay.isRecording()) {
+				replay.getRecorder().stop(ConfigManager.SAVE_STOP);
+			}
+		}
 
 	}
 	
@@ -31,6 +37,7 @@ public class ReplaySystem extends JavaPlugin{
 		LogUtils.log("Loading Replay v" + getDescription().getVersion() + " by " + getDescription().getAuthors().get(0));
 		
 		ReplayManager.register();
+		ConfigManager.loadConfigs();
 		
 		ReplaySaver.register(new DefaultReplaySaver());
 		

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.commands.ReplayCommand;
+import me.jumper251.replay.listener.ReplayListener;
 import me.jumper251.replay.replaysystem.Replay;
 
 public class ReplayManager {
@@ -16,7 +17,7 @@ public class ReplayManager {
 	}
 	
 	private static void registerEvents() {
-		
+		new ReplayListener().register();
 	}
 	
 	private static void registerCommands() {

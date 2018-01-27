@@ -41,7 +41,7 @@ public class MetadataBuilder {
 	}
 	
 	public MetadataBuilder setArrows(int amount) {
-		if (VersionUtil.isCompatible(VersionEnum.V1_11) || VersionUtil.isCompatible(VersionEnum.V1_12)) {
+		if (VersionUtil.isCompatible(VersionEnum.V1_10) || VersionUtil.isCompatible(VersionEnum.V1_11) || VersionUtil.isCompatible(VersionEnum.V1_12)) {
 			return setValue(10, amount);
 		} else {
 			return setValue(9, amount);
