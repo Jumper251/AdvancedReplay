@@ -19,7 +19,8 @@ public class ConfigManager {
 	public static int MAX_LENGTH;
 	
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
-	public static boolean SAVE_STOP;
+	public static boolean RECORD_ITEMS;
+	public static boolean SAVE_STOP, USE_OFFLINE_SKINS;
 	
 	public static String DEATH_MESSAGE, LEAVE_MESSAGE;
 	
@@ -29,11 +30,13 @@ public class ConfigManager {
 			
 			cfg.set("general.max_length", 3600);
 			cfg.set("general.save_on_stop", false);
+			cfg.set("general.use_offline_skins", true);
 			cfg.set("general.death_message", "&6{name} &7died.");
 			cfg.set("general.quit_message", "&6{name} &7left the game.");
 
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
+			cfg.set("recording.entities.items.enabled", true);
 
 			try {
 				cfg.save(file);
@@ -48,11 +51,13 @@ public class ConfigManager {
 	public static void loadData() {
 		MAX_LENGTH = cfg.getInt("general.max_length");
 		SAVE_STOP = cfg.getBoolean("general.save_on_stop");
+		USE_OFFLINE_SKINS = cfg.getBoolean("general.use_offline_skins");
 		DEATH_MESSAGE = cfg.getString("general.death_message");
 		LEAVE_MESSAGE = cfg.getString("general.quit_message");
 
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");
+		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");
 
 	}
 	
@@ -66,5 +71,7 @@ public class ConfigManager {
 		} catch (InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+		
+		loadConfigs();
 	}
 }

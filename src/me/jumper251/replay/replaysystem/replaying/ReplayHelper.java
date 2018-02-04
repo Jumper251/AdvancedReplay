@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.replaying;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -46,7 +47,7 @@ public class ReplayHelper {
 	
 	@SuppressWarnings("deprecation")
 	public static void createTeleporter(Player player, Replayer replayer) {
-		Inventory inv = Bukkit.createInventory(null, ((int)replayer.getNPCList().size() / 9) > 0 ? (int)replayer.getNPCList().size() * 9 : 9 , "¤7Teleporter");
+		Inventory inv = Bukkit.createInventory(null, ((int)replayer.getNPCList().size() / 9) > 0 ? ((int)Math.floor(replayer.getNPCList().size() / 9)) * 9 : 9 , "¤7Teleporter");
 		
 		int index = 0;
 		
@@ -90,6 +91,10 @@ public class ReplayHelper {
 		titlePacket.sendPacket(player);
 		
 		
+	}
+	
+	public static boolean isInRange(Location loc1, Location loc2) {
+		return loc1.getWorld().getName().equals(loc2.getWorld().getName()) && (loc1.distance(loc2) <= 48D);
 	}
 	
 }

@@ -1,5 +1,6 @@
 package me.jumper251.replay.replaysystem.replaying;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -8,6 +9,7 @@ import java.util.HashMap;
 
 import java.util.List;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -146,6 +148,8 @@ public class Replayer {
 		for (INPC npc : this.npcs.values()) {
 			npc.remove();
 		}
+		
+		this.utils.despawn(new ArrayList<Entity>(this.utils.getEntities().values()));
 		
 		this.npcs.clear();
 		

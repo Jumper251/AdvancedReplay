@@ -1,5 +1,7 @@
 package me.jumper251.replay.replaysystem.utils;
 
+import java.util.List;
+
 import java.util.UUID;
 
 
@@ -7,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 
@@ -14,7 +17,7 @@ public interface INPC {
 
 	void spawn(Location loc, int tabMode, Player... players);
 	
-	void respawn();
+	void respawn(Player... players);
 	
 	void despawn();
 	
@@ -55,6 +58,12 @@ public interface INPC {
 	void setYaw(float yaw);
 	
 	Location getLocation();
+	
+	Location getOrigin();
+	
+	Player[] getVisible();
+	
+	void setLastEquipment(List<WrapperPlayServerEntityEquipment> list);
 	
 	
 	

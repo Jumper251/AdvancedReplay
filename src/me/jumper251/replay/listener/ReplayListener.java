@@ -1,19 +1,30 @@
 package me.jumper251.replay.listener;
 
 
+import java.util.Arrays;
+
+
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.replaysystem.replaying.Replayer;
 import me.jumper251.replay.replaysystem.utils.INPC;
@@ -21,7 +32,7 @@ import me.jumper251.replay.replaysystem.utils.INPC;
 public class ReplayListener extends AbstractListener {
 
 	@SuppressWarnings("deprecation")
-	@EventHandler
+	@EventHandler (priority = EventPriority.MONITOR)
 	public void onInteract(PlayerInteractEvent e) {
 		if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
@@ -110,10 +121,10 @@ public class ReplayListener extends AbstractListener {
 				if (e.getInventory().getName().equalsIgnoreCase("§7Teleporter")) {
 					Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
 					
-					if (e.getCurrentItem().getTypeId() == 397) {
-						SkullMeta meta = (SkullMeta) e.getCurrentItem().getItemMeta();
-						if (replayer.getNPCList().containsKey(meta.getOwner())) {
-							INPC npc = replayer.getNPCList().get(meta.getOwner());
+					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getTypeId() == 397) {
+						String owner = e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§6", "");
+						if (replayer.getNPCList().containsKey(owner)) {
+							INPC npc = replayer.getNPCList().get(owner);
 							p.teleport(npc.getLocation());
 						}
 					}
@@ -151,7 +162,7 @@ public class ReplayListener extends AbstractListener {
 			
 			for (INPC npc : replayer.getNPCList().values()) {
 				npc.despawn();
-				npc.respawn();
+				npc.respawn(p);
 			}
 		}
 	}
@@ -166,5 +177,75 @@ public class ReplayListener extends AbstractListener {
 			
 		}
 
+	}
+	
+	@EventHandler
+	public void onPickup(PlayerPickupItemEvent e) {
+		Player p = e.getPlayer();
+		if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+			e.setCancelled(true);
+		}
+		
+	}
+	
+	@EventHandler
+	public void onDrop(PlayerDropItemEvent e) {
+		Player p = e.getPlayer();
+		if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+			e.setCancelled(true);
+		}
+		
+	}
+	
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		Player p = e.getPlayer();
+		if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+			Chunk oldChunk = e.getFrom().getChunk();
+			Chunk newChunk = e.getTo().getChunk();
+			
+			if (oldChunk.getWorld() != newChunk.getWorld() || oldChunk.getX() != newChunk.getX() || oldChunk.getZ() != newChunk.getZ()) {
+				Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
+				
+				for (INPC npc : replayer.getNPCList().values()) {
+
+					if (ReplayHelper.isInRange(npc.getLocation(), p.getLocation())) {
+						if (!Arrays.asList(npc.getVisible()).contains(p)) {
+							npc.respawn(p);
+						}
+					} else {
+						if (Arrays.asList(npc.getVisible()).contains(p)) {
+							npc.despawn();
+						}
+					}
+				}
+			}
+			
+		}
+		
+	}
+	
+	@EventHandler
+	public void onWorldChange(PlayerChangedWorldEvent e) {
+		Player p = e.getPlayer();
+		if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+			final Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
+			
+			new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+					for (INPC npc : replayer.getNPCList().values()) {
+						
+						npc.despawn();
+						
+						if (ReplayHelper.isInRange(p.getLocation(), npc.getLocation())) {
+							npc.respawn(p);
+						}
+					}
+					
+				}
+			}.runTaskLater(ReplaySystem.getInstance(), 20);
+		}
 	}
 }

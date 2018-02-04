@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
 import com.comphenix.packetwrapper.WrapperPlayClientBlockDig;
@@ -16,6 +18,8 @@ import com.comphenix.packetwrapper.WrapperPlayClientEntityAction;
 import com.comphenix.packetwrapper.WrapperPlayClientLook;
 import com.comphenix.packetwrapper.WrapperPlayClientPosition;
 import com.comphenix.packetwrapper.WrapperPlayClientPositionLook;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -29,6 +33,9 @@ import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.types.AnimationData;
 import me.jumper251.replay.replaysystem.data.types.EntityActionData;
+import me.jumper251.replay.replaysystem.data.types.EntityData;
+import me.jumper251.replay.replaysystem.data.types.ItemData;
+import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
@@ -43,6 +50,8 @@ public class PacketRecorder extends AbstractListener{
 	
 	private HashMap<String, List<PacketData>> packetData;
 	
+	private List<Integer> spawnedEntities;
+	
 	private Recorder recorder;
 	
 	private AbstractListener compListener, listener;
@@ -50,6 +59,7 @@ public class PacketRecorder extends AbstractListener{
 	public PacketRecorder(Recorder recorder) {
 		super();
 		this.packetData = new HashMap<String, List<PacketData>>();
+		this.spawnedEntities = new ArrayList<Integer>();
 		this.recorder = recorder;
 		
 	}
@@ -61,7 +71,7 @@ public class PacketRecorder extends AbstractListener{
 		
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
 				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
-				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Client.USE_ITEM) {
+				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Client.USE_ITEM, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
             		
@@ -117,6 +127,42 @@ public class PacketRecorder extends AbstractListener{
   
             			
             			addData(event.getPlayer().getName(), data);
+            		}
+            }
+            
+            @SuppressWarnings("deprecation")
+			@Override
+            public void onPacketSending(PacketEvent event) {
+            		Player p = event.getPlayer();
+            		if (!recorder.getPlayers().contains(p.getName())) return;
+            		
+            		if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY) {
+            			WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity(event.getPacket());
+            			
+            			if (packet.getType() == 2 && !spawnedEntities.contains(packet.getEntityID())) {
+            				Entity en = packet.getEntity(p.getWorld());
+            				if (en != null && en instanceof Item) {
+            					Item item = (Item) en;
+            					LocationData location = new LocationData(packet.getX(), packet.getY(), packet.getZ(), p.getWorld().getName());
+            					LocationData velocity = LocationData.fromLocation(item.getVelocity().toLocation(p.getWorld()));
+            					
+            					addData(p.getName(), new EntityData(0, packet.getEntityID(), new ItemData(item.getItemStack().getTypeId(), item.getItemStack().getData().getData()), location, velocity));
+            					
+            					spawnedEntities.add(packet.getEntityID());
+            				}
+            			}
+            		}
+            		
+            		if (event.getPacketType() == PacketType.Play.Server.ENTITY_DESTROY) {
+            			WrapperPlayServerEntityDestroy packet = new WrapperPlayServerEntityDestroy(event.getPacket());
+            			for (int id : packet.getEntityIDs()) {
+
+            				if (spawnedEntities.contains(id)) {
+            					addData(p.getName(), new EntityData(1, id, null, null, null));
+            					
+            					spawnedEntities.remove(new Integer(id));
+            				}
+            			}
             		}
             }
             

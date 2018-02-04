@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 
 
+
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +24,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerNamedEntitySpawn;
 import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
@@ -48,7 +51,7 @@ public class PacketNPC implements INPC{
 	
 	private WrappedGameProfile profile;
 	
-	private Location location;
+	private Location location, origin;
 	
 	private WrapperPlayServerNamedEntitySpawn spawnPacket;
 	
@@ -56,11 +59,16 @@ public class PacketNPC implements INPC{
 	
 	private Player[] visible;
 	
+	private Player oldVisible;
+	
+	private List<WrapperPlayServerEntityEquipment> lastEquipment;
+	
 	public PacketNPC(int id, UUID uuid, String name) {
 		this.id = id;
 		this.uuid = uuid;
 		this.name = name;
 		this.tabMode = 1;
+		this.lastEquipment = new ArrayList<WrapperPlayServerEntityEquipment>();
 		this.spawnPacket = new WrapperPlayServerNamedEntitySpawn();
 	}
 	
@@ -71,7 +79,9 @@ public class PacketNPC implements INPC{
 	public void spawn(Location loc, int tabMode, Player... players) {
 		this.tabMode = tabMode;
 		this.visible = players;
+		this.oldVisible = players[0];
 		this.location = loc;
+		this.origin = loc;
 		NPCManager.names.add(this.name);
 		
 		this.spawnPacket.setEntityID(this.id);
@@ -95,12 +105,17 @@ public class PacketNPC implements INPC{
 		
 	}
 	
-	public void respawn() {
+	public void respawn(Player... players) {
+		this.visible = players;
 		this.spawnPacket.setMetadata(this.data);
 		this.spawnPacket.setPosition(this.location.toVector());
 		
 		for (Player player : Arrays.asList(this.visible)) {
 			this.spawnPacket.sendPacket(player);
+			
+			for (WrapperPlayServerEntityEquipment equipment : this.lastEquipment) {
+				equipment.sendPacket(player);
+			}
 		}
 	}
 	
@@ -110,8 +125,13 @@ public class PacketNPC implements INPC{
 		destroyPacket.setEntityIds(new int[] { this.id });
 		
 		for (Player player : Arrays.asList(this.visible)) {
-			destroyPacket.sendPacket(player);
+			if(player != null){				
+				destroyPacket.sendPacket(player);
+			}
 		}
+		
+		Arrays.fill(this.visible, null);
+		
 	}
 	
 	public void remove() {
@@ -122,17 +142,16 @@ public class PacketNPC implements INPC{
 		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
 		
 		destroyPacket.setEntityIds(new int[] { this.id });
-		
-		for(Player player : Arrays.asList(this.visible)) {
-			if(player != null){				
-				if(this.tabMode == 2){
-					getInfoRemovePacket().sendPacket(player);
-				}
-				
-				destroyPacket.sendPacket(player);
 
+		if(this.oldVisible != null){				
+			if(this.tabMode == 2){
+				getInfoRemovePacket().sendPacket(this.oldVisible);
 			}
+				
+			destroyPacket.sendPacket(this.oldVisible);
+
 		}
+		
 	}
 	
 	public void teleport(Location loc, boolean onGround) {
@@ -303,5 +322,18 @@ public class PacketNPC implements INPC{
 	
 	public Location getLocation() {
 		return location;
+	}
+	
+	public Location getOrigin() {
+		return origin;
+	}
+	
+	public Player[] getVisible() {
+		return this.visible;
+	}
+	
+	public void setLastEquipment(List<WrapperPlayServerEntityEquipment> list) {
+		this.lastEquipment = list;
+		
 	}
 }

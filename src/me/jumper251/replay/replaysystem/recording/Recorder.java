@@ -2,7 +2,9 @@ package me.jumper251.replay.replaysystem.recording;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,12 +25,17 @@ import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
+import me.jumper251.replay.replaysystem.data.types.EntityData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
 import me.jumper251.replay.replaysystem.data.types.SignatureData;
 import me.jumper251.replay.replaysystem.data.types.SpawnData;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.ReplayManager;
+import me.jumper251.replay.utils.fetcher.JsonData;
+import me.jumper251.replay.utils.fetcher.PlayerInfo;
+import me.jumper251.replay.utils.fetcher.SkinInfo;
+import me.jumper251.replay.utils.fetcher.WebsiteFetcher;
 
 public class Recorder {
 
@@ -72,19 +79,27 @@ public class Recorder {
 			@Override
 			public void run() {
 				
-				for (String name : packetRecorder.getPacketData().keySet()) {
-					List<PacketData> list = packetRecorder.getPacketData().get(name);
-					for (PacketData packetData : list) {
-						if (packetData instanceof BlockChangeData && !ConfigManager.RECORD_BLOCKS) continue;
+				HashMap<String, List<PacketData>> tmpMap = packetRecorder.getPacketData();
+				
+				for (String name : tmpMap.keySet()) {
+					List<PacketData> list = tmpMap.get(name);
+					for (Iterator<PacketData> it = list.iterator(); it.hasNext();) {
+						PacketData packetData = it.next();
 						
+						if (packetData instanceof BlockChangeData && !ConfigManager.RECORD_BLOCKS) continue;
+						if (packetData instanceof EntityData && !ConfigManager.RECORD_ITEMS) continue;
+
 						ActionData actionData = new ActionData(currentTick, ActionType.PACKET, name, packetData);
 						addData(currentTick, actionData);
+						
+						it.remove();
 					}
 					
 				}
-				
-				packetRecorder.getPacketData().clear();
-				
+
+				packetRecorder.getPacketData().keySet().removeAll(tmpMap.keySet());
+			
+
 				if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
 					IReplayHook hook = ReplayAPI.getInstance().getHookManager().getHook();
 					
@@ -100,7 +115,7 @@ public class Recorder {
 				
 				Recorder.this.currentTick++;
 				
-				if (Recorder.this.currentTick >= ConfigManager.MAX_LENGTH) stop(ConfigManager.SAVE_STOP);
+				if ((Recorder.this.currentTick / 20) >= ConfigManager.MAX_LENGTH) stop(ConfigManager.SAVE_STOP);
 			}
 		};
 		
@@ -139,19 +154,45 @@ public class Recorder {
 	}
 	
 	public void createSpawnAction(Player player, Location loc) {
+		SignatureData[] signArr = new SignatureData[1];
+		
+		if (!Bukkit.getOnlineMode() && ConfigManager.USE_OFFLINE_SKINS) {
+			new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+					PlayerInfo info = (PlayerInfo) WebsiteFetcher.getJson("https://api.mojang.com/users/profiles/minecraft/" + player.getName(), true, new JsonData(true, new PlayerInfo()));
+
+					if (info != null) {		
+						SkinInfo skin = (SkinInfo) WebsiteFetcher.getJson("https://sessionserver.mojang.com/session/minecraft/profile/" + info.getId() + "?unsigned=false", true, new JsonData(true, new SkinInfo()));
+						
+						Map<String, String> props = skin.getProperties().get(0);
+						signArr[0] =  new SignatureData(props.get("name"), props.get("value"), props.get("signature"));
+					}
+					
+					ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0]));
+					addData(0, spawnData);
+				
+					ActionData invData = new ActionData(0, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));
+					addData(0, invData);
+				}
+			}.runTaskAsynchronously(ReplaySystem.getInstance());
+		}
+		
 		Multimap<String, WrappedSignedProperty> map = WrappedGameProfile.fromPlayer(player).getProperties();
-		SignatureData signature = null;
 		for (String prop : map.asMap().keySet()) {
 			for (WrappedSignedProperty sp : map.get(prop)) {
-				signature = new SignatureData(sp.getName(), sp.getValue(), sp.getSignature());
+				signArr[0] =  new SignatureData(sp.getName(), sp.getValue(), sp.getSignature());
 			}
 		}
 		
-		ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signature));
-		addData(currentTick, spawnData);
+		if (!ConfigManager.USE_OFFLINE_SKINS || Bukkit.getOnlineMode()) {
+			ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0]));
+			addData(currentTick, spawnData);
 		
-		ActionData invData = new ActionData(currentTick, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));
-		addData(currentTick, invData);
+			ActionData invData = new ActionData(currentTick, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));
+			addData(currentTick, invData);
+		}
 	}
 	
 	public List<String> getPlayers() {
