@@ -92,7 +92,7 @@ public class Recorder {
 						ActionData actionData = new ActionData(currentTick, ActionType.PACKET, name, packetData);
 						addData(currentTick, actionData);
 						
-						it.remove();
+
 					}
 					
 				}

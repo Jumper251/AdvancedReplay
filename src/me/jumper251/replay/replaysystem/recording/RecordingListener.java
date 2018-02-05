@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -39,6 +40,7 @@ import me.jumper251.replay.replaysystem.data.types.ItemData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.ProjectileData;
+import me.jumper251.replay.replaysystem.data.types.WorldChangeData;
 import me.jumper251.replay.replaysystem.utils.ItemUtils;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 
@@ -321,5 +323,17 @@ public class RecordingListener extends AbstractListener {
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 		}
+	}
+	
+	@EventHandler
+	public void onWorldChange(PlayerChangedWorldEvent e) {
+		Player p = e.getPlayer();
+		if (this.recorder.getPlayers().contains(p.getName())) {
+			LocationData location = LocationData.fromLocation(p.getLocation());
+			
+			
+			this.packetRecorder.addData(p.getName(), new WorldChangeData(location));
+		}
+
 	}
 }

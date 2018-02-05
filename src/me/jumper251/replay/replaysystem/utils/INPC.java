@@ -59,6 +59,10 @@ public interface INPC {
 	
 	Location getLocation();
 	
+	void setOrigin(Location origin);
+	
+	void setLocation(Location location);
+	
 	Location getOrigin();
 	
 	Player[] getVisible();

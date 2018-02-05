@@ -20,7 +20,7 @@ public class ConfigManager {
 	
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
 	public static boolean RECORD_ITEMS;
-	public static boolean SAVE_STOP, USE_OFFLINE_SKINS;
+	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS;
 	
 	public static String DEATH_MESSAGE, LEAVE_MESSAGE;
 	
@@ -31,6 +31,7 @@ public class ConfigManager {
 			cfg.set("general.max_length", 3600);
 			cfg.set("general.save_on_stop", false);
 			cfg.set("general.use_offline_skins", true);
+			cfg.set("general.hide_players", false);
 			cfg.set("general.death_message", "&6{name} &7died.");
 			cfg.set("general.quit_message", "&6{name} &7left the game.");
 
@@ -52,6 +53,7 @@ public class ConfigManager {
 		MAX_LENGTH = cfg.getInt("general.max_length");
 		SAVE_STOP = cfg.getBoolean("general.save_on_stop");
 		USE_OFFLINE_SKINS = cfg.getBoolean("general.use_offline_skins");
+		HIDE_PLAYERS = cfg.getBoolean("general.hide_players");
 		DEATH_MESSAGE = cfg.getString("general.death_message");
 		LEAVE_MESSAGE = cfg.getString("general.quit_message");
 

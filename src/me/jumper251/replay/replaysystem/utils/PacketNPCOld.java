@@ -325,6 +325,18 @@ public class PacketNPCOld implements INPC{
 		return null;
 	}
 	
+	@Override
+	public void setOrigin(Location origin) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void setLocation(Location location) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public Player[] getVisible() {
 		return this.visible;
 	}

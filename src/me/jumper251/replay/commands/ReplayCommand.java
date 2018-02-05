@@ -26,25 +26,22 @@ public class ReplayCommand implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-		if(!(cs instanceof Player)){ 
-			cs.sendMessage("You must be a player to execute this command."); 
-			return true; 
-		}
+
 		
-		final Player p = (Player)cs;	
+
 		
 		String arg = args.length >= 1 ? args[0] : "overview";
 		
-		if (p.hasPermission("replay.command." + arg)) {
+		if (cs.hasPermission("replay.command." + arg)) {
 			
 			if (args.length == 0) {
-				p.sendMessage(ReplaySystem.PREFIX + "ReplaySystem ¤ev" + ReplaySystem.getInstance().getDescription().getVersion());
-				p.sendMessage("¤6/Replay start <Name> [<Players ...>] ¤7 - Records a new replay");
-				p.sendMessage("¤6/Replay stop <Name> ¤7 - Stops and saves a replay");
-				p.sendMessage("¤6/Replay play <Name> ¤7 - Starts a recorded replay");
-				p.sendMessage("¤6/Replay delete <Name> ¤7 - Deletes a replay");
-				p.sendMessage("¤6/Replay list ¤7 - Lists all replays");
-				p.sendMessage("¤6/Replay reload ¤7 - Reloads the config");
+				cs.sendMessage(ReplaySystem.PREFIX + "ReplaySystem ¤ev" + ReplaySystem.getInstance().getDescription().getVersion());
+				cs.sendMessage("¤6/Replay start <Name> [<Players ...>] ¤7 - Records a new replay");
+				cs.sendMessage("¤6/Replay stop <Name> ¤7 - Stops and saves a replay");
+				cs.sendMessage("¤6/Replay play <Name> ¤7 - Starts a recorded replay");
+				cs.sendMessage("¤6/Replay delete <Name> ¤7 - Deletes a replay");
+				cs.sendMessage("¤6/Replay list ¤7 - Lists all replays");
+				cs.sendMessage("¤6/Replay reload ¤7 - Reloads the config");
 
 			}
 			
@@ -60,31 +57,31 @@ public class ReplayCommand implements CommandExecutor{
 								replayNames.add("¤e" + files[i].getName() + "¤7");
 							}
 						}
-						p.sendMessage(ReplaySystem.PREFIX + "Available replays: ¤8(¤6" + files.length + "¤8)");
+						cs.sendMessage(ReplaySystem.PREFIX + "Available replays: ¤8(¤6" + files.length + "¤8)");
 						String showList = replayNames.toString().replace("[", "").replace("]", "").replaceAll("\\.replay", "");
-						p.sendMessage("¤7" + showList);
+						cs.sendMessage("¤7" + showList);
 					} else {
-						p.sendMessage(ReplaySystem.PREFIX + "¤cNo replays found.");
+						cs.sendMessage(ReplaySystem.PREFIX + "¤cNo replays found.");
 					}
 					
 				}
 				
 				if (arg.equalsIgnoreCase("reload")) {
 					ConfigManager.reloadConfig();
-					p.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully reloaded the configuration.");
+					cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully reloaded the configuration.");
 				}
 				
 				if(arg.equalsIgnoreCase("start")){
-					p.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay start <Name> [<Players ...>]");
+					cs.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay start <Name> [<Players ...>]");
 				}
 				if(arg.equalsIgnoreCase("stop")){
-					p.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay stop <Name>");
+					cs.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay stop <Name>");
 				}
 				if(arg.equalsIgnoreCase("play")){
-					p.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay play <Name>");
+					cs.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay play <Name>");
 				}
 				if(arg.equalsIgnoreCase("delete")){
-					p.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay delete <Name>");
+					cs.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay delete <Name>");
 				}
 				
 			}
@@ -95,30 +92,36 @@ public class ReplayCommand implements CommandExecutor{
 					if (!ReplaySaver.exists(name) && !ReplayManager.activeReplays.containsKey(name)) {
 						 ReplayAPI.getInstance().recordReplay(name);
 						 
-						 p.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully started recording ¤e" + name + "¤7.\n¤7Use ¤6/Replay stop " + name + "¤7 to save it.");
-						 p.sendMessage("¤7INFO: You are recording all online players.");
+						 cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully started recording ¤e" + name + "¤7.\n¤7Use ¤6/Replay stop " + name + "¤7 to save it.");
+						 cs.sendMessage("¤7INFO: You are recording all online players.");
 						 
 					} else {
-						p.sendMessage(ReplaySystem.PREFIX + "¤cReplay already exists.");
+						cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay already exists.");
 					}
 				}
 				
 				if(arg.equalsIgnoreCase("stop")) {
 					if (ReplayManager.activeReplays.containsKey(name) && ReplayManager.activeReplays.get(name).isRecording()) {
 						Replay replay = ReplayManager.activeReplays.get(name);
-						p.sendMessage(ReplaySystem.PREFIX + "Saving replay ¤e" + name + "¤7...");
+						cs.sendMessage(ReplaySystem.PREFIX + "Saving replay ¤e" + name + "¤7...");
 						replay.getRecorder().stop(true);
 						
 						String path = ReplaySaver.replaySaver instanceof DefaultReplaySaver ? ReplaySystem.getInstance().getDataFolder() + "/replays/" + name + ".replay" : null;
-						p.sendMessage(ReplaySystem.PREFIX + "¤7Successfully saved replay" + (path != null ? " to ¤o" + path : ""));
+						cs.sendMessage(ReplaySystem.PREFIX + "¤7Successfully saved replay" + (path != null ? " to ¤o" + path : ""));
 						
 					} else {
-						p.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
+						cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
 					}
 
 				}
 				
 				if (arg.equalsIgnoreCase("play")) {
+					if(!(cs instanceof Player)){ 
+						cs.sendMessage("You must be a player to execute this command."); 
+						return true; 
+					}
+					final Player p = (Player)cs;	
+					
 					if (ReplaySaver.exists(name) && !ReplayHelper.replaySessions.containsKey(p.getName())) {
 						p.sendMessage(ReplaySystem.PREFIX + "Loading replay ¤e" + name + "¤7...");
 						Replay replay = ReplaySaver.load(args[1]);
@@ -133,9 +136,9 @@ public class ReplayCommand implements CommandExecutor{
 				if (arg.equalsIgnoreCase("delete")) {
 					if (ReplaySaver.exists(name)) {
 						ReplaySaver.delete(name);
-						p.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully deleted replay.");
+						cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully deleted replay.");
 					} else {
-						p.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
+						cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
 					}
 				}
 			}
@@ -156,17 +159,17 @@ public class ReplayCommand implements CommandExecutor{
 					if (players.length > 0) {
 						ReplayAPI.getInstance().recordReplay(name, players);
 					 
-						p.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully started recording ¤e" + name + "¤7.\n¤7Use ¤6/Replay stop " + name + "¤7 to save it.");
+						cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully started recording ¤e" + name + "¤7.\n¤7Use ¤6/Replay stop " + name + "¤7 to save it.");
 					}
 					 
 				} else {
-					p.sendMessage(ReplaySystem.PREFIX + "¤cReplay already exists.");
+					cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay already exists.");
 				}
 			}
 			
 			
 		} else {
-			p.sendMessage(ReplaySystem.PREFIX + "¤cInsufficient permissions");
+			cs.sendMessage(ReplaySystem.PREFIX + "¤cInsufficient permissions");
 
 		}
 		return true;

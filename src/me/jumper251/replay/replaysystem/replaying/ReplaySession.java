@@ -1,5 +1,6 @@
 package me.jumper251.replay.replaysystem.replaying;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.jumper251.replay.ReplaySystem;
+import me.jumper251.replay.filesystem.ConfigManager;
 
 public class ReplaySession {
 
@@ -62,6 +64,14 @@ public class ReplaySession {
 		
 		this.player.setAllowFlight(true);
 		this.player.setFlying(true);
+		
+		if (ConfigManager.HIDE_PLAYERS) {
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				if (all == this.player) continue;
+				
+				this.player.hidePlayer(all);
+			}
+		}
 
 
 	}
@@ -86,6 +96,14 @@ public class ReplaySession {
 				player.setExp(0);
 				
 				player.teleport(start);
+				
+				if (ConfigManager.HIDE_PLAYERS) {
+					for (Player all : Bukkit.getOnlinePlayers()) {
+						if (all == player) continue;
+						
+						player.showPlayer(all);
+					}
+				}
 				
 			}
 		}.runTask(ReplaySystem.getInstance());

@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.replaying;
 
 
 import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,6 +45,7 @@ import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
 import me.jumper251.replay.replaysystem.data.types.ProjectileData;
 import me.jumper251.replay.replaysystem.data.types.SpawnData;
+import me.jumper251.replay.replaysystem.data.types.WorldChangeData;
 import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import me.jumper251.replay.replaysystem.utils.INPC;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
@@ -181,6 +183,18 @@ public class ReplayingUtils {
 				}
 			}
 			
+			if (action.getPacketData() instanceof WorldChangeData) {
+				WorldChangeData worldChange = (WorldChangeData) action.getPacketData();
+				Location loc = LocationData.toLocation(worldChange.getLocation());
+				
+				npc.despawn();
+				npc.setOrigin(loc);
+				npc.setLocation(loc);
+				
+				npc.respawn(replayer.getWatchingPlayer());
+				
+			}
+			
 
 		}
 		
@@ -256,7 +270,11 @@ public class ReplayingUtils {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).setArrows(0).resetValue().getData());
 
 		}
-		if (spawnData.getSignature() != null && Bukkit.getPlayer(action.getName()) == null) {
+		
+		if (ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName())) {
+			tabMode = 2;
+		}
+		if ((spawnData.getSignature() != null && Bukkit.getPlayer(action.getName()) == null) || (spawnData.getSignature() != null && ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName()))) {
 			WrappedGameProfile profile = new WrappedGameProfile(spawnData.getUuid(), action.getName());
 			WrappedSignedProperty signed = new WrappedSignedProperty(spawnData.getSignature().getName(), spawnData.getSignature().getValue(), spawnData.getSignature().getSignature());
 			profile.getProperties().put(spawnData.getSignature().getName(), signed);

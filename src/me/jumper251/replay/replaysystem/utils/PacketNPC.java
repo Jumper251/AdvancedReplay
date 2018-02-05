@@ -324,6 +324,15 @@ public class PacketNPC implements INPC{
 		return location;
 	}
 	
+	public void setOrigin(Location origin) {
+		this.origin = origin;
+	}
+	
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
 	public Location getOrigin() {
 		return origin;
 	}
