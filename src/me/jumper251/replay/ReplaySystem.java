@@ -2,17 +2,23 @@ package me.jumper251.replay;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.utils.LogUtils;
+import me.jumper251.replay.utils.Metrics;
 import me.jumper251.replay.utils.ReplayManager;
+import me.jumper251.replay.utils.Updater;
 
 public class ReplaySystem extends JavaPlugin{
 
 	
 	public static ReplaySystem instance;
+	
+	public static Updater updater;
+	public static Metrics metrics;
 	
 	public final static String PREFIX = "¤8[¤3Replay¤8] ¤r¤7";
 
@@ -40,6 +46,9 @@ public class ReplaySystem extends JavaPlugin{
 		ConfigManager.loadConfigs();
 		
 		ReplaySaver.register(new DefaultReplaySaver());
+		
+		updater = new Updater();
+		metrics = new Metrics(this);
 		
 		LogUtils.log("Finished (" + (System.currentTimeMillis() - start) + "ms)");
 

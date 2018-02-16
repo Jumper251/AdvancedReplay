@@ -35,7 +35,7 @@ public class ReplayCommand implements CommandExecutor{
 		if (cs.hasPermission("replay.command." + arg)) {
 			
 			if (args.length == 0) {
-				cs.sendMessage(ReplaySystem.PREFIX + "ReplaySystem ¤ev" + ReplaySystem.getInstance().getDescription().getVersion());
+				cs.sendMessage(ReplaySystem.PREFIX + "AdvancedReplay ¤ev" + ReplaySystem.getInstance().getDescription().getVersion());
 				cs.sendMessage("¤6/Replay start <Name> [<Players ...>] ¤7 - Records a new replay");
 				cs.sendMessage("¤6/Replay stop <Name> ¤7 - Stops and saves a replay");
 				cs.sendMessage("¤6/Replay play <Name> ¤7 - Starts a recorded replay");

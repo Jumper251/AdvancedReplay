@@ -149,7 +149,7 @@ public class Replayer {
 			npc.remove();
 		}
 		
-		this.utils.despawn(new ArrayList<Entity>(this.utils.getEntities().values()));
+		this.utils.despawn(new ArrayList<Entity>(this.utils.getEntities().values()), null);
 		
 		this.npcs.clear();
 		

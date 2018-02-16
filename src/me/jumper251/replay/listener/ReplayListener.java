@@ -1,7 +1,9 @@
 package me.jumper251.replay.listener;
 
 
+
 import java.util.Arrays;
+
 
 
 import org.bukkit.Chunk;
@@ -17,6 +19,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -25,9 +28,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.jumper251.replay.ReplaySystem;
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.replaysystem.replaying.Replayer;
 import me.jumper251.replay.replaysystem.utils.INPC;
+
 
 public class ReplayListener extends AbstractListener {
 
@@ -246,6 +251,17 @@ public class ReplayListener extends AbstractListener {
 					
 				}
 			}.runTaskLater(ReplaySystem.getInstance(), 20);
+		}
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		
+		if(ConfigManager.UPDATE_NOTIFY){
+			if(ReplaySystem.updater.isVersionAvailable() && p.hasPermission("replay.admin")){
+				p.sendMessage(ReplaySystem.PREFIX + "An update is available: https://www.spigotmc.org/resources/advancedreplay-1-9-1-12.52849/");
+			}
 		}
 	}
 }

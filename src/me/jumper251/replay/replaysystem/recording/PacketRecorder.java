@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 
 
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.comphenix.packetwrapper.WrapperPlayClientLook;
 import com.comphenix.packetwrapper.WrapperPlayClientPosition;
 import com.comphenix.packetwrapper.WrapperPlayClientPositionLook;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -34,11 +36,13 @@ import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.types.AnimationData;
 import me.jumper251.replay.replaysystem.data.types.EntityActionData;
 import me.jumper251.replay.replaysystem.data.types.EntityData;
+import me.jumper251.replay.replaysystem.data.types.FishingData;
 import me.jumper251.replay.replaysystem.data.types.ItemData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
+import me.jumper251.replay.replaysystem.data.types.VelocityData;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
@@ -51,7 +55,8 @@ public class PacketRecorder extends AbstractListener{
 	private HashMap<String, List<PacketData>> packetData;
 	
 	private List<Integer> spawnedEntities;
-	
+	private List<Integer> spawnedHooks;
+
 	private Recorder recorder;
 	
 	private AbstractListener compListener, listener;
@@ -60,6 +65,7 @@ public class PacketRecorder extends AbstractListener{
 		super();
 		this.packetData = new HashMap<String, List<PacketData>>();
 		this.spawnedEntities = new ArrayList<Integer>();
+		this.spawnedHooks = new ArrayList<Integer>();
 		this.recorder = recorder;
 		
 	}
@@ -71,7 +77,7 @@ public class PacketRecorder extends AbstractListener{
 		
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
 				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
-				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Client.USE_ITEM, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY) {
+				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Client.USE_ITEM, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Server.ENTITY_VELOCITY) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
             		
@@ -150,7 +156,20 @@ public class PacketRecorder extends AbstractListener{
             					
             					spawnedEntities.add(packet.getEntityID());
             				}
+            				
+            	
+            
             			}
+        				if (packet.getType() == 90  && !spawnedHooks.contains(packet.getEntityID())) {
+        					LocationData location = new LocationData(packet.getX(), packet.getY(), packet.getZ(), p.getWorld().getName());
+        					location.setYaw(packet.getYaw());
+        					location.setPitch(packet.getPitch());
+        					
+        					
+        					addData(p.getName(), new FishingData(packet.getEntityID(), location, packet.getOptionalSpeedX(), packet.getOptionalSpeedY(), packet.getOptionalSpeedZ()));
+        					spawnedHooks.add(packet.getEntityID());
+        					
+        				}
             		}
             		
             		if (event.getPacketType() == PacketType.Play.Server.ENTITY_DESTROY) {
@@ -162,7 +181,23 @@ public class PacketRecorder extends AbstractListener{
             					
             					spawnedEntities.remove(new Integer(id));
             				}
+            				
+            				if (spawnedHooks.contains(id)) {
+            					addData(p.getName(), new EntityData(2, id, null, null, null));
+            					
+            					spawnedHooks.remove(new Integer(id));
+            				}
             			}
+            		}
+            		
+            		if (event.getPacketType() == PacketType.Play.Server.ENTITY_VELOCITY) {
+            			WrapperPlayServerEntityVelocity packet = new WrapperPlayServerEntityVelocity(event.getPacket());
+            			
+            			if (spawnedHooks.contains(packet.getEntityID())) {
+
+            				addData(p.getName(), new VelocityData(packet.getEntityID(), packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ()));
+            			}
+            			
             		}
             }
             
