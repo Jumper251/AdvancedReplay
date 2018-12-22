@@ -189,7 +189,7 @@ public class ReplayingUtils {
 					}
 				} else {
 					if (hooks.containsKey(entityData.getId())) {
-						despawn(null, new int[] {hooks.get(entityData.getId())});
+						despawn(null, new int[] { hooks.get(entityData.getId()) });
 
 						hooks.remove(entityData.getId());
 					}

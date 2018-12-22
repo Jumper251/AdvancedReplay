@@ -55,17 +55,22 @@ public class PacketNPCOld implements INPC{
 	
 	private WrapperPlayServerNamedEntitySpawn spawnPacket;
 	
-	private Location location;
+	private Location location, origin;
 	
 	private float yaw, pitch;
 	
 	private Player[] visible;
+	
+	private Player oldVisible;
+	
+	private List<WrapperPlayServerEntityEquipment> lastEquipment;
 	
 	public PacketNPCOld(int id, UUID uuid, String name) {
 		this.id = id;
 		this.uuid = uuid;
 		this.name = name;
 		this.tabMode = 1;
+		this.lastEquipment = new ArrayList<WrapperPlayServerEntityEquipment>();
 		this.spawnPacket = new WrapperPlayServerNamedEntitySpawn();
 	}
 	
@@ -76,7 +81,9 @@ public class PacketNPCOld implements INPC{
 	public void spawn(Location loc, int tabMode, Player... players) {
 		this.tabMode = tabMode;
 		this.visible = players;
+		this.oldVisible = players[0];
 		this.location = loc;
+		this.origin = loc;
 		NPCManager.names.add(this.name);
 
 		this.spawnPacket.setEntityID(this.id);
@@ -321,19 +328,18 @@ public class PacketNPCOld implements INPC{
 	
 	@Override
 	public Location getOrigin() {
-		// TODO Auto-generated method stub
-		return null;
+		return origin;
 	}
 	
 	@Override
 	public void setOrigin(Location origin) {
-		// TODO Auto-generated method stub
+		this.origin = origin;
 		
 	}
 	
 	@Override
 	public void setLocation(Location location) {
-		// TODO Auto-generated method stub
+		this.location = location;
 		
 	}
 	
@@ -342,7 +348,7 @@ public class PacketNPCOld implements INPC{
 	}
 	
 	public void setLastEquipment(List<WrapperPlayServerEntityEquipment> list) {
-		// TODO Auto-generated method stub
+		this.lastEquipment = list;
 		
 	}
 }

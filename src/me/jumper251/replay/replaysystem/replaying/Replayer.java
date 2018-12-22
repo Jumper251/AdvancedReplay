@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 
 import me.jumper251.replay.ReplaySystem;
+import me.jumper251.replay.api.IReplayHook;
 import me.jumper251.replay.api.ReplayAPI;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ActionData;
@@ -121,7 +122,9 @@ public class Replayer {
 				
 				if (action.getType() == ActionType.CUSTOM) {
 					if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
-						ReplayAPI.getInstance().getHookManager().getHook().onPlay(action, Replayer.this);
+						for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
+							hook.onPlay(action, Replayer.this);
+						}
 					}
 				}
 			

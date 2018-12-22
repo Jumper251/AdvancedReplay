@@ -101,13 +101,14 @@ public class Recorder {
 			
 
 				if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
-					IReplayHook hook = ReplayAPI.getInstance().getHookManager().getHook();
 					
-					for (String names : players) {
-						PacketData customData = hook.onRecord(names);
-						if (customData != null) {
-							ActionData customAction = new ActionData(currentTick, ActionType.CUSTOM, names, customData);
-							addData(currentTick, customAction);
+					for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
+						for (String names : players) {
+							PacketData customData = hook.onRecord(names);
+							if (customData != null) {
+								ActionData customAction = new ActionData(currentTick, ActionType.CUSTOM, names, customData);
+								addData(currentTick, customAction);
+							}
 						}
 					}
 				}

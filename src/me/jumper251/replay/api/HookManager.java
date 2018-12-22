@@ -1,23 +1,30 @@
 package me.jumper251.replay.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HookManager {
 
-	private IReplayHook hook;
+	private List<IReplayHook> hooks = new ArrayList<IReplayHook>();
 	
 	
 	public void registerHook(IReplayHook hook) {
-		this.hook = hook;
+		if (!this.hooks.contains(hook)) {
+			this.hooks.add(hook);
+		}
 	}
 	
-	public void unregisterHook() {
-		this.hook = null;
+	public void unregisterHook(IReplayHook hook) {
+		if (this.hooks.contains(hook)) {
+			this.hooks.remove(hook);
+		}
 	}
 	
 	public boolean isRegistered() {
-		return this.hook != null;
+		return this.hooks.size() > 0;
 	}
 	
-	public IReplayHook getHook() {
-		return hook;
+	public List<IReplayHook> getHooks() {
+		return hooks;
 	}
 }

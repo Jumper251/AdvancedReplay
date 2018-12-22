@@ -27,8 +27,8 @@ public class ReplayAPI {
 		this.hookManager.registerHook(hook);
 	}
 	
-	public void unregisterHook() {
-		this.hookManager.unregisterHook();
+	public void unregisterHook(IReplayHook hook) {
+		this.hookManager.unregisterHook(hook);
 	}
 	
 	

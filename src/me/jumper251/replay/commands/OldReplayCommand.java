@@ -1,6 +1,6 @@
 package me.jumper251.replay.commands;
 
-import java.io.File;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.utils.ReplayManager;
 
 
-public class ReplayCommand implements CommandExecutor{
+public class OldReplayCommand implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
@@ -47,18 +47,15 @@ public class ReplayCommand implements CommandExecutor{
 			
 			if (args.length == 1) {
 				if(arg.equalsIgnoreCase("list")) {
-					File dir = new File(ReplaySystem.getInstance().getDataFolder() + "/replays/");
-					if (dir.exists()) {
+					if (ReplaySaver.getReplays().size() > 0) {
 						List<String> replayNames = new ArrayList<String>();
-						
-						File[] files = dir.listFiles();
-						for (int i = 0; i < files.length; i++) {
-							if (files[i].isFile()) {
-								replayNames.add("¤e" + files[i].getName() + "¤7");
-							}
+
+						for (String file : ReplaySaver.getReplays()) {
+							replayNames.add("¤e" + file + "¤7");
+							
 						}
-						cs.sendMessage(ReplaySystem.PREFIX + "Available replays: ¤8(¤6" + files.length + "¤8)");
-						String showList = replayNames.toString().replace("[", "").replace("]", "").replaceAll("\\.replay", "");
+						cs.sendMessage(ReplaySystem.PREFIX + "Available replays: ¤8(¤6" + ReplaySaver.getReplays().size() + "¤8)");
+						String showList = replayNames.toString().replace("[", "").replace("]", "");
 						cs.sendMessage("¤7" + showList);
 					} else {
 						cs.sendMessage(ReplaySystem.PREFIX + "¤cNo replays found.");
@@ -70,6 +67,13 @@ public class ReplayCommand implements CommandExecutor{
 					ConfigManager.reloadConfig();
 					cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully reloaded the configuration.");
 				}
+				
+				if (arg.equalsIgnoreCase("reformat")) {
+					cs.sendMessage(ReplaySystem.PREFIX + "Reformatting Replay files...");
+					((DefaultReplaySaver)ReplaySaver.replaySaver).reformatAll();
+					cs.sendMessage("¤aFinished. Check console for details.");
+				}
+				
 				
 				if(arg.equalsIgnoreCase("start")){
 					cs.sendMessage(ReplaySystem.PREFIX + "Usage: ¤6/Replay start <Name> [<Players ...>]");
@@ -124,10 +128,15 @@ public class ReplayCommand implements CommandExecutor{
 					
 					if (ReplaySaver.exists(name) && !ReplayHelper.replaySessions.containsKey(p.getName())) {
 						p.sendMessage(ReplaySystem.PREFIX + "Loading replay ¤e" + name + "¤7...");
-						Replay replay = ReplaySaver.load(args[1]);
-						p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration ¤e" + (replay.getData().getDuration() / 20) + "¤7 seconds.");
-						replay.play(p);
-						
+						try {
+							Replay replay = ReplaySaver.load(args[1]);
+							p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration ¤e" + (replay.getData().getDuration() / 20) + "¤7 seconds.");
+							replay.play(p);
+						} catch (Exception e) {
+							e.printStackTrace();
+							
+							p.sendMessage(ReplaySystem.PREFIX + "¤cError while loading ¤o" + name + ".replay. ¤r¤cCheck console for more details.");
+						}
 					} else {
 						p.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
 					}

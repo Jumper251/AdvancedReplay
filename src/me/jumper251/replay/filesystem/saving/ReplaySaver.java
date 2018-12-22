@@ -1,5 +1,8 @@
 package me.jumper251.replay.filesystem.saving;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.jumper251.replay.replaysystem.Replay;
 
 public class ReplaySaver {
@@ -43,6 +46,14 @@ public class ReplaySaver {
 	public static void delete(String replayName) {
 		if (isRegistered()) {
 			replaySaver.deleteReplay(replayName);
+		}
+	}
+	
+	public static List<String> getReplays() {
+		if (isRegistered()) {
+			return replaySaver.getReplays();
+		} else {
+			return new ArrayList<String>();
 		}
 	}
  }
