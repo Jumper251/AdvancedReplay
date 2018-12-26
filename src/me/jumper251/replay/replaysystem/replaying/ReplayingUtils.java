@@ -41,7 +41,10 @@ import me.jumper251.replay.replaysystem.data.types.AnimationData;
 import me.jumper251.replay.replaysystem.data.types.BedEnterData;
 import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
 import me.jumper251.replay.replaysystem.data.types.EntityActionData;
+import me.jumper251.replay.replaysystem.data.types.EntityAnimationData;
 import me.jumper251.replay.replaysystem.data.types.EntityData;
+import me.jumper251.replay.replaysystem.data.types.EntityItemData;
+import me.jumper251.replay.replaysystem.data.types.EntityMovingData;
 import me.jumper251.replay.replaysystem.data.types.FishingData;
 import me.jumper251.replay.replaysystem.data.types.InvData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
@@ -52,11 +55,15 @@ import me.jumper251.replay.replaysystem.data.types.SpawnData;
 import me.jumper251.replay.replaysystem.data.types.VelocityData;
 import me.jumper251.replay.replaysystem.data.types.WorldChangeData;
 import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
-import me.jumper251.replay.replaysystem.utils.INPC;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
-import me.jumper251.replay.replaysystem.utils.PacketNPC;
-import me.jumper251.replay.replaysystem.utils.PacketNPCOld;
+import me.jumper251.replay.replaysystem.utils.entities.IEntity;
+import me.jumper251.replay.replaysystem.utils.entities.INPC;
+import me.jumper251.replay.replaysystem.utils.entities.PacketEntity;
+import me.jumper251.replay.replaysystem.utils.entities.PacketEntityOld;
+import me.jumper251.replay.replaysystem.utils.entities.PacketNPC;
+import me.jumper251.replay.replaysystem.utils.entities.PacketNPCOld;
+import me.jumper251.replay.utils.MaterialBridge;
 import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
@@ -67,17 +74,17 @@ public class ReplayingUtils {
 	
 	private ActionData lastSpawnAction;
 	
-	private HashMap<Integer, Entity> entities;
+	private HashMap<Integer, Entity> itemEntities;
 	private HashMap<Integer, Integer> hooks;
 
 	public ReplayingUtils(Replayer replayer) {
 		this.replayer = replayer;
-		this.entities = new HashMap<Integer, Entity>();
+		this.itemEntities = new HashMap<Integer, Entity>();
 		this.hooks = new HashMap<Integer, Integer>();
 	}
 	
 	public void handleAction(ActionData action, ReplayData data, boolean reversed) {
-				
+
 		if (action.getType() == ActionType.SPAWN) {
 			if (!reversed) {
 				spawnNPC(action);
@@ -118,7 +125,7 @@ public class ReplayingUtils {
 				AnimationData animationData = (AnimationData) action.getPacketData();
 				npc.animate(animationData.getId());
 				
-				if (animationData.getId() == 1) {
+				if (animationData.getId() == 1 && !VersionUtil.isCompatible(VersionEnum.V1_8)) {
 					replayer.getWatchingPlayer().playSound(npc.getLocation(), Sound.ENTITY_PLAYER_HURT, 5F, 5.0F);
 				}
 			}
@@ -176,16 +183,16 @@ public class ReplayingUtils {
 				npc.sleep(LocationData.toLocation(bed.getLocation()));
 			}
 			
-			if (action.getPacketData() instanceof EntityData) {
-				EntityData entityData = (EntityData) action.getPacketData();
+			if (action.getPacketData() instanceof EntityItemData) {
+				EntityItemData entityData = (EntityItemData) action.getPacketData();
 
 				if (entityData.getAction() == 0 && !reversed) {
 					spawnItemStack(entityData);
 				} else if (entityData.getAction() == 1){
-					if (entities.containsKey(entityData.getId())) {
-						despawn(Arrays.asList(new Entity[] { entities.get(entityData.getId()) }), null);
+					if (itemEntities.containsKey(entityData.getId())) {
+						despawn(Arrays.asList(new Entity[] { itemEntities.get(entityData.getId()) }), null);
 						
-						entities.remove(entityData.getId());
+						itemEntities.remove(entityData.getId());
 					}
 				} else {
 					if (hooks.containsKey(entityData.getId())) {
@@ -193,6 +200,50 @@ public class ReplayingUtils {
 
 						hooks.remove(entityData.getId());
 					}
+				}
+			}
+			
+			if (action.getPacketData() instanceof EntityData) {
+				EntityData entityData = (EntityData) action.getPacketData();
+
+				if (entityData.getAction() == 0) {
+					if (!reversed) {
+					IEntity entity = VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketEntityOld(EntityType.valueOf(entityData.getType()))  : new PacketEntity(EntityType.valueOf(entityData.getType()));
+					entity.spawn(LocationData.toLocation(entityData.getLocation()), this.replayer.getWatchingPlayer());
+					replayer.getEntityList().put(entityData.getId(), entity);
+					} else if (replayer.getEntityList().containsKey(entityData.getId())){
+						IEntity ent = replayer.getEntityList().get(entityData.getId());
+						ent.remove();
+
+					}
+					
+				} else if (entityData.getAction() == 1) {
+					if (!reversed && replayer.getEntityList().containsKey(entityData.getId())) {
+					IEntity ent = replayer.getEntityList().get(entityData.getId());
+					ent.remove();
+					} else {
+						IEntity entity = VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketEntityOld(EntityType.valueOf(entityData.getType()))  : new PacketEntity(EntityType.valueOf(entityData.getType()));
+						entity.spawn(LocationData.toLocation(entityData.getLocation()), this.replayer.getWatchingPlayer());
+						replayer.getEntityList().put(entityData.getId(), entity);
+					}
+				}
+			}
+			
+			if (action.getPacketData() instanceof EntityMovingData) {
+				EntityMovingData entityMoving = (EntityMovingData) action.getPacketData();
+				if (replayer.getEntityList().containsKey(entityMoving.getId())) {
+					IEntity ent = replayer.getEntityList().get(entityMoving.getId());
+					ent.teleport(new Location(ent.getOrigin().getWorld(), entityMoving.getX(), entityMoving.getY(), entityMoving.getZ()), true);
+					ent.look(entityMoving.getYaw(), entityMoving.getPitch());
+				}
+			}
+			
+			if (action.getPacketData() instanceof EntityAnimationData) {
+				EntityAnimationData entityAnimating = (EntityAnimationData) action.getPacketData();
+				if (replayer.getEntityList().containsKey(entityAnimating.getEntId()) && !reversed) {
+
+					IEntity ent = replayer.getEntityList().get(entityAnimating.getEntId());
+					ent.animate(entityAnimating.getId());
 				}
 			}
 			
@@ -217,19 +268,18 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof VelocityData) {
 				VelocityData velocity = (VelocityData) action.getPacketData();
-				if (hooks.containsKey(velocity.getId())) {
+				int entID = -1;
+				if (hooks.containsKey(velocity.getId())) entID = hooks.get(velocity.getId());
+				if (replayer.getEntityList().containsKey(velocity.getId())) entID = replayer.getEntityList().get(velocity.getId()).getId();
 
+				if (entID != -1) {
 					WrapperPlayServerEntityVelocity packet = new WrapperPlayServerEntityVelocity();
-					packet.setEntityID(hooks.get(velocity.getId()));
+					packet.setEntityID(entID);
 					packet.setVelocityX(velocity.getX());
 					packet.setVelocityY(velocity.getY());
 					packet.setVelocityZ(velocity.getZ());
 					
 					packet.sendPacket(replayer.getWatchingPlayer());
-					
-
-					
-
 				}
 
 			}
@@ -313,6 +363,7 @@ public class ReplayingUtils {
 		if (ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName())) {
 			tabMode = 2;
 		}
+		
 		if ((spawnData.getSignature() != null && Bukkit.getPlayer(action.getName()) == null) || (spawnData.getSignature() != null && ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName()))) {
 			WrappedGameProfile profile = new WrappedGameProfile(spawnData.getUuid(), action.getName());
 			WrappedSignedProperty signed = new WrappedSignedProperty(spawnData.getSignature().getName(), spawnData.getSignature().getValue(), spawnData.getSignature().getSignature());
@@ -374,7 +425,7 @@ public class ReplayingUtils {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
-				if (blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && Material.getMaterial(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9) {
+				if (blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9) {
 					loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().getId(), 15);
 					
 				}
@@ -385,9 +436,17 @@ public class ReplayingUtils {
 				if (id == 11) id = 10;
 				
 				if (ConfigManager.REAL_CHANGES) {
-					loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
+					if (VersionUtil.isCompatible(VersionEnum.V1_13)) {
+						loc.getBlock().setType(MaterialBridge.fromID(id), true);
+					} else {
+						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
+					}
 				} else {
-					replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
+					if (VersionUtil.isCompatible(VersionEnum.V1_13)) {
+						replayer.getWatchingPlayer().sendBlockChange(loc, MaterialBridge.fromID(id), (byte) subId);
+					} else {
+						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
+					}
 				}
 				
 				
@@ -395,18 +454,17 @@ public class ReplayingUtils {
 		}.runTask(ReplaySystem.getInstance());
 	}
 	
-	private void spawnItemStack(EntityData entityData) {
+	private void spawnItemStack(EntityItemData entityData) {
 		final Location loc = LocationData.toLocation(entityData.getLocation());
 		
 		new BukkitRunnable() {
 			
-			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
-				Item item = loc.getWorld().dropItemNaturally(loc, new ItemStack(entityData.getItemData().getId(), 1, (short) entityData.getItemData().getSubId()));
+				Item item = loc.getWorld().dropItemNaturally(loc, new ItemStack(MaterialBridge.fromID(entityData.getItemData().getId()), 1, (short) entityData.getItemData().getSubId()));
 				item.setVelocity(LocationData.toLocation(entityData.getVelocity()).toVector());
 				
-				entities.put(entityData.getId(), item);
+				itemEntities.put(entityData.getId(), item);
 				
 			}
 		}.runTask(ReplaySystem.getInstance());
@@ -435,6 +493,6 @@ public class ReplayingUtils {
 	}
 	
 	public HashMap<Integer, Entity> getEntities() {
-		return entities;
+		return itemEntities;
 	}
 }

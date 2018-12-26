@@ -24,13 +24,16 @@ import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.SpawnData;
-import me.jumper251.replay.replaysystem.utils.INPC;
+import me.jumper251.replay.replaysystem.utils.entities.IEntity;
+import me.jumper251.replay.replaysystem.utils.entities.INPC;
 
 
 
 public class Replayer {
 
 	private HashMap<String, INPC> npcs;
+	
+	private HashMap<Integer, IEntity> entities;
 	
 	private Player watcher;
 	
@@ -50,6 +53,7 @@ public class Replayer {
 		this.replay = replay;
 		this.watcher = watcher;
 		this.npcs = new HashMap<String, INPC>();
+		this.entities = new HashMap<Integer, IEntity>();
 		this.utils = new ReplayingUtils(this);
 		this.session = new ReplaySession(this);
 		this.paused = false;
@@ -152,6 +156,10 @@ public class Replayer {
 			npc.remove();
 		}
 		
+		for (IEntity entity : this.entities.values()) {
+			entity.remove();
+		}
+		
 		this.utils.despawn(new ArrayList<Entity>(this.utils.getEntities().values()), null);
 		
 		this.npcs.clear();
@@ -162,6 +170,10 @@ public class Replayer {
 	
 	public HashMap<String, INPC> getNPCList() {
 		return npcs;
+	}
+	
+	public HashMap<Integer, IEntity> getEntityList() {
+		return entities;
 	}
 	
 	public Player getWatchingPlayer() {

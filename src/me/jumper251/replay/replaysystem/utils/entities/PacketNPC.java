@@ -1,4 +1,4 @@
-package me.jumper251.replay.replaysystem.utils;
+package me.jumper251.replay.replaysystem.utils.entities;
 
 import java.util.ArrayList;
 
@@ -32,6 +32,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 
+import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.StringUtils;
 
@@ -83,15 +84,15 @@ public class PacketNPC implements INPC{
 		this.location = loc;
 		this.origin = loc;
 		NPCManager.names.add(this.name);
-		
+
 		this.spawnPacket.setEntityID(this.id);
 		this.spawnPacket.setPlayerUUID(uuid);
 		this.spawnPacket.setPosition(loc.toVector());
 		this.spawnPacket.setYaw(this.yaw);
 		this.spawnPacket.setPitch(this.pitch);
-		
+	
 		if(this.data != null) this.spawnPacket.setMetadata(this.data);
-
+		
 		for(Player player : Arrays.asList(players)) {
 			if(tabMode != 0) {
 				getInfoAddPacket().sendPacket(player);
@@ -177,7 +178,7 @@ public class PacketNPC implements INPC{
 	public void look(float yaw, float pitch) {
 		  WrapperPlayServerEntityLook lookPacket = new WrapperPlayServerEntityLook();
 		  WrapperPlayServerEntityHeadRotation head = new WrapperPlayServerEntityHeadRotation();
-
+		  
 		  head.setEntityID(this.id);
 		  head.setHeadYaw(((byte)(yaw * 256 / 360)));
 		  lookPacket.setEntityID(this.id);

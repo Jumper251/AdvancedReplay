@@ -57,7 +57,7 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
 			if (args.length == 0) {
 				cs.sendMessage(this.description);
 				for (SubCommand sub : this.subCommands) {
-					if (!checkPermission(cs, sub.getLabel().toLowerCase())) continue;
+					if (!checkPermission(cs, sub.getLabel().toLowerCase()) || !sub.isEnabled()) continue;
 						
 					cs.sendMessage(this.format.getOverviewMessage(this.command, sub.getArgs(), sub.getDescription()));
 				}
@@ -67,7 +67,7 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
 						
 						if (sub.isPlayerOnly() && !(cs instanceof Player)) {
 							cs.sendMessage(this.format.getConsoleMessage());
-							continue;
+							return true;
 						}
 						
 						if (!sub.execute(cs, cmd, label, args)) {

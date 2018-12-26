@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
+import me.jumper251.replay.utils.MaterialBridge;
 
 public class ReplaySession {
 
@@ -29,7 +30,6 @@ public class ReplaySession {
 		this.startSession();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void startSession() {
 		this.content = this.player.getInventory().getContents();
 		this.start = this.player.getLocation();
@@ -41,8 +41,8 @@ public class ReplaySession {
 		ItemStack teleporter = ReplayHelper.creatItem(Material.COMPASS, "§7Teleport");
 		ItemStack time = ReplayHelper.creatItem(Material.WATCH, "§cSlow §8[§eRight§8] §aFast §8[§eShift Right§8]");
 		ItemStack leave = ReplayHelper.creatItem(Material.WOOD_DOOR, "§7Leave replay");
-		ItemStack backward = new ItemStack(397,1,(short)3);
-		ItemStack forward = new ItemStack(397,1,(short)3);
+		ItemStack backward = new ItemStack(Material.SKULL_ITEM,1,(short)3);
+		ItemStack forward = new ItemStack(Material.SKULL_ITEM,1,(short)3);
 		
 		SkullMeta backMeta = (SkullMeta) backward.getItemMeta();
 		backMeta.setDisplayName("§c« §e10 seconds");

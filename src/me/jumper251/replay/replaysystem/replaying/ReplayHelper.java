@@ -29,9 +29,8 @@ public class ReplayHelper {
 		return stack;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static ItemStack getPauseItem() {
-		ItemStack pause = new ItemStack(397,1,(short)3);
+		ItemStack pause = new ItemStack(Material.SKULL_ITEM,1,(short)3);
 
 		SkullMeta pauseMeta = (SkullMeta) pause.getItemMeta();
 		pauseMeta.setDisplayName("¤cPause");
@@ -45,14 +44,13 @@ public class ReplayHelper {
 		return creatItem(Material.SLIME_BLOCK, "¤aResume");
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void createTeleporter(Player player, Replayer replayer) {
 		Inventory inv = Bukkit.createInventory(null, ((int)replayer.getNPCList().size() / 9) > 0 ? ((int)Math.floor(replayer.getNPCList().size() / 9)) * 9 : 9 , "¤7Teleporter");
 		
 		int index = 0;
 		
 		for (String name : replayer.getNPCList().keySet()) {
-			ItemStack stack = new ItemStack(397,1,(short)3);
+			ItemStack stack = new ItemStack(Material.SKULL_ITEM,1,(short)3);
 			SkullMeta meta = (SkullMeta) stack.getItemMeta();
 			meta.setDisplayName("¤6" + name);
 			meta.setOwner(name);

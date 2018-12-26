@@ -10,7 +10,7 @@ public abstract class SubCommand {
 
 	private AbstractCommand parent;
 	private String label, description, args;
-	private boolean playerOnly;
+	private boolean playerOnly, enabled = true;
 	private List<String> aliases;
 	
 	public SubCommand(AbstractCommand parent, String label, String description, String args, boolean playerOnly) {
@@ -49,6 +49,14 @@ public abstract class SubCommand {
 	
 	public boolean isPlayerOnly() {
 		return playerOnly;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
 	public List<String> getAliases() {

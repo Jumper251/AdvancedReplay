@@ -14,6 +14,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 
 import me.jumper251.replay.replaysystem.data.types.InvData;
 import me.jumper251.replay.replaysystem.data.types.ItemData;
+import me.jumper251.replay.utils.MaterialBridge;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
@@ -113,16 +114,15 @@ public class NPCManager {
 		return list;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static ItemStack fromID(ItemData data) {
-		if (data == null) return new ItemStack(0);
-		return new ItemStack(data.getId(), 1, (short)data.getSubId());
+		if (data == null) return new ItemStack(Material.AIR);
+		return new ItemStack(MaterialBridge.fromID(data.getId()), 1, (short)data.getSubId());
 	}
 	
 	@SuppressWarnings("deprecation")
 	public static ItemData fromItemStack(ItemStack stack) {
 		if (stack == null) return null;
-		return new ItemData(stack.getTypeId(), stack.getData().getData());
+		return new ItemData(stack.getType().getId(), stack.getData().getData());
 	}
 	
 	@SuppressWarnings("deprecation")

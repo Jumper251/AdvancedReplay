@@ -7,40 +7,33 @@ public class EntityData extends PacketData {
 	 */
 	private static final long serialVersionUID = 2309497657075148314L;
 	
-	
 	private int action, id;
 	
-	private ItemData itemData;
+	private LocationData location;
 	
-	private LocationData location, velocity;
+	private String type;
 	
-	public EntityData(int action, int id, ItemData itemData, LocationData location, LocationData velocity) {
+	public EntityData(int action, int id, LocationData location, String type) {
 		this.action = action;
-		this.itemData = itemData;
-		this.location = location;
 		this.id = id;
-		this.velocity = velocity;
+		this.location = location;
+		this.type = type;
 	}
-	
 	
 	public int getAction() {
 		return action;
-	}
-	
-	public ItemData getItemData() {
-		return itemData;
-	}
-	
-	public LocationData getLocation() {
-		return location;
 	}
 	
 	public int getId() {
 		return id;
 	}
 	
-	public LocationData getVelocity() {
-		return velocity;
+	public LocationData getLocation() {
+		return location;
+	}
+	
+	public String getType() {
+		return type;
 	}
 
 }

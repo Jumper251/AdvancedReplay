@@ -2,8 +2,10 @@ package me.jumper251.replay.replaysystem.recording;
 
 import java.util.Set;
 
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -35,6 +37,7 @@ import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.types.AnimationData;
 import me.jumper251.replay.replaysystem.data.types.BedEnterData;
 import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
+import me.jumper251.replay.replaysystem.data.types.EntityAnimationData;
 import me.jumper251.replay.replaysystem.data.types.InvData;
 import me.jumper251.replay.replaysystem.data.types.ItemData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
@@ -43,6 +46,7 @@ import me.jumper251.replay.replaysystem.data.types.ProjectileData;
 import me.jumper251.replay.replaysystem.data.types.WorldChangeData;
 import me.jumper251.replay.replaysystem.utils.ItemUtils;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
+import me.jumper251.replay.utils.MaterialBridge;
 
 public class RecordingListener extends AbstractListener {
 
@@ -171,6 +175,12 @@ public class RecordingListener extends AbstractListener {
 					this.packetRecorder.addData(p.getName(), new MetadataUpdate(false, this.recorder.getData().getWatcher(p.getName()).isBlocking()));
 				}
 			}
+		} else if (e.getEntity() instanceof LivingEntity) {
+			LivingEntity living = (LivingEntity) e.getEntity();
+			if (this.packetRecorder.getEntityLookup().containsKey(living.getEntityId())) {
+				
+				this.packetRecorder.addData(this.packetRecorder.getEntityLookup().get(living.getEntityId()), new EntityAnimationData(living.getEntityId(), (living.getHealth() - e.getFinalDamage()) > 0 ? 2 : 3));
+			}
 		}
 		
 	}
@@ -243,7 +253,7 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			InvData data = NPCManager.copyFromPlayer(p, true, true);
-			if (data.getMainHand() != null && p.getItemInHand() != null && p.getItemInHand().getAmount() <= 1 && p.getItemInHand().getType() == Material.getMaterial(data.getMainHand().getId())) {
+			if (data.getMainHand() != null && p.getItemInHand() != null && p.getItemInHand().getAmount() <= 1 && p.getItemInHand().getType() == MaterialBridge.fromID(data.getMainHand().getId())) {
 				data.setMainHand(null);
 			}
 			
@@ -273,8 +283,8 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlockPlaced().getLocation());
 			
-			ItemData before = new ItemData(e.getBlockReplacedState().getTypeId(), e.getBlockReplacedState().getData().getData());
-			ItemData after = new ItemData(e.getBlockPlaced().getTypeId(), e.getBlockPlaced().getData());
+			ItemData before = new ItemData(e.getBlockReplacedState().getType().getId(), e.getBlockReplacedState().getData().getData());
+			ItemData after = new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 		}
@@ -288,7 +298,7 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlock().getLocation());
 
-			ItemData before = new ItemData(e.getBlock().getTypeId(), e.getBlock().getData());
+			ItemData before = new ItemData(e.getBlock().getType().getId(), e.getBlock().getData());
 			ItemData after = new ItemData(0, 0);
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
@@ -303,7 +313,7 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlockClicked().getLocation());
 
-			ItemData before = new ItemData(e.getBlockClicked().getState().getTypeId(), e.getBlockClicked().getState().getData().getData());
+			ItemData before = new ItemData(e.getBlockClicked().getState().getType().getId(), e.getBlockClicked().getState().getData().getData());
 			ItemData after = new ItemData(0, 0);
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
@@ -318,7 +328,7 @@ public class RecordingListener extends AbstractListener {
 			Block block = e.getBlockClicked().getRelative(e.getBlockFace());
 			LocationData location = LocationData.fromLocation(block.getLocation());
 			
-			ItemData before = new ItemData(block.getTypeId(), block.getData());
+			ItemData before = new ItemData(block.getType().getId(), block.getData());
 			ItemData after = new ItemData(e.getBucket() == Material.WATER_BUCKET ? 9 : 11, 0);
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));

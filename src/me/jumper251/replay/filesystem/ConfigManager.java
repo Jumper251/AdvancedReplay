@@ -19,7 +19,7 @@ public class ConfigManager {
 	public static int MAX_LENGTH;
 	
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
-	public static boolean RECORD_ITEMS;
+	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
 	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY;
 	
 	public static String DEATH_MESSAGE, LEAVE_MESSAGE;
@@ -39,6 +39,7 @@ public class ConfigManager {
 
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
+			cfg.set("recording.entities.enabled", false);
 			cfg.set("recording.entities.items.enabled", true);
 
 			try {
@@ -64,6 +65,7 @@ public class ConfigManager {
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");
+		RECORD_ENTITIES = cfg.getBoolean("recording.entities.enabled");
 
 	}
 	

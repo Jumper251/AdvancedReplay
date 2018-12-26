@@ -31,7 +31,7 @@ import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.replaysystem.replaying.Replayer;
-import me.jumper251.replay.replaysystem.utils.INPC;
+import me.jumper251.replay.replaysystem.utils.entities.INPC;
 
 
 public class ReplayListener extends AbstractListener {
@@ -47,7 +47,7 @@ public class ReplayListener extends AbstractListener {
 				Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
 				if (p.getItemInHand() == null) return;
 				
-				if (p.getItemInHand().getTypeId() == 397) {
+				if (p.getItemInHand().getType().getId() == 397) {
 					SkullMeta meta = (SkullMeta) p.getItemInHand().getItemMeta();
 					if (meta.getOwner().equalsIgnoreCase("Push_red_button")) {
 						replayer.setPaused(!replayer.isPaused());
@@ -94,7 +94,7 @@ public class ReplayListener extends AbstractListener {
 					
 				}
 				
-				if (p.getItemInHand().getType() == Material.WOOD_DOOR) {
+				if (p.getItemInHand().getType() == Material.WOOD_DOOR || p.getItemInHand().getType().getId() == 64) {
 					replayer.stop();
 				}
 				
@@ -102,7 +102,7 @@ public class ReplayListener extends AbstractListener {
 					ReplayHelper.createTeleporter(p, replayer);
 				}
 				
-				if (p.getItemInHand().getTypeId() == 397 || p.getItemInHand().getType() == Material.SLIME_BLOCK) {
+				if (p.getItemInHand().getType().getId() == 397 || p.getItemInHand().getType() == Material.SLIME_BLOCK) {
 					if (replayer.isPaused()) {
 						p.getInventory().setItem(4, ReplayHelper.getResumeItem());
 					} else {
@@ -126,7 +126,7 @@ public class ReplayListener extends AbstractListener {
 				if (e.getInventory().getName().equalsIgnoreCase("§7Teleporter")) {
 					Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
 					
-					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getTypeId() == 397) {
+					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getType().getId() == 397) {
 						String owner = e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§6", "");
 						if (replayer.getNPCList().containsKey(owner)) {
 							INPC npc = replayer.getNPCList().get(owner);

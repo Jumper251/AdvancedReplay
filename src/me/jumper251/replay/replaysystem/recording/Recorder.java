@@ -25,7 +25,10 @@ import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
+import me.jumper251.replay.replaysystem.data.types.EntityAnimationData;
 import me.jumper251.replay.replaysystem.data.types.EntityData;
+import me.jumper251.replay.replaysystem.data.types.EntityItemData;
+import me.jumper251.replay.replaysystem.data.types.EntityMovingData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
 import me.jumper251.replay.replaysystem.data.types.SignatureData;
@@ -87,7 +90,8 @@ public class Recorder {
 						PacketData packetData = it.next();
 						
 						if (packetData instanceof BlockChangeData && !ConfigManager.RECORD_BLOCKS) continue;
-						if (packetData instanceof EntityData && !ConfigManager.RECORD_ITEMS) continue;
+						if (packetData instanceof EntityItemData && !ConfigManager.RECORD_ITEMS) continue;
+						if ((packetData instanceof EntityData || packetData instanceof EntityMovingData || packetData instanceof EntityAnimationData) && !ConfigManager.RECORD_ENTITIES) continue;
 
 						ActionData actionData = new ActionData(currentTick, ActionType.PACKET, name, packetData);
 						addData(currentTick, actionData);
