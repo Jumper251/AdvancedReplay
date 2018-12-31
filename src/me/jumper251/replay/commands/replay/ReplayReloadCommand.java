@@ -19,7 +19,7 @@ public class ReplayReloadCommand extends SubCommand {
 	@Override
 	public boolean execute(CommandSender cs, Command cmd, String label, String[] args) {
 		ConfigManager.reloadConfig();
-		cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully reloaded the configuration.");
+		cs.sendMessage(ReplaySystem.PREFIX + "Â§aSuccessfully reloaded the configuration.");
 		return true;
 	}
 

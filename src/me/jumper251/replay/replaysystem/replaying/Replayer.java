@@ -205,7 +205,7 @@ public class Replayer {
 		this.speed = speed;
 		
 		
-		ReplayHelper.sendTitle(watcher, null, speed >= 1 ? "¤ax" + speed : "¤cx" + speed, 10);
+		ReplayHelper.sendTitle(watcher, null, speed >= 1 ? "Â§ax" + speed : "Â§cx" + speed, 10);
 	}
 	
 	public double getSpeed() {

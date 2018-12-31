@@ -21,7 +21,7 @@ public class ReplayReformatCommand extends SubCommand {
 	public boolean execute(CommandSender cs, Command cmd, String label, String[] args) {
 		cs.sendMessage(ReplaySystem.PREFIX + "Reformatting Replay files...");
 		((DefaultReplaySaver)ReplaySaver.replaySaver).reformatAll();
-		cs.sendMessage("¤aFinished. Check console for details.");
+		cs.sendMessage("Â§aFinished. Check console for details.");
 		
 		return true;
 	}

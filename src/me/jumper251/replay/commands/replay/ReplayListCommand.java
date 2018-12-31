@@ -23,14 +23,14 @@ public class ReplayListCommand extends SubCommand {
 			List<String> replayNames = new ArrayList<String>();
 
 			for (String file : ReplaySaver.getReplays()) {
-				replayNames.add("คe" + file + "ค7");
+				replayNames.add("ยงe" + file + "ยง7");
 				
 			}
-			cs.sendMessage(ReplaySystem.PREFIX + "Available replays: ค8(ค6" + ReplaySaver.getReplays().size() + "ค8)");
+			cs.sendMessage(ReplaySystem.PREFIX + "Available replays: ยง8(ยง6" + ReplaySaver.getReplays().size() + "ยง8)");
 			String showList = replayNames.toString().replace("[", "").replace("]", "");
-			cs.sendMessage("ค7" + showList);
+			cs.sendMessage("ยง7" + showList);
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "คcNo replays found.");
+			cs.sendMessage(ReplaySystem.PREFIX + "ยงcNo replays found.");
 		}
 		return true;
 	}

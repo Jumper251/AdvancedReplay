@@ -20,9 +20,6 @@ import java.util.concurrent.Executors;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import me.jumper251.replay.utils.Acceptor;
-import me.jumper251.replay.utils.Consumer;
-
 
 public class WebsiteFetcher {
 	

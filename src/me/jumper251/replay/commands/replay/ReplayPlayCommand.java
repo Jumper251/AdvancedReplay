@@ -31,18 +31,18 @@ public class ReplayPlayCommand extends SubCommand {
 		final Player p = (Player)cs;	
 		
 		if (ReplaySaver.exists(name) && !ReplayHelper.replaySessions.containsKey(p.getName())) {
-			p.sendMessage(ReplaySystem.PREFIX + "Loading replay ¤e" + name + "¤7...");
+			p.sendMessage(ReplaySystem.PREFIX + "Loading replay Â§e" + name + "Â§7...");
 			try {
 				Replay replay = ReplaySaver.load(args[1]);
-				p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration ¤e" + (replay.getData().getDuration() / 20) + "¤7 seconds.");
+				p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration Â§e" + (replay.getData().getDuration() / 20) + "Â§7 seconds.");
 				replay.play(p);
 			} catch (Exception e) {
 				e.printStackTrace();
 				
-				p.sendMessage(ReplaySystem.PREFIX + "¤cError while loading ¤o" + name + ".replay. ¤r¤cCheck console for more details.");
+				p.sendMessage(ReplaySystem.PREFIX + "Â§cError while loading Â§o" + name + ".replay. Â§rÂ§cCheck console for more details.");
 			}
 		} else {
-			p.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
+			p.sendMessage(ReplaySystem.PREFIX + "Â§cReplay not found.");
 		}
 		
 		return true;

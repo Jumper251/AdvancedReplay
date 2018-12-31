@@ -31,14 +31,14 @@ public class ReplayStopCommand extends SubCommand {
 		
 		if (ReplayManager.activeReplays.containsKey(name) && ReplayManager.activeReplays.get(name).isRecording()) {
 			Replay replay = ReplayManager.activeReplays.get(name);
-			cs.sendMessage(ReplaySystem.PREFIX + "Saving replay ¤e" + name + "¤7...");
+			cs.sendMessage(ReplaySystem.PREFIX + "Saving replay Â§e" + name + "Â§7...");
 			replay.getRecorder().stop(true);
 			
 			String path = ReplaySaver.replaySaver instanceof DefaultReplaySaver ? ReplaySystem.getInstance().getDataFolder() + "/replays/" + name + ".replay" : null;
-			cs.sendMessage(ReplaySystem.PREFIX + "¤7Successfully saved replay" + (path != null ? " to ¤o" + path : ""));
+			cs.sendMessage(ReplaySystem.PREFIX + "Â§7Successfully saved replay" + (path != null ? " to Â§o" + path : ""));
 			
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
+			cs.sendMessage(ReplaySystem.PREFIX + "Â§cReplay not found.");
 		}
 		
 		return true;

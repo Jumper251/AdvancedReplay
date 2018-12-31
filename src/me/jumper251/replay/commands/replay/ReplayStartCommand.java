@@ -31,11 +31,11 @@ public class ReplayStartCommand extends SubCommand {
 			if (!ReplaySaver.exists(name) && !ReplayManager.activeReplays.containsKey(name)) {
 				 ReplayAPI.getInstance().recordReplay(name);
 				 
-				 cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully started recording ¤e" + name + "¤7.\n¤7Use ¤6/Replay stop " + name + "¤7 to save it.");
-				 cs.sendMessage("¤7INFO: You are recording all online players.");
+				 cs.sendMessage(ReplaySystem.PREFIX + "Â§aSuccessfully started recording Â§e" + name + "Â§7.\nÂ§7Use Â§6/Replay stop " + name + "Â§7 to save it.");
+				 cs.sendMessage("Â§7INFO: You are recording all online players.");
 				 
 			} else {
-				cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay already exists.");
+				cs.sendMessage(ReplaySystem.PREFIX + "Â§cReplay already exists.");
 			}
 			
 		} else {
@@ -53,11 +53,11 @@ public class ReplayStartCommand extends SubCommand {
 				if (players.length > 0) {
 					ReplayAPI.getInstance().recordReplay(name, players);
 				 
-					cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully started recording ¤e" + name + "¤7.\n¤7Use ¤6/Replay stop " + name + "¤7 to save it.");
+					cs.sendMessage(ReplaySystem.PREFIX + "Â§aSuccessfully started recording Â§e" + name + "Â§7.\nÂ§7Use Â§6/Replay stop " + name + "Â§7 to save it.");
 				}
 				 
 			} else {
-				cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay already exists.");
+				cs.sendMessage(ReplaySystem.PREFIX + "Â§cReplay already exists.");
 			}
 		} 
 		

@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
+import me.jumper251.replay.utils.fetcher.Acceptor;
+import me.jumper251.replay.utils.fetcher.Consumer;
 
 
 

@@ -27,9 +27,9 @@ public class ReplayDeleteCommand extends SubCommand {
 		
 		if (ReplaySaver.exists(name)) {
 			ReplaySaver.delete(name);
-			cs.sendMessage(ReplaySystem.PREFIX + "¤aSuccessfully deleted replay.");
+			cs.sendMessage(ReplaySystem.PREFIX + "Â§aSuccessfully deleted replay.");
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "¤cReplay not found.");
+			cs.sendMessage(ReplaySystem.PREFIX + "Â§cReplay not found.");
 		}
 		
 		return true;

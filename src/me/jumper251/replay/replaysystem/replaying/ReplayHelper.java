@@ -33,7 +33,7 @@ public class ReplayHelper {
 		ItemStack pause = new ItemStack(Material.SKULL_ITEM,1,(short)3);
 
 		SkullMeta pauseMeta = (SkullMeta) pause.getItemMeta();
-		pauseMeta.setDisplayName("¤cPause");
+		pauseMeta.setDisplayName("Â§cPause");
 		pauseMeta.setOwner("Push_red_button");
 		pause.setItemMeta(pauseMeta);
 		
@@ -41,18 +41,18 @@ public class ReplayHelper {
 	}
 	
 	public static ItemStack getResumeItem() {
-		return creatItem(Material.SLIME_BLOCK, "¤aResume");
+		return creatItem(Material.SLIME_BLOCK, "Â§aResume");
 	}
 	
 	public static void createTeleporter(Player player, Replayer replayer) {
-		Inventory inv = Bukkit.createInventory(null, ((int)replayer.getNPCList().size() / 9) > 0 ? ((int)Math.floor(replayer.getNPCList().size() / 9)) * 9 : 9 , "¤7Teleporter");
+		Inventory inv = Bukkit.createInventory(null, ((int)replayer.getNPCList().size() / 9) > 0 ? ((int)Math.floor(replayer.getNPCList().size() / 9)) * 9 : 9 , "Â§7Teleporter");
 		
 		int index = 0;
 		
 		for (String name : replayer.getNPCList().keySet()) {
 			ItemStack stack = new ItemStack(Material.SKULL_ITEM,1,(short)3);
 			SkullMeta meta = (SkullMeta) stack.getItemMeta();
-			meta.setDisplayName("¤6" + name);
+			meta.setDisplayName("Â§6" + name);
 			meta.setOwner(name);
 			stack.setItemMeta(meta);
 			
