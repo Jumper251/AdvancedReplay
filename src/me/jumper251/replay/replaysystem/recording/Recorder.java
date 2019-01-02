@@ -48,7 +48,7 @@ public class Recorder {
 	
 	private ReplayData data;
 	
-	BukkitRunnable run;
+	private BukkitRunnable run;
 	private int currentTick;
 	private PacketRecorder packetRecorder;
 	

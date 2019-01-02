@@ -22,11 +22,14 @@ public class ReplaySession {
 	
 	private Location start;
 	
+	private ReplayPacketListener packetListener;
+	
 	public ReplaySession(Replayer replayer) {
 		this.replayer = replayer;
 		
 		this.player = this.replayer.getWatchingPlayer();
 		
+		this.packetListener = new ReplayPacketListener(replayer);
 		this.startSession();
 	}
 	
@@ -81,6 +84,7 @@ public class ReplaySession {
 			ReplayHelper.replaySessions.remove(this.player.getName());
 		}
 		
+		this.packetListener.unregister();
 
 		
 		new BukkitRunnable() {
@@ -110,5 +114,9 @@ public class ReplaySession {
 				
 			}
 		}.runTask(ReplaySystem.getInstance());
+	}
+	
+	public ReplayPacketListener getPacketListener() {
+		return packetListener;
 	}
 }

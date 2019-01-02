@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 
 
+
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 
@@ -24,12 +25,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
+import me.jumper251.replay.replaysystem.replaying.ReplayPacketListener;
 import me.jumper251.replay.replaysystem.replaying.Replayer;
 import me.jumper251.replay.replaysystem.utils.entities.INPC;
 
@@ -252,6 +256,22 @@ public class ReplayListener extends AbstractListener {
 				}
 			}.runTaskLater(ReplaySystem.getInstance(), 20);
 		}
+	}
+	
+	@EventHandler
+	public void onSneak(PlayerToggleSneakEvent e) {
+		Player p = e.getPlayer();
+		if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+			ReplayPacketListener packetListener = ReplayHelper.replaySessions.get(p.getName()).getSession().getPacketListener();
+			
+			if (packetListener.getPrevious() != -1) {
+				packetListener.setCamera(p, p.getEntityId(), packetListener.getPrevious());
+				
+				p.setAllowFlight(true);
+			}
+		}
+
+
 	}
 	
 	@EventHandler

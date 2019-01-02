@@ -174,7 +174,7 @@ public class ReplayingUtils {
 					blockChange = new BlockChangeData(blockChange.getLocation(), blockChange.getAfter(), blockChange.getBefore());
 				}
 				
-				setBlockChange(blockChange, npc.getId());
+				setBlockChange(blockChange);
 			}
 			
 			if (action.getPacketData() instanceof BedEnterData) {
@@ -417,7 +417,7 @@ public class ReplayingUtils {
 		}
 	}
 	
-	private void setBlockChange(BlockChangeData blockChange, int entID) {
+	private void setBlockChange(BlockChangeData blockChange) {
 		final Location loc = LocationData.toLocation(blockChange.getLocation());
 		
 		new BukkitRunnable() {

@@ -22,11 +22,7 @@ public class ReplayManager {
 	}
 	
 	private static void registerCommands() {
-		ReplaySystem.getInstance().getCommand("replay").setExecutor(new ReplayCommand());;
-	}
-	
-	public static void addMetrics() {
-		
+		ReplaySystem.getInstance().getCommand("replay").setExecutor(new ReplayCommand());
 	}
 
 }

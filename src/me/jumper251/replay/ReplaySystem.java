@@ -29,7 +29,7 @@ public class ReplaySystem extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		for (Replay replay : ReplayManager.activeReplays.values()) {
-			if (replay.isRecording()) {
+		    if (replay.isRecording()) {
 				replay.getRecorder().stop(ConfigManager.SAVE_STOP);
 			}
 		}
