@@ -36,7 +36,7 @@ public class ReplayPacketListener extends AbstractListener {
 		
 		if (!isRegistered()) register();
 	}
-	
+
 	@Override
 	public void register() {
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.NORMAL, PacketType.Play.Client.USE_ENTITY, PacketType.Play.Server.ENTITY_DESTROY) {

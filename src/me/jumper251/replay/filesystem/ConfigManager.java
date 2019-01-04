@@ -20,9 +20,10 @@ public class ConfigManager {
 	
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
+	public static boolean RECORD_CHAT;
 	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY;
 	
-	public static String DEATH_MESSAGE, LEAVE_MESSAGE;
+	public static String DEATH_MESSAGE, LEAVE_MESSAGE, CHAT_FORMAT;
 	
 	public static void loadConfigs() {
 		if (!file.exists()) {
@@ -40,7 +41,9 @@ public class ConfigManager {
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
 			cfg.set("recording.entities.enabled", false);
-			cfg.set("recording.entities.items.enabled", true);
+			cfg.set("recording.chat.enabled", false);
+			cfg.set("recording.chat.format", "&r<{name}> {message}");
+
 
 			try {
 				cfg.save(file);
@@ -61,11 +64,14 @@ public class ConfigManager {
 		
 		DEATH_MESSAGE = cfg.getString("general.death_message");
 		LEAVE_MESSAGE = cfg.getString("general.quit_message");
+		CHAT_FORMAT = cfg.getString("recording.chat.format");
 
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");
 		RECORD_ENTITIES = cfg.getBoolean("recording.entities.enabled");
+		RECORD_CHAT = cfg.getBoolean("recording.chat.enabled");
+
 
 	}
 	

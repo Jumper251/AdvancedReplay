@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.recording;
 import java.util.Set;
 
 
+import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -18,32 +19,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
-import me.jumper251.replay.replaysystem.data.types.AnimationData;
-import me.jumper251.replay.replaysystem.data.types.BedEnterData;
-import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
-import me.jumper251.replay.replaysystem.data.types.EntityAnimationData;
-import me.jumper251.replay.replaysystem.data.types.InvData;
-import me.jumper251.replay.replaysystem.data.types.ItemData;
-import me.jumper251.replay.replaysystem.data.types.LocationData;
-import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
-import me.jumper251.replay.replaysystem.data.types.ProjectileData;
-import me.jumper251.replay.replaysystem.data.types.WorldChangeData;
 import me.jumper251.replay.replaysystem.utils.ItemUtils;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MaterialBridge;
@@ -197,7 +178,18 @@ public class RecordingListener extends AbstractListener {
 			}
 		}
 	}
-	
+
+	@EventHandler
+	public void onChat(AsyncPlayerChatEvent e) {
+		Player p = e.getPlayer();
+		if (recorder.getPlayers().contains(p.getName())) {
+
+			this.packetRecorder.addData(p.getName(), new ChatData(e.getMessage()));
+		}
+
+	}
+
+
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBed(PlayerBedEnterEvent e) {
 		Player p = e.getPlayer();

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,15 +25,6 @@ import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
-import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
-import me.jumper251.replay.replaysystem.data.types.EntityAnimationData;
-import me.jumper251.replay.replaysystem.data.types.EntityData;
-import me.jumper251.replay.replaysystem.data.types.EntityItemData;
-import me.jumper251.replay.replaysystem.data.types.EntityMovingData;
-import me.jumper251.replay.replaysystem.data.types.LocationData;
-import me.jumper251.replay.replaysystem.data.types.PacketData;
-import me.jumper251.replay.replaysystem.data.types.SignatureData;
-import me.jumper251.replay.replaysystem.data.types.SpawnData;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.ReplayManager;
 import me.jumper251.replay.utils.fetcher.JsonData;
@@ -92,6 +84,8 @@ public class Recorder {
 						if (packetData instanceof BlockChangeData && !ConfigManager.RECORD_BLOCKS) continue;
 						if (packetData instanceof EntityItemData && !ConfigManager.RECORD_ITEMS) continue;
 						if ((packetData instanceof EntityData || packetData instanceof EntityMovingData || packetData instanceof EntityAnimationData) && !ConfigManager.RECORD_ENTITIES) continue;
+						if (packetData instanceof ChatData && !ConfigManager.RECORD_CHAT) continue;
+
 
 						ActionData actionData = new ActionData(currentTick, ActionType.PACKET, name, packetData);
 						addData(currentTick, actionData);

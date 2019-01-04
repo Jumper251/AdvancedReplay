@@ -233,7 +233,7 @@ public class ReplayListener extends AbstractListener {
 		}
 		
 	}
-	
+
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent e) {
 		Player p = e.getPlayer();

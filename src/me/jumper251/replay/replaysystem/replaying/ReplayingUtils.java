@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -37,23 +38,6 @@ import me.jumper251.replay.filesystem.MessageBuilder;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
-import me.jumper251.replay.replaysystem.data.types.AnimationData;
-import me.jumper251.replay.replaysystem.data.types.BedEnterData;
-import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
-import me.jumper251.replay.replaysystem.data.types.EntityActionData;
-import me.jumper251.replay.replaysystem.data.types.EntityAnimationData;
-import me.jumper251.replay.replaysystem.data.types.EntityData;
-import me.jumper251.replay.replaysystem.data.types.EntityItemData;
-import me.jumper251.replay.replaysystem.data.types.EntityMovingData;
-import me.jumper251.replay.replaysystem.data.types.FishingData;
-import me.jumper251.replay.replaysystem.data.types.InvData;
-import me.jumper251.replay.replaysystem.data.types.LocationData;
-import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
-import me.jumper251.replay.replaysystem.data.types.MovingData;
-import me.jumper251.replay.replaysystem.data.types.ProjectileData;
-import me.jumper251.replay.replaysystem.data.types.SpawnData;
-import me.jumper251.replay.replaysystem.data.types.VelocityData;
-import me.jumper251.replay.replaysystem.data.types.WorldChangeData;
 import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
@@ -129,7 +113,16 @@ public class ReplayingUtils {
 					replayer.getWatchingPlayer().playSound(npc.getLocation(), Sound.ENTITY_PLAYER_HURT, 5F, 5.0F);
 				}
 			}
-			
+
+			if (action.getPacketData() instanceof ChatData) {
+				ChatData chatData = (ChatData) action.getPacketData();
+
+				replayer.sendMessage(new MessageBuilder(ConfigManager.CHAT_FORMAT)
+						.set("name", action.getName())
+						.set("message", chatData.getMessage())
+						.build());
+			}
+
 			if (action.getPacketData() instanceof InvData) {
 				InvData invData = (InvData) action.getPacketData();
 				
