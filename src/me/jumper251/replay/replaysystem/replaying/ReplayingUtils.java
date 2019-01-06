@@ -59,6 +59,7 @@ public class ReplayingUtils {
 	private ActionData lastSpawnAction;
 	
 	private HashMap<Integer, Entity> itemEntities;
+	
 	private HashMap<Integer, Integer> hooks;
 
 	public ReplayingUtils(Replayer replayer) {
