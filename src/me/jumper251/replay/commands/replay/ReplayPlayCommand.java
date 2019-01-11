@@ -15,6 +15,7 @@ import me.jumper251.replay.commands.SubCommand;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
+import me.jumper251.replay.utils.fetcher.Consumer;
 
 public class ReplayPlayCommand extends SubCommand {
 
@@ -33,9 +34,15 @@ public class ReplayPlayCommand extends SubCommand {
 		if (ReplaySaver.exists(name) && !ReplayHelper.replaySessions.containsKey(p.getName())) {
 			p.sendMessage(ReplaySystem.PREFIX + "Loading replay §e" + name + "§7...");
 			try {
-				Replay replay = ReplaySaver.load(args[1]);
-				p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration §e" + (replay.getData().getDuration() / 20) + "§7 seconds.");
-				replay.play(p);
+				ReplaySaver.load(args[1], new Consumer<Replay>() {
+					
+					@Override
+					public void accept(Replay replay) {
+						p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration §e" + (replay.getData().getDuration() / 20) + "§7 seconds.");
+						replay.play(p);
+					}
+				});
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				

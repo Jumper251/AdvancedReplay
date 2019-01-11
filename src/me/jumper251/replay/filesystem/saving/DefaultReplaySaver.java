@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -17,11 +19,15 @@ import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.utils.LogUtils;
+import me.jumper251.replay.utils.fetcher.Acceptor;
+import me.jumper251.replay.utils.fetcher.Consumer;
 
-public class DefaultReplaySaver implements IReplaySaver{
+public class DefaultReplaySaver implements IReplaySaver {
 
 	public final static File DIR = new File(ReplaySystem.getInstance().getDataFolder() + "/replays/");
 	private boolean reformatting;
+	
+	private ExecutorService pool = Executors.newCachedThreadPool();
 	
 	@Override
 	public void saveReplay(Replay replay) {
@@ -54,29 +60,36 @@ public class DefaultReplaySaver implements IReplaySaver{
 	
 
 	@Override
-	public Replay loadReplay(String replayName) {
-		try {
-			
-			File file = new File(DIR, replayName + ".replay");
-			
-			FileInputStream fileIn = new FileInputStream(file);
-			GZIPInputStream gIn = new GZIPInputStream(fileIn);
-			ObjectInputStream objectIn = new ObjectInputStream(gIn);
-			
-			ReplayData data = (ReplayData) objectIn.readObject();
-
-			objectIn.close();
-			gIn.close();
-			fileIn.close();
-
-			
-			return new Replay(replayName, data);
-			
-		} catch (Exception e) {
-			if(!reformatting) e.printStackTrace();
-		}
+	public void loadReplay(String replayName, Consumer<Replay> consumer) {
 		
-		return null;
+		this.pool.execute(new Acceptor<Replay>(consumer) {
+
+			@Override
+			public Replay getValue() {
+				try {
+					
+					File file = new File(DIR, replayName + ".replay");
+					
+					FileInputStream fileIn = new FileInputStream(file);
+					GZIPInputStream gIn = new GZIPInputStream(fileIn);
+					ObjectInputStream objectIn = new ObjectInputStream(gIn);
+					
+					ReplayData data = (ReplayData) objectIn.readObject();
+
+					objectIn.close();
+					gIn.close();
+					fileIn.close();
+
+					
+					return new Replay(replayName, data);
+					
+				} catch (Exception e) {
+					if(!reformatting) e.printStackTrace();
+				}
+				
+				return null;
+			}
+		});
 	}
 
 	@Override
@@ -107,29 +120,35 @@ public class DefaultReplaySaver implements IReplaySaver{
 	}
 	
 	private void reformat(String replayName) {
-		Replay old = loadReplay(replayName);
-		if (old == null) {
-			LogUtils.log("Reformatting: " + replayName);
-			
-			try {
-				File file = new File(DIR, replayName + ".replay");
-				
-				FileInputStream fileIn = new FileInputStream(file);
-				ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-				
-				ReplayData data = (ReplayData) objectIn.readObject();
+		loadReplay(replayName, new Consumer<Replay>() {
 
-				objectIn.close();
-				fileIn.close();
-
-				deleteReplay(replayName);
-				saveReplay(new Replay(replayName, data));
+			@Override
+			public void accept(Replay old) {
 				
-			} catch (Exception e) {
-				e.printStackTrace();
+				if (old == null) {
+					LogUtils.log("Reformatting: " + replayName);
+					
+					try {
+						File file = new File(DIR, replayName + ".replay");
+						
+						FileInputStream fileIn = new FileInputStream(file);
+						ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+						
+						ReplayData data = (ReplayData) objectIn.readObject();
+
+						objectIn.close();
+						fileIn.close();
+
+						deleteReplay(replayName);
+						saveReplay(new Replay(replayName, data));
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				
+				}				
 			}
-		
-		}
+		});
 	}
 
 

@@ -9,6 +9,7 @@ import java.util.Map;
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,6 +26,7 @@ import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
+import me.jumper251.replay.replaysystem.data.ReplayInfo;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.ReplayManager;
 import me.jumper251.replay.utils.fetcher.JsonData;
@@ -44,10 +46,13 @@ public class Recorder {
 	private int currentTick;
 	private PacketRecorder packetRecorder;
 	
-	public Recorder(Replay replay, List<Player> players) {
+	private CommandSender sender;
+	
+	public Recorder(Replay replay, List<Player> players, CommandSender sender) {
 		this.players = new ArrayList<String>();
 		this.data = new ReplayData();
 		this.replay = replay;
+		this.sender = sender;
 		
 		HashMap<String, PlayerWatcher> tmpWatchers = new HashMap<String, PlayerWatcher>();
 		for (Player player: players) {
@@ -139,6 +144,7 @@ public class Recorder {
 			this.data.setDuration(this.currentTick);
 			this.data.setWatchers(new HashMap<String, PlayerWatcher>());
 			this.replay.setData(this.data);
+			this.replay.setReplayInfo(new ReplayInfo(this.replay.getId(), this.sender.getName(), System.currentTimeMillis(), this.currentTick));
 			ReplaySaver.save(this.replay);
 		} else {
 			this.data.getActions().clear();

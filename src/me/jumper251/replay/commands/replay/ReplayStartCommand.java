@@ -29,7 +29,7 @@ public class ReplayStartCommand extends SubCommand {
 		
 		if (args.length == 2) {
 			if (!ReplaySaver.exists(name) && !ReplayManager.activeReplays.containsKey(name)) {
-				 ReplayAPI.getInstance().recordReplay(name);
+				 ReplayAPI.getInstance().recordReplay(name, cs);
 				 
 				 cs.sendMessage(ReplaySystem.PREFIX + "§aSuccessfully started recording §e" + name + "§7.\n§7Use §6/Replay stop " + name + "§7 to save it.");
 				 cs.sendMessage("§7INFO: You are recording all online players.");
@@ -51,7 +51,7 @@ public class ReplayStartCommand extends SubCommand {
 				Player[] players = new Player[playerList.size()];
 				players = playerList.toArray(players);
 				if (players.length > 0) {
-					ReplayAPI.getInstance().recordReplay(name, players);
+					ReplayAPI.getInstance().recordReplay(name, cs, players);
 				 
 					cs.sendMessage(ReplaySystem.PREFIX + "§aSuccessfully started recording §e" + name + "§7.\n§7Use §6/Replay stop " + name + "§7 to save it.");
 				}

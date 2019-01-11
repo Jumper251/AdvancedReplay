@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.jumper251.replay.filesystem.saving.IReplaySaver;
@@ -12,6 +13,7 @@ import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.utils.ReplayManager;
+import me.jumper251.replay.utils.fetcher.Consumer;
 
 public class ReplayAPI {
 
@@ -32,7 +34,7 @@ public class ReplayAPI {
 	}
 	
 	
-	public Replay recordReplay(String name, Player... players) {
+	public Replay recordReplay(String name, CommandSender sender, Player... players) {
 		List<Player> toRecord = new ArrayList<Player>();
 		
 		if (players != null && players.length > 0) { 
@@ -45,7 +47,7 @@ public class ReplayAPI {
 		
 		Replay replay = new Replay();
 		if (name != null) replay.setId(name);
-		replay.recordAll(toRecord);
+		replay.recordAll(toRecord, sender);
 		
 		return replay;
 	}
@@ -59,7 +61,14 @@ public class ReplayAPI {
 	
 	public void playReplay(String name, Player watcher) {
 		if (ReplaySaver.exists(name) && !ReplayHelper.replaySessions.containsKey(watcher.getName())) {
-			ReplaySaver.load(name).play(watcher);
+			ReplaySaver.load(name, new Consumer<Replay>() {
+				
+				@Override
+				public void accept(Replay replay) {
+					replay.play(watcher);
+					
+				}
+			});
 		}
 	}
 	

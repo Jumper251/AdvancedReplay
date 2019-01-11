@@ -1,6 +1,7 @@
 package me.jumper251.replay.commands.replay;
 
 import java.io.File;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -9,15 +10,23 @@ import java.util.stream.IntStream;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.commands.AbstractCommand;
 import me.jumper251.replay.commands.CommandPagination;
 import me.jumper251.replay.commands.IPaginationExecutor;
 import me.jumper251.replay.commands.SubCommand;
+import me.jumper251.replay.filesystem.saving.DatabaseReplaySaver;
 import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
+import me.jumper251.replay.replaysystem.data.ReplayInfo;
 import me.jumper251.replay.utils.MathUtils;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.HoverEvent.Action;
 
 public class ReplayListCommand extends SubCommand {
 
@@ -44,7 +53,21 @@ public class ReplayListCommand extends SubCommand {
 
 				@Override
 				public void print(String element) {
-					cs.sendMessage("§e " + element + (getCreationDate(element) != null ? "§7 - Date: §6" + format.format(getCreationDate(element)) : null));
+					String message = "§e " + element + (getCreationDate(element) != null ? "§7 - Date: §6" + format.format(getCreationDate(element)) : "");
+					
+					if (cs instanceof Player && DatabaseReplaySaver.getInfo(element) != null && DatabaseReplaySaver.getInfo(element).getCreator() != null) {
+						ReplayInfo info  = DatabaseReplaySaver.getInfo(element);
+						
+						BaseComponent[] comps = new ComponentBuilder(message)
+								.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder("§7Replay §e§l" + info.getID() + "\n\n§7Created by: §6" + info.getCreator() + "\n§7Duration: §6" + (info.getDuration() / 20) + " §8sec").create()))
+								.event(new ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + info.getID()))
+								.create();
+						
+						((Player)cs).spigot().sendMessage(comps);
+						
+					} else {	
+						cs.sendMessage(message);
+					}
 					
 				}
 			});
@@ -59,6 +82,10 @@ public class ReplayListCommand extends SubCommand {
 	private Date getCreationDate(String replay) {
 		if (ReplaySaver.replaySaver instanceof DefaultReplaySaver) {
 			return new Date(new File(DefaultReplaySaver.DIR, replay + ".replay").lastModified());
+		}
+		
+		if (ReplaySaver.replaySaver instanceof DatabaseReplaySaver) {
+			return new Date(DatabaseReplaySaver.replayCache.get(replay).getTime());
 		}
 		
 		return null;

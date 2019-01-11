@@ -3,9 +3,14 @@ package me.jumper251.replay.replaysystem;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.replaysystem.data.ReplayData;
+import me.jumper251.replay.replaysystem.data.ReplayInfo;
 import me.jumper251.replay.replaysystem.recording.Recorder;
 import me.jumper251.replay.replaysystem.replaying.Replayer;
 import me.jumper251.replay.utils.ReplayManager;
@@ -16,6 +21,8 @@ public class Replay {
 	private String id;
 	
 	private ReplayData data;
+	
+	private ReplayInfo replayInfo;
 	
 	private Recorder recorder;
 	private Replayer replayer;
@@ -34,12 +41,12 @@ public class Replay {
 		this.data = data;
 	}
 	
-	public void record(Player... players) {
-		recordAll(Arrays.asList(players));
+	public void record(CommandSender sender, Player... players) {
+		recordAll(Arrays.asList(players), sender);
 	}
 	
-	public void recordAll(List<Player> players) {
-		this.recorder = new Recorder(this, players);
+	public void recordAll(List<Player> players, CommandSender sender) {
+		this.recorder = new Recorder(this, players, sender);
 		this.recorder.start();
 		this.isRecording = true;
 		
@@ -48,10 +55,25 @@ public class Replay {
 	}
 	
 	public void play(Player watcher) {
+		if (!Bukkit.isPrimaryThread()) {
+			new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+					startReplay(watcher);
+				}
+			}.runTask(ReplaySystem.getInstance());
+		
+		} else {
+			startReplay(watcher);
+		}
+		
+	}
+		
+	private void startReplay(Player watcher) {
 		this.replayer = new Replayer(this, watcher);
 		this.replayer.start();
 		this.isPlaying = true;
-		
 	}
 	
 	public String getId() {
@@ -92,5 +114,13 @@ public class Replay {
 	
 	public void setPlaying(boolean isPlaying) {
 		this.isPlaying = isPlaying;
+	}
+	
+	public void setReplayInfo(ReplayInfo replayInfo) {
+		this.replayInfo = replayInfo;
+	}
+	
+	public ReplayInfo getReplayInfo() {
+		return replayInfo;
 	}
 }

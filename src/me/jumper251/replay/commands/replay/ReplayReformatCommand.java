@@ -15,6 +15,8 @@ public class ReplayReformatCommand extends SubCommand {
 
 	public ReplayReformatCommand(AbstractCommand parent) {
 		super(parent, "reformat", "Reformat the replays", "reformat", false);
+		
+		this.setEnabled(false);
 	}
 
 	@Override

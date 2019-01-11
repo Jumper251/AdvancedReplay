@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.jumper251.replay.replaysystem.Replay;
+import me.jumper251.replay.utils.fetcher.Consumer;
 
 public class ReplaySaver {
 
@@ -27,11 +28,11 @@ public class ReplaySaver {
 		}
 	}
 	
-	public static Replay load(String replayName) {
+	public static void load(String replayName, Consumer<Replay> consumer) {
 		if (isRegistered()) {
-			return replaySaver.loadReplay(replayName);
+			replaySaver.loadReplay(replayName, consumer);
 		} else {
-			return null;
+			consumer.accept(null);;
 		}
 	}
 	
