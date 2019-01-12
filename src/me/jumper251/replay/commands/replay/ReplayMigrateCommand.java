@@ -51,7 +51,7 @@ public class ReplayMigrateCommand extends SubCommand {
 			
 			cs.sendMessage(ReplaySystem.PREFIX + "§7Migrating replays to §e" + option);
 			for (String replayName : ReplaySaver.getReplays()) {
-				this.migrate(replayName, option, migrationSaver);
+				this.migrate(replayName, migrationSaver);
 			}
 			
 			
@@ -62,7 +62,7 @@ public class ReplayMigrateCommand extends SubCommand {
 		return true;
 	}
 	
-	private void migrate(String replayName, String option, IReplaySaver saver) {
+	private void migrate(String replayName, IReplaySaver saver) {
 		
 		ReplaySaver.load(replayName, new Consumer<Replay>() {
 			

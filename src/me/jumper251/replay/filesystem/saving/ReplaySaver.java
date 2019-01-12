@@ -32,7 +32,7 @@ public class ReplaySaver {
 		if (isRegistered()) {
 			replaySaver.loadReplay(replayName, consumer);
 		} else {
-			consumer.accept(null);;
+			consumer.accept(null);
 		}
 	}
 	

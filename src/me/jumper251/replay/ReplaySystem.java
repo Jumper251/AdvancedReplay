@@ -16,7 +16,7 @@ import me.jumper251.replay.utils.Updater;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
-public class ReplaySystem extends JavaPlugin{
+public class ReplaySystem extends JavaPlugin {
 
 	
 	public static ReplaySystem instance;
