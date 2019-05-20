@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.replaying;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +14,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import com.comphenix.packetwrapper.WrapperPlayServerTitle;
 import com.comphenix.protocol.wrappers.EnumWrappers.TitleAction;
+
+import me.jumper251.replay.filesystem.ItemConfig;
+import me.jumper251.replay.filesystem.ItemConfigOption;
+import me.jumper251.replay.filesystem.ItemConfigType;
+
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 
 
@@ -20,8 +26,25 @@ public class ReplayHelper {
 
 	public static HashMap<String, Replayer> replaySessions = new HashMap<String, Replayer>();
 	
-	public static ItemStack creatItem(Material material, String name) {
-		ItemStack stack = new ItemStack(material);
+	public static ItemStack createItem(ItemConfigOption option) {
+		String displayName = ChatColor.translateAlternateColorCodes('&', option.getName());
+		
+		ItemStack stack = createItem(option.getMaterial(), displayName, option.getData());
+		
+
+		if (option.getOwner() != null && stack.getItemMeta() instanceof SkullMeta) {
+ 
+			SkullMeta meta = (SkullMeta) stack.getItemMeta();
+			meta.setOwner(option.getOwner());
+			meta.setDisplayName(displayName);
+			stack.setItemMeta(meta);
+		}
+		
+		return stack;
+	}
+	
+	public static ItemStack createItem(Material material, String name, int data) {
+		ItemStack stack = new ItemStack(material, 1, (byte) data);
 		ItemMeta meta = stack.getItemMeta();
 		meta.setDisplayName(name);
 		stack.setItemMeta(meta);
@@ -30,18 +53,11 @@ public class ReplayHelper {
 	}
 	
 	public static ItemStack getPauseItem() {
-		ItemStack pause = new ItemStack(Material.SKULL_ITEM,1,(short)3);
-
-		SkullMeta pauseMeta = (SkullMeta) pause.getItemMeta();
-		pauseMeta.setDisplayName("§cPause");
-		pauseMeta.setOwner("Push_red_button");
-		pause.setItemMeta(pauseMeta);
-		
-		return pause;
+		return createItem(ItemConfig.getItem(ItemConfigType.PAUSE));
 	}
 	
 	public static ItemStack getResumeItem() {
-		return creatItem(Material.SLIME_BLOCK, "§aResume");
+		return createItem(ItemConfig.getItem(ItemConfigType.RESUME));
 	}
 	
 	public static void createTeleporter(Player player, Replayer replayer) {

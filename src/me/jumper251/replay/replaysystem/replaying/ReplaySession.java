@@ -1,16 +1,18 @@
 package me.jumper251.replay.replaysystem.replaying;
 
 import org.bukkit.Bukkit;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
+import me.jumper251.replay.filesystem.ItemConfig;
+import me.jumper251.replay.filesystem.ItemConfigOption;
+import me.jumper251.replay.filesystem.ItemConfigType;
 
 public class ReplaySession {
 
@@ -41,29 +43,20 @@ public class ReplaySession {
 		this.player.setFoodLevel(20);
 		this.player.getInventory().clear();
 		
-		ItemStack teleporter = ReplayHelper.creatItem(Material.COMPASS, "§7Teleport");
-		ItemStack time = ReplayHelper.creatItem(Material.WATCH, "§cSlow §8[§eRight§8] §aFast §8[§eShift Right§8]");
-		ItemStack leave = ReplayHelper.creatItem(Material.WOOD_DOOR, "§7Leave replay");
-		ItemStack backward = new ItemStack(Material.SKULL_ITEM,1,(short)3);
-		ItemStack forward = new ItemStack(Material.SKULL_ITEM,1,(short)3);
-		
-		SkullMeta backMeta = (SkullMeta) backward.getItemMeta();
-		backMeta.setDisplayName("§c« §e10 seconds");
-		backMeta.setOwner("MHF_ArrowLeft");
-		backward.setItemMeta(backMeta);
-		
-		SkullMeta forwardMeta = (SkullMeta) forward.getItemMeta();
-		forwardMeta.setDisplayName("§a» §e10 seconds");
-		forwardMeta.setOwner("MHF_ArrowRight");
-		forward.setItemMeta(forwardMeta);
+		ItemConfigOption teleport = ItemConfig.getItem(ItemConfigType.TELEPORT);
+		ItemConfigOption time = ItemConfig.getItem(ItemConfigType.SPEED);
+		ItemConfigOption leave = ItemConfig.getItem(ItemConfigType.LEAVE);
+		ItemConfigOption backward = ItemConfig.getItem(ItemConfigType.BACKWARD);
+		ItemConfigOption forward = ItemConfig.getItem(ItemConfigType.FORWARD);
+		ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.RESUME);
 
 		
-		this.player.getInventory().setItem(0, teleporter);
-		this.player.getInventory().setItem(1, time);
-		this.player.getInventory().setItem(3, backward);
-		this.player.getInventory().setItem(4, ReplayHelper.getPauseItem());
-		this.player.getInventory().setItem(5, forward);
-		this.player.getInventory().setItem(8, leave);
+		this.player.getInventory().setItem(teleport.getSlot(), ReplayHelper.createItem(teleport));
+		this.player.getInventory().setItem(time.getSlot(), ReplayHelper.createItem(time));
+		this.player.getInventory().setItem(backward.getSlot(), ReplayHelper.createItem(backward));
+		this.player.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getPauseItem());
+		this.player.getInventory().setItem(forward.getSlot(), ReplayHelper.createItem(forward));
+		this.player.getInventory().setItem(leave.getSlot(), ReplayHelper.createItem(leave));
 		
 		this.player.setAllowFlight(true);
 		this.player.setFlying(true);

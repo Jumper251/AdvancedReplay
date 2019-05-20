@@ -26,6 +26,10 @@ public class ReplayStartCommand extends SubCommand {
 		if (args.length < 2) return false;
 		
 		String name = args[1];
+		if (name.length() > 40) {
+			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay name is too long.");
+			return true;
+		}
 		
 		if (args.length == 2) {
 			if (!ReplaySaver.exists(name) && !ReplayManager.activeReplays.containsKey(name)) {

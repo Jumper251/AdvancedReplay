@@ -7,8 +7,8 @@ import java.util.Arrays;
 
 
 
+
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,12 +26,15 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
+import me.jumper251.replay.filesystem.ItemConfig;
+import me.jumper251.replay.filesystem.ItemConfigOption;
+import me.jumper251.replay.filesystem.ItemConfigType;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.replaysystem.replaying.ReplayPacketListener;
 import me.jumper251.replay.replaysystem.replaying.Replayer;
@@ -50,34 +53,35 @@ public class ReplayListener extends AbstractListener {
 				
 				Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
 				if (p.getItemInHand() == null) return;
+				if (p.getItemInHand().getItemMeta() == null) return;
 				
-				if (p.getItemInHand().getType().getId() == 397) {
-					SkullMeta meta = (SkullMeta) p.getItemInHand().getItemMeta();
-					if (meta.getOwner().equalsIgnoreCase("Push_red_button")) {
-						replayer.setPaused(!replayer.isPaused());
-						ReplayHelper.sendTitle(p, null, "§c❙❙", 20);
+				ItemMeta meta = p.getItemInHand().getItemMeta();
+				ItemConfigType itemType = ItemConfig.getByIdAndName(p.getItemInHand().getType(), meta.getDisplayName().replaceAll("§", "&"));
+				
+				if (itemType == ItemConfigType.PAUSE) {
+					replayer.setPaused(!replayer.isPaused());
+					ReplayHelper.sendTitle(p, null, "§c❙❙", 20);
+				}
 					
-					}
-					
-					if (meta.getOwner().equalsIgnoreCase("MHF_ArrowRight")) {
-						replayer.getUtils().forward();
-						ReplayHelper.sendTitle(p, null, "§a»»", 20);
+				if (itemType == ItemConfigType.FORWARD) {
+					replayer.getUtils().forward();
+					ReplayHelper.sendTitle(p, null, "§a»»", 20);
 
-					}
-					if (meta.getOwner().equalsIgnoreCase("MHF_ArrowLeft")) {
-						replayer.getUtils().backward();
-						ReplayHelper.sendTitle(p, null, "§c««", 20);
+				}
+				if (itemType == ItemConfigType.BACKWARD) {
+					replayer.getUtils().backward();
+					ReplayHelper.sendTitle(p, null, "§c««", 20);
 
-					}
 				}
 				
-				if (p.getItemInHand().getType() == Material.SLIME_BLOCK) {
+				
+				if (itemType == ItemConfigType.RESUME) {
 					replayer.setPaused(!replayer.isPaused());
 					ReplayHelper.sendTitle(p, null, "§a➤", 20);
 
 				}
 				
-				if (p.getItemInHand().getType() == Material.WATCH) {
+				if (itemType == ItemConfigType.SPEED) {
 					if (p.isSneaking()) {
 						if (replayer.getSpeed() < 1) {
 							replayer.setSpeed(1);
@@ -98,19 +102,21 @@ public class ReplayListener extends AbstractListener {
 					
 				}
 				
-				if (p.getItemInHand().getType() == Material.WOOD_DOOR || p.getItemInHand().getType().getId() == 64) {
+				if (itemType == ItemConfigType.LEAVE) {
 					replayer.stop();
 				}
 				
-				if (p.getItemInHand().getType() == Material.COMPASS) {
+				if (itemType == ItemConfigType.TELEPORT) {
 					ReplayHelper.createTeleporter(p, replayer);
 				}
 				
-				if (p.getItemInHand().getType().getId() == 397 || p.getItemInHand().getType() == Material.SLIME_BLOCK) {
+				ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.RESUME);
+				
+				if (itemType == ItemConfigType.PAUSE || itemType == ItemConfigType.RESUME) {
 					if (replayer.isPaused()) {
-						p.getInventory().setItem(4, ReplayHelper.getResumeItem());
+						p.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getResumeItem());
 					} else {
-						p.getInventory().setItem(4, ReplayHelper.getPauseItem());
+						p.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getPauseItem());
 					}
 				}
 				

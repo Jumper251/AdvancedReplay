@@ -23,7 +23,7 @@ public class MySQLService extends DatabaseService {
 	
 	@Override
 	public void createReplayTable() {
-		database.update("CREATE TABLE IF NOT EXISTS " + NAME + " (id VARCHAR(300) PRIMARY KEY UNIQUE, creator VARCHAR(30), duration INT(255), time BIGINT(255), data LONGBLOB)");		
+		database.update("CREATE TABLE IF NOT EXISTS " + NAME + " (id VARCHAR(40) PRIMARY KEY UNIQUE, creator VARCHAR(30), duration INT(255), time BIGINT(255), data LONGBLOB)");		
 		
 	}
 

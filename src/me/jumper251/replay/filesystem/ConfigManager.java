@@ -60,6 +60,7 @@ public class ConfigManager {
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
 			cfg.set("recording.entities.enabled", false);
+			cfg.set("recording.entities.items.enabled", true);
 			cfg.set("recording.chat.enabled", false);
 			cfg.set("recording.chat.format", "&r<{name}> {message}");
 
@@ -70,8 +71,11 @@ public class ConfigManager {
 				e.printStackTrace();
 			}
 		}
+			
+		ItemConfig.loadConfig();
 		
 		loadData(true);
+		
 	}
 	
 	public static void loadData(boolean initial) {
@@ -106,11 +110,13 @@ public class ConfigManager {
 		}
 
 
+		ItemConfig.loadData();
 	}
 	
 	public static void reloadConfig() {
 		try {
 			cfg.load(file);
+			ItemConfig.cfg.load(ItemConfig.file);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
