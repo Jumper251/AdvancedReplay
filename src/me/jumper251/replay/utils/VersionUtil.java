@@ -10,13 +10,29 @@ public class VersionUtil {
 
 	public static String VERSION;
 	
+	public static String CLEAN_VERSION;
+	
 	static {
         String bpName = Bukkit.getServer().getClass().getPackage().getName();
          VERSION = bpName.substring(bpName.lastIndexOf(".") + 1, bpName.length());
+         
+         CLEAN_VERSION = VERSION.substring(0, VERSION.length() - 3);
 	}
 	
 	public static boolean isCompatible(VersionEnum ve){
 		return VERSION.toLowerCase().contains(ve.toString().toLowerCase());
+	}
+	
+	public static boolean isAbove(VersionEnum ve) {		
+		return VersionEnum.valueOf(CLEAN_VERSION.toUpperCase()).getOrder() >= ve.getOrder();
+	}
+	
+	public static boolean isBelow(VersionEnum ve) {
+		return VersionEnum.valueOf(CLEAN_VERSION.toUpperCase()).getOrder() <= ve.getOrder();
+	}
+	
+	public static boolean isBetween(VersionEnum ve1, VersionEnum ve2) {
+		return isAbove(ve1) && isBelow(ve2);
 	}
 	
 	public static Class<?> getNmsClass(String nmsClassName) throws ClassNotFoundException {
@@ -38,13 +54,24 @@ public class VersionUtil {
 
 	
 	public enum VersionEnum {
-		V1_8,
-		V1_9,
-		V1_10,
-		V1_11,
-		V1_12,
-		V1_13,
-		V1_14;
+
+		V1_8(1),
+		V1_9(2),
+		V1_10(3),
+		V1_11(4),
+		V1_12(5),
+		V1_13(6),
+		V1_14(7);
+		
+		private int order;
+		
+		private VersionEnum(int order) {
+			this.order = order;
+		}
+		
+		public int getOrder() {
+			return order;
+		}
 
 	}
 }

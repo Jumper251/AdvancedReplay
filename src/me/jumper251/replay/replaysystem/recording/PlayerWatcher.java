@@ -1,9 +1,6 @@
 package me.jumper251.replay.replaysystem.recording;
 
 import java.io.Serializable;
-
-
-
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
@@ -37,9 +34,17 @@ public class PlayerWatcher implements Serializable{
 			byte burnByte = (byte) (this.burning ? 0x01 : 0);
 			byte oldBlock = (byte) (this.blocking ? 0x10 : 0);
 			
+			if (VersionUtil.isAbove(VersionEnum.V1_13)) {
+				oldBlock = 0;
+			}
+			
 			byte value = (byte) (burnByte | sneakByte | oldBlock);
 			
 			builder.setValue(0, value);
+			
+			if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+				builder.setPoseField(this.sneaking ? "SNEAKING" : "STANDING");
+			}
 			
 		} else {
 			builder.resetValue();
@@ -48,8 +53,10 @@ public class PlayerWatcher implements Serializable{
 		if (!VersionUtil.isCompatible(VersionEnum.V1_8)) {
 			byte blockByte = (byte) (this.blocking ? 0x01 : 0);
 
-			if (VersionUtil.isCompatible(VersionEnum.V1_12) || VersionUtil.isCompatible(VersionEnum.V1_11) || VersionUtil.isCompatible(VersionEnum.V1_10) || VersionUtil.isCompatible(VersionEnum.V1_13)) {
+			if (VersionUtil.isBetween(VersionEnum.V1_10, VersionEnum.V1_13)) {
 				builder.setValue(6, blockByte);
+			} else if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+				builder.setValue(7, blockByte);
 			} else {
 				builder.setValue(5, blockByte);
 			}

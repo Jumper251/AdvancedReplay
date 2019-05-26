@@ -96,6 +96,7 @@ public class ReplayingUtils {
 				EntityActionData eaData = (EntityActionData) action.getPacketData();
 				if (eaData.getAction() == PlayerAction.START_SNEAKING) {
 					data.getWatcher(action.getName()).setSneaking(reversed ? false : true);
+
 					npc.setData(data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData())));
 				} else if (eaData.getAction() == PlayerAction.STOP_SNEAKING) {
 					data.getWatcher(action.getName()).setSneaking(reversed);
@@ -174,7 +175,20 @@ public class ReplayingUtils {
 			if (action.getPacketData() instanceof BedEnterData) {
 				BedEnterData bed = (BedEnterData) action.getPacketData();
 				
-				npc.sleep(LocationData.toLocation(bed.getLocation()));
+				if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+					npc.teleport(LocationData.toLocation(bed.getLocation()), true);
+					
+					npc.setData(new MetadataBuilder(npc.getData())
+							.setPoseField("SLEEPING")
+							.getData());
+					
+					npc.updateMetadata();
+					npc.teleport(LocationData.toLocation(bed.getLocation()), true);
+
+					
+				} else {
+					npc.sleep(LocationData.toLocation(bed.getLocation()));
+				}
 			}
 			
 			if (action.getPacketData() instanceof EntityItemData) {
@@ -430,13 +444,13 @@ public class ReplayingUtils {
 				if (id == 11) id = 10;
 				
 				if (ConfigManager.REAL_CHANGES) {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14)) {
 						loc.getBlock().setType(MaterialBridge.fromID(id), true);
 					} else {
 						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
 					}
 				} else {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14)) {
 						replayer.getWatchingPlayer().sendBlockChange(loc, MaterialBridge.fromID(id), (byte) subId);
 					} else {
 						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);

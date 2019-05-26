@@ -3,6 +3,7 @@ package me.jumper251.replay.commands.replay;
 import java.io.File;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,19 +42,22 @@ public class ReplayListCommand extends SubCommand {
 		
 		if (ReplaySaver.getReplays().size() > 0) {
 			int page = 1;
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 			if (args.length == 2 && MathUtils.isInt(args[1])) page = Integer.valueOf(args[1]);
 			
 
-			CommandPagination<String> pagination = new CommandPagination<>(ReplaySaver.getReplays(), 9);
+			List<String> replays = ReplaySaver.getReplays();
+			replays.sort(dateComparator());
+			
+			CommandPagination<String> pagination = new CommandPagination<>(replays, 9);
 			cs.sendMessage(ReplaySystem.PREFIX + "Available replays: §8(§6" + ReplaySaver.getReplays().size() + "§8) §7| Page: §e" + page + "§7/§e" + pagination.getPages());
 
 			pagination.printPage(page, new IPaginationExecutor<String>() {
 
 				@Override
 				public void print(String element) {
-					String message = "§e " + element + (getCreationDate(element) != null ? "§7 - Date: §6" + format.format(getCreationDate(element)) : "");
+					String message = String.format(" §6§o%s    §e%s", (getCreationDate(element) != null ? format.format(getCreationDate(element)) : ""), element);
 					
 					if (cs instanceof Player && DatabaseReplaySaver.getInfo(element) != null && DatabaseReplaySaver.getInfo(element).getCreator() != null) {
 						ReplayInfo info  = DatabaseReplaySaver.getInfo(element);
@@ -89,6 +93,17 @@ public class ReplayListCommand extends SubCommand {
 		}
 		
 		return null;
+	}
+	
+	private Comparator<String> dateComparator() {
+		return (s1, s2) -> {
+			if (getCreationDate(s1) != null && getCreationDate(s2) != null) {
+				return getCreationDate(s1).compareTo(getCreationDate(s2));
+			} else {
+				return 0;
+			}
+			
+		};
 	}
 	
 	@Override

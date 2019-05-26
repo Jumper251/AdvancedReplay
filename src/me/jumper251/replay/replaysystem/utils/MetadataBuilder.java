@@ -1,5 +1,8 @@
 package me.jumper251.replay.replaysystem.utils;
 
+
+import java.lang.reflect.Method;
+
 import org.bukkit.entity.Entity;
 
 
@@ -37,15 +40,23 @@ public class MetadataBuilder {
 	}
 	
 	public MetadataBuilder resetValue() {
-		return setValue(0, (byte) 0);
+		if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+			return setValue(0, (byte) 0).setPoseField("STANDING");
+		} else {
+			return setValue(0, (byte) 0);
+		}
 	}
 	
 	public MetadataBuilder setArrows(int amount) {
-		if (VersionUtil.isCompatible(VersionEnum.V1_10) || VersionUtil.isCompatible(VersionEnum.V1_11) || VersionUtil.isCompatible(VersionEnum.V1_12) || VersionUtil.isCompatible(VersionEnum.V1_13)) {
+		
+		if (VersionUtil.isBetween(VersionEnum.V1_10, VersionEnum.V1_13)) {
 			return setValue(10, amount);
+		} else if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+			return setValue(11, amount);
 		} else {
 			return setValue(9, amount);
 		}
+		
 	}
 	
 	public MetadataBuilder setGlowing() {
@@ -70,5 +81,21 @@ public class MetadataBuilder {
 	
 	public WrappedDataWatcher getData() {
 		return this.data;
+	}
+	
+	public MetadataBuilder setPoseField(String type) {
+		Object enumField = null;
+		
+		try {
+			Class<?> entityPose = Class.forName("net.minecraft.server." + VersionUtil.VERSION + ".EntityPose");
+			
+			Method valueOf = entityPose.getMethod("valueOf", String.class);
+			enumField = valueOf.invoke(null, type);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return setValue(6, enumField);
 	}
 }

@@ -1,5 +1,5 @@
 name: AdvancedReplay
-version: 1.3.4
+version: 1.4
 main: me.jumper251.replay.ReplaySystem
 author: Jumper251
 commands:

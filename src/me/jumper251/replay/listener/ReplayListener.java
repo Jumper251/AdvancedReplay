@@ -133,7 +133,8 @@ public class ReplayListener extends AbstractListener {
 			Player p = (Player) e.getWhoClicked();
 			if (ReplayHelper.replaySessions.containsKey(p.getName())) {
 				e.setCancelled(true);
-				if (e.getInventory().getName().equalsIgnoreCase("§7Teleporter")) {
+				
+				if (e.getView().getTitle().equalsIgnoreCase("§7Teleporter")) {
 					Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
 					
 					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getType().getId() == 397) {
