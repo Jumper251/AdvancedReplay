@@ -4,9 +4,9 @@ package me.jumper251.replay.replaysystem.replaying;
 
 import java.util.Arrays;
 
+
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
@@ -22,10 +22,10 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.comphenix.packetwrapper.AbstractPacket;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
@@ -41,6 +41,7 @@ import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
+import me.jumper251.replay.replaysystem.utils.entities.FishingUtils;
 import me.jumper251.replay.replaysystem.utils.entities.IEntity;
 import me.jumper251.replay.replaysystem.utils.entities.INPC;
 import me.jumper251.replay.replaysystem.utils.entities.PacketEntity;
@@ -87,8 +88,15 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof MovingData) {
 				MovingData movingData = (MovingData) action.getPacketData();
-				npc.teleport(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true);
-				npc.look(movingData.getYaw(), movingData.getPitch());
+				
+				if (VersionUtil.isAbove(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_8)) {
+					npc.move(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true, movingData.getYaw(), movingData.getPitch());
+				}
+				
+				if (VersionUtil.isBetween(VersionEnum.V1_9, VersionEnum.V1_14)) {
+					npc.teleport(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true);
+					npc.look(movingData.getYaw(), movingData.getPitch());
+				}
 		
 			}
 			
@@ -241,8 +249,16 @@ public class ReplayingUtils {
 				EntityMovingData entityMoving = (EntityMovingData) action.getPacketData();
 				if (replayer.getEntityList().containsKey(entityMoving.getId())) {
 					IEntity ent = replayer.getEntityList().get(entityMoving.getId());
-					ent.teleport(new Location(ent.getOrigin().getWorld(), entityMoving.getX(), entityMoving.getY(), entityMoving.getZ()), true);
-					ent.look(entityMoving.getYaw(), entityMoving.getPitch());
+					
+					if (VersionUtil.isAbove(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_8)) {
+						ent.move(new Location(ent.getOrigin().getWorld(), entityMoving.getX(), entityMoving.getY(), entityMoving.getZ()), true, entityMoving.getYaw(), entityMoving.getPitch());
+					}
+					
+					if (VersionUtil.isBetween(VersionEnum.V1_9, VersionEnum.V1_14)) {
+						ent.teleport(new Location(ent.getOrigin().getWorld(), entityMoving.getX(), entityMoving.getY(), entityMoving.getZ()), true);
+						ent.look(entityMoving.getYaw(), entityMoving.getPitch());
+					}
+		
 				}
 			}
 			
@@ -269,7 +285,6 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof FishingData) {
 				FishingData fishing = (FishingData) action.getPacketData();
-				
 				spawnProjectile(null, fishing, replayer.getWatchingPlayer().getWorld(), npc.getId());
 				
 			}
@@ -399,27 +414,10 @@ public class ReplayingUtils {
 			}.runTask(ReplaySystem.getInstance());
 		} 
 		
-		if (fishing != null) {
-			Location loc = LocationData.toLocation(fishing.getLocation());
-			
-			WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity();
-			
+		if (fishing != null) {			
 			int rndID = MathUtils.randInt(2000, 30000);
-			packet.setEntityID(rndID);
-			packet.setObjectData(id);
-			packet.setUniqueId(UUID.randomUUID());
+			AbstractPacket packet = VersionUtil.isCompatible(VersionEnum.V1_8) ? FishingUtils.createHookPacketOld(fishing, id, rndID) : FishingUtils.createHookPacket(fishing, id, rndID);	
 			
-			packet.setOptionalSpeedX(fishing.getX());
-			packet.setOptionalSpeedY(fishing.getY());
-			packet.setOptionalSpeedZ(fishing.getZ());
-			
-			packet.setType(90);
-			packet.setX(loc.getX());
-			packet.setY(loc.getY());
-			packet.setZ(loc.getZ());
-			packet.setPitch(loc.getPitch());
-			packet.setYaw(loc.getYaw());
-
 			hooks.put(fishing.getId(), rndID);
 			packet.sendPacket(replayer.getWatchingPlayer());
 		}
@@ -444,13 +442,13 @@ public class ReplayingUtils {
 				if (id == 11) id = 10;
 				
 				if (ConfigManager.REAL_CHANGES) {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15)) {
 						loc.getBlock().setType(MaterialBridge.fromID(id), true);
 					} else {
 						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
 					}
 				} else {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15)) {
 						replayer.getWatchingPlayer().sendBlockChange(loc, MaterialBridge.fromID(id), (byte) subId);
 					} else {
 						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);

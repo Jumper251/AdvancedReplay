@@ -23,6 +23,7 @@ public class MetadataBuilder {
 	
 	public MetadataBuilder(WrappedDataWatcher data) {
 		this.data = data;
+
 	}
 	
 	public MetadataBuilder setValue(int index, Object value) {

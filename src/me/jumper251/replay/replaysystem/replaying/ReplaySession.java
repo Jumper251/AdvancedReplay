@@ -32,7 +32,6 @@ public class ReplaySession {
 		this.player = this.replayer.getWatchingPlayer();
 		
 		this.packetListener = new ReplayPacketListener(replayer);
-		this.startSession();
 	}
 	
 	public void startSession() {

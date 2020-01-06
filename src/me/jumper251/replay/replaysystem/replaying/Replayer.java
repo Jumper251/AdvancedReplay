@@ -1,6 +1,7 @@
 package me.jumper251.replay.replaysystem.replaying;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 
 
@@ -72,6 +73,7 @@ public class Replayer {
 				break;
 			}
 		}
+		this.session.startSession();
 		
 		this.speed = 1;
 		

@@ -30,6 +30,9 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.PacketConstructor;
 import com.comphenix.protocol.reflect.IntEnum;
 
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+
 public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.SPAWN_ENTITY;
 
@@ -149,7 +152,9 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	}
 
 	public void setUniqueId(UUID value) {
-		handle.getUUIDs().write(0, value);
+		if(!VersionUtil.isCompatible(VersionEnum.V1_8)) {
+			handle.getUUIDs().write(0, value);
+		}
 	}
 
 	/**

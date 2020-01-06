@@ -24,6 +24,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerNamedEntitySpawn;
 import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
+import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
@@ -171,6 +172,31 @@ public class PacketNPC implements INPC{
 		for(Player player : Arrays.asList(this.visible)) {
 			if(player != null) {
 				packet.sendPacket(player);
+			}
+		}
+	}
+	
+	public void move(Location loc, boolean onGround, float yaw, float pitch) {
+		WrapperPlayServerRelEntityMoveLook packet = new WrapperPlayServerRelEntityMoveLook();
+		WrapperPlayServerEntityHeadRotation head = new WrapperPlayServerEntityHeadRotation();
+
+		packet.setEntityID(this.id);
+
+		head.setEntityID(this.id);
+		head.setHeadYaw(((byte)(yaw * 256 / 360)));
+		
+		packet.setDx((short) ((loc.getX() * 32 - this.location.getX() * 32) * 128));
+		packet.setDy((short) ((loc.getY() * 32 - this.location.getY() * 32) * 128));
+		packet.setDz((short) ((loc.getZ() * 32 - this.location.getZ() * 32) * 128));
+		packet.setPitch(pitch);
+		packet.setYaw(yaw);
+
+		this.location = loc;
+
+		for(Player player : Arrays.asList(this.visible)) {
+			if(player != null) {
+				packet.sendPacket(player);
+				head.sendPacket(player);
 			}
 		}
 	}

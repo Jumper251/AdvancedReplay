@@ -30,6 +30,9 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+
 public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
     public static final PacketType TYPE = PacketType.Play.Server.NAMED_ENTITY_SPAWN;
 
@@ -233,6 +236,8 @@ public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
      * @param value - new value.
      */
     public void setMetadata(WrappedDataWatcher value) {
-        handle.getDataWatcherModifier().write(0, value);
+    	if (VersionUtil.isBelow(VersionEnum.V1_14)) {
+    		handle.getDataWatcherModifier().write(0, value);
+    	}
     }
 }

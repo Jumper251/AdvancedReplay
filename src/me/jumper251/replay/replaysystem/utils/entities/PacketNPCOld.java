@@ -30,6 +30,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
 import com.comphenix.packetwrapper.old.WrapperPlayServerNamedEntitySpawn;
+import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
@@ -172,6 +173,30 @@ public class PacketNPCOld implements INPC{
 		for(Player player : Arrays.asList(this.visible)) {
 			if(player != null) {
 				packet.sendPacket(player);
+			}
+		}
+	}
+	
+	public void move(Location loc, boolean onGround, float yaw, float pitch) {
+		WrapperPlayServerEntityHeadRotation head = new WrapperPlayServerEntityHeadRotation();
+		WrapperPlayServerEntityTeleport packet = new WrapperPlayServerEntityTeleport();
+		
+		head.setEntityID(this.id);
+		head.setHeadYaw(((byte)(yaw * 256 / 360)));
+		
+		packet.setEntityID(this.id);
+		packet.setX(loc.getX());
+		packet.setY(loc.getY());
+		packet.setZ(loc.getZ());
+		packet.setPitch(pitch);
+		packet.setYaw(yaw);
+
+		this.location = loc;
+
+		for(Player player : Arrays.asList(this.visible)) {
+			if(player != null) {
+				packet.sendPacket(player);
+				head.sendPacket(player);
 			}
 		}
 	}

@@ -14,6 +14,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityStatus;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
+import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 import me.jumper251.replay.utils.MathUtils;
@@ -123,6 +124,32 @@ public class PacketEntity implements IEntity{
 		}		
 	}
 
+	public void move(Location loc, boolean onGround, float yaw, float pitch) {
+		WrapperPlayServerRelEntityMoveLook packet = new WrapperPlayServerRelEntityMoveLook();
+		WrapperPlayServerEntityHeadRotation head = new WrapperPlayServerEntityHeadRotation();
+
+		packet.setEntityID(this.id);
+
+		head.setEntityID(this.id);
+		head.setHeadYaw(((byte)(yaw * 256 / 360)));
+		
+		packet.setDx((short) ((loc.getX() * 32 - this.location.getX() * 32) * 128));
+		packet.setDy((short) ((loc.getY() * 32 - this.location.getY() * 32) * 128));
+		packet.setDz((short) ((loc.getZ() * 32 - this.location.getZ() * 32) * 128));
+		packet.setPitch(pitch);
+		packet.setYaw(yaw);
+
+		this.location = loc;
+
+		for(Player player : Arrays.asList(this.visible)) {
+			if(player != null) {
+				packet.sendPacket(player);
+				head.sendPacket(player);
+			}
+		}
+	}
+	
+	
 	@Override
 	public void look(float yaw, float pitch) {
 		  WrapperPlayServerEntityLook lookPacket = new WrapperPlayServerEntityLook();

@@ -287,7 +287,7 @@ public class ReplayListener extends AbstractListener {
 		
 		if(ConfigManager.UPDATE_NOTIFY){
 			if(ReplaySystem.updater.isVersionAvailable() && p.hasPermission("replay.admin")){
-				p.sendMessage(ReplaySystem.PREFIX + "An update is available: https://www.spigotmc.org/resources/advancedreplay-1-9-1-12.52849/");
+				p.sendMessage(ReplaySystem.PREFIX + "An update is available: https://www.spigotmc.org/resources/advancedreplay-1-8-1-15.52849/");
 			}
 		}
 	}

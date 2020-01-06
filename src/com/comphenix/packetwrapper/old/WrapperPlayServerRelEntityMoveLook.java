@@ -1,6 +1,5 @@
 /**
  * PacketWrapper - ProtocolLib wrappers for Minecraft packets
-
  * Copyright (C) dmulloy2 <http://dmulloy2.net>
  * Copyright (C) Kristian S. Strangeland
  *
@@ -17,32 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.comphenix.packetwrapper;
-
-import java.util.UUID;
+package com.comphenix.packetwrapper.old;
 
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
 
+import com.comphenix.packetwrapper.AbstractPacket;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
-import me.jumper251.replay.utils.VersionUtil;
-import me.jumper251.replay.utils.VersionUtil.VersionEnum;
-
-public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
+public class WrapperPlayServerRelEntityMoveLook extends AbstractPacket {
 	public static final PacketType TYPE =
-			PacketType.Play.Server.NAMED_ENTITY_SPAWN;
+			PacketType.Play.Server.REL_ENTITY_MOVE_LOOK;
 
-	public WrapperPlayServerNamedEntitySpawn() {
+	public WrapperPlayServerRelEntityMoveLook() {
 		super(new PacketContainer(TYPE), TYPE);
 		handle.getModifier().writeDefaults();
 	}
 
-	public WrapperPlayServerNamedEntitySpawn(PacketContainer packet) {
+	public WrapperPlayServerRelEntityMoveLook(PacketContainer packet) {
 		super(packet, TYPE);
 	}
 
@@ -86,72 +79,54 @@ public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
 		return getEntity(event.getPlayer().getWorld());
 	}
 
-	/**
-	 * Retrieve Player UUID.
-	 * <p>
-	 * Notes: player's UUID
-	 * 
-	 * @return The current Player UUID
-	 */
-	public UUID getPlayerUUID() {
-		return handle.getUUIDs().read(0);
-	}
+
+
+   public double getDx() {
+       return handle.getBytes().read(0) / 32D;
+   }
+
+   /**
+    * Set DX.
+    * @param value - new value.
+    */
+   public void setDx(double value) {
+       handle.getBytes().write(0, (byte) (value ));
+   }
+
+   /**
+    * Retrieve DY.
+    * @return The current DY
+    */
+   public double getDy() {
+       return handle.getBytes().read(0) / 32D;
+   }
+
+   /**
+    * Set DY.
+    * @param value - new value.
+    */
+   public void setDy(double value) {
+       handle.getBytes().write(0, (byte) (value ));
+   }
+
+   /**
+    * Retrieve DZ.
+    * @return The current DZ
+    */
+   public double getDz() {
+       return handle.getBytes().read(0) / 32D;
+   }
+
+   /**
+    * Set DZ.
+    * @param value - new value.
+    */
+   public void setDz(double value) {
+       handle.getBytes().write(0, (byte) (value));
+   }
 
 	/**
-	 * Set Player UUID.
-	 * 
-	 * @param value - new value.
-	 */
-	public void setPlayerUUID(UUID value) {
-		handle.getUUIDs().write(0, value);
-	}
-
-	/**
-	 * Retrieve the position of the spawned entity as a vector.
-	 * 
-	 * @return The position as a vector.
-	 */
-	public Vector getPosition() {
-		return new Vector(getX(), getY(), getZ());
-	}
-
-	/**
-	 * Set the position of the spawned entity using a vector.
-	 * 
-	 * @param position - the new position.
-	 */
-	public void setPosition(Vector position) {
-		setX(position.getX());
-		setY(position.getY());
-		setZ(position.getZ());
-	}
-
-	public double getX() {
-		return handle.getDoubles().read(0);
-	}
-
-	public void setX(double value) {
-		handle.getDoubles().write(0, value);
-	}
-
-	public double getY() {
-		return handle.getDoubles().read(1);
-	}
-
-	public void setY(double value) {
-		handle.getDoubles().write(1, value);
-	}
-
-	public double getZ() {
-		return handle.getDoubles().read(2);
-	}
-
-	public void setZ(double value) {
-		handle.getDoubles().write(2, value);
-	}
-
-	/**
-	 * Retrieve the yaw of the spawned entity.
+	 * Retrieve the yaw of the current entity.
 	 * 
 	 * @return The current Yaw
 	 */
@@ -160,16 +135,17 @@ public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
 	}
 
 	/**
-	 * Set the yaw of the spawned entity.
+	 * Set the yaw of the current entity.
 	 * 
 	 * @param value - new yaw.
 	 */
 	public void setYaw(float value) {
 		handle.getBytes().write(0, (byte) (value * 256.0F / 360.0F));
+
 	}
 
 	/**
-	 * Retrieve the pitch of the spawned entity.
+	 * Retrieve the pitch of the current entity.
 	 * 
 	 * @return The current pitch
 	 */
@@ -178,7 +154,7 @@ public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
 	}
 
 	/**
-	 * Set the pitch of the spawned entity.
+	 * Set the pitch of the current entity.
 	 * 
 	 * @param value - new pitch.
 	 */
@@ -187,24 +163,20 @@ public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
 	}
 
 	/**
-	 * Retrieve Metadata.
-	 * <p>
-	 * Notes: the client will crash if no metadata is sent
+	 * Retrieve On Ground.
 	 * 
-	 * @return The current Metadata
+	 * @return The current On Ground
 	 */
-	public WrappedDataWatcher getMetadata() {
-		return handle.getDataWatcherModifier().read(0);
+	public boolean getOnGround() {
+		return handle.getBooleans().read(0);
 	}
 
 	/**
-	 * Set Metadata.
+	 * Set On Ground.
 	 * 
 	 * @param value - new value.
 	 */
-	public void setMetadata(WrappedDataWatcher value) {
-		if (VersionUtil.isBelow(VersionEnum.V1_14)) {
-			handle.getDataWatcherModifier().write(0, value);
-		}
+	public void setOnGround(boolean value) {
+		handle.getBooleans().write(0, value);
 	}
 }

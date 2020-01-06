@@ -25,6 +25,8 @@ public interface INPC {
 	
 	void teleport(Location loc, boolean onGround);
 	
+	void move(Location loc, boolean onGround, float yaw, float pitch);
+	
 	void look(float yaw, float pitch);
 	
 	void updateMetadata();

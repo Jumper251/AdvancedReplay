@@ -42,8 +42,11 @@ public class PlayerWatcher implements Serializable{
 			
 			builder.setValue(0, value);
 			
-			if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+			if (VersionUtil.isCompatible(VersionEnum.V1_14)) {
 				builder.setPoseField(this.sneaking ? "SNEAKING" : "STANDING");
+			}
+			if (VersionUtil.isAbove(VersionEnum.V1_15)) {
+				builder.setPoseField(this.sneaking ? "CROUCHING" : "STANDING");
 			}
 			
 		} else {
