@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.database.DatabaseRegistry;
 import me.jumper251.replay.database.MySQLDatabase;
+import me.jumper251.replay.replaysystem.utils.ReplayQuality;
 import me.jumper251.replay.utils.LogUtils;
 
 public class ConfigManager {
@@ -28,6 +29,8 @@ public class ConfigManager {
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
 	public static boolean RECORD_CHAT;
 	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE;
+	
+	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
 	public static String DEATH_MESSAGE, LEAVE_MESSAGE, CHAT_FORMAT;
 	
@@ -51,6 +54,7 @@ public class ConfigManager {
 			cfg.set("general.save_on_stop", false);
 			cfg.set("general.use_mysql", false);
 			cfg.set("general.use_offline_skins", true);
+			cfg.set("general.quality", "high");
 			cfg.set("general.hide_players", false);
 			cfg.set("general.update_notifications", true);
 			
@@ -82,6 +86,7 @@ public class ConfigManager {
 		MAX_LENGTH = cfg.getInt("general.max_length");
 		SAVE_STOP = cfg.getBoolean("general.save_on_stop");
 		USE_OFFLINE_SKINS = cfg.getBoolean("general.use_offline_skins");
+		QUALITY = ReplayQuality.valueOf(cfg.getString("general.quality", "high").toUpperCase());
 		HIDE_PLAYERS = cfg.getBoolean("general.hide_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");

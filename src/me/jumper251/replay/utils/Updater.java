@@ -36,14 +36,9 @@ public class Updater {
 	}
 	
 	public void checkForUpdate(){
-
-		getContent(new Consumer<String>() {
-			
-			@Override
-			public void accept(String version) {
-				if(version != null && !version.equalsIgnoreCase(currentVersion)){
-					versionAvailable = true;
-				}
+		getContent(version -> {
+			if (version != null && !version.equalsIgnoreCase(currentVersion)) {
+				versionAvailable = true;
 			}
 		});
 	}
@@ -57,7 +52,7 @@ public class Updater {
 				try{
 					HttpURLConnection con = (HttpURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=" + id).openConnection();
 		        	con.setDoOutput(true);
-		        	con.setRequestMethod("POST");
+		        	con.setRequestMethod("GET");
 		        	
 		        	String version;
 		        	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));

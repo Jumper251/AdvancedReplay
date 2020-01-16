@@ -82,7 +82,7 @@ public class Recorder {
 				HashMap<String, List<PacketData>> tmpMap = packetRecorder.getPacketData();
 				
 				for (String name : tmpMap.keySet()) {
-					List<PacketData> list = tmpMap.get(name);
+					List<PacketData> list = new ArrayList<>(tmpMap.get(name));
 					for (Iterator<PacketData> it = list.iterator(); it.hasNext();) {
 						PacketData packetData = it.next();
 						
@@ -101,6 +101,7 @@ public class Recorder {
 				}
 
 				packetRecorder.getPacketData().keySet().removeAll(tmpMap.keySet());
+		
 			
 
 				if (ReplayAPI.getInstance().getHookManager().isRegistered()) {

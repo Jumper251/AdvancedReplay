@@ -1,12 +1,13 @@
 package me.jumper251.replay.replaysystem;
 
 import java.util.Arrays;
+
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.replaysystem.data.ReplayData;
@@ -56,14 +57,7 @@ public class Replay {
 	
 	public void play(Player watcher) {
 		if (!Bukkit.isPrimaryThread()) {
-			new BukkitRunnable() {
-				
-				@Override
-				public void run() {
-					startReplay(watcher);
-				}
-			}.runTask(ReplaySystem.getInstance());
-		
+			Bukkit.getScheduler().runTask(ReplaySystem.getInstance(), () -> startReplay(watcher));
 		} else {
 			startReplay(watcher);
 		}

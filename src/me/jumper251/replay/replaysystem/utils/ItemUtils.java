@@ -12,7 +12,7 @@ import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class ItemUtils {
 
-	  private static final List<Material> INTERACTABLE = new ArrayList<Material>();
+	  private static final List<Material> INTERACTABLE = new ArrayList<>();
 
 	  public static boolean isInteractable(Material mat) {
 		  if (mat == null) return false;

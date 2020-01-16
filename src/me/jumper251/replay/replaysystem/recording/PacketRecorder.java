@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 
 
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import com.comphenix.packetwrapper.WrapperPlayClientLook;
 import com.comphenix.packetwrapper.WrapperPlayClientPosition;
 import com.comphenix.packetwrapper.WrapperPlayClientPositionLook;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMove;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMoveLook;
@@ -73,6 +75,8 @@ public class PacketRecorder extends AbstractListener{
 
 	private Recorder recorder;
 	
+	private ReplayOptimizer optimizer;
+	
 	private AbstractListener compListener, listener;
 	
 	public PacketRecorder(Recorder recorder) {
@@ -84,8 +88,10 @@ public class PacketRecorder extends AbstractListener{
 		this.idLookup = new HashMap<Integer, Entity>();
 		this.spawnedHooks = new ArrayList<Integer>();
 		this.recorder = recorder;
+		this.optimizer = new ReplayOptimizer();
 		
-	}
+	}	
+
 	
 	@Override
 	public void register() {
@@ -95,7 +101,7 @@ public class PacketRecorder extends AbstractListener{
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
 				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
 				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Server.ENTITY_VELOCITY, PacketType.Play.Server.SPAWN_ENTITY_LIVING,
-				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION) {
+				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
             		
@@ -106,7 +112,7 @@ public class PacketRecorder extends AbstractListener{
             			if (event.getPacketType() == PacketType.Play.Client.POSITION) {
             				WrapperPlayClientPosition packet = new WrapperPlayClientPosition(event.getPacket());
             				data = new MovingData(packet.getX(), packet.getY(), packet.getZ(), p.getLocation().getPitch(), p.getLocation().getYaw());
-            				
+            			            				
             				if (recorder.getData().getWatcher(p.getName()).isBurning() && p.getFireTicks() <= 20) {
             					recorder.getData().getWatcher(p.getName()).setBurning(false);
             					addData(p.getName(), new MetadataUpdate(false, recorder.getData().getWatcher(p.getName()).isBlocking()));
@@ -117,11 +123,13 @@ public class PacketRecorder extends AbstractListener{
             			if (event.getPacketType() == PacketType.Play.Client.LOOK) {
             				WrapperPlayClientLook packet = new WrapperPlayClientLook(event.getPacket());
             				data = new MovingData(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ(), packet.getPitch(), packet.getYaw());
+
             			}
             			
                		if (event.getPacketType() == PacketType.Play.Client.POSITION_LOOK) {
             				WrapperPlayClientPositionLook packet = new WrapperPlayClientPositionLook(event.getPacket());
             				data = new MovingData(packet.getX(), packet.getY(), packet.getZ(), packet.getPitch(), packet.getYaw());
+
             			}
                			
                		if (event.getPacketType() == PacketType.Play.Client.ENTITY_ACTION) {
@@ -286,6 +294,16 @@ public class PacketRecorder extends AbstractListener{
             				
             			}
             		}
+            		if (event.getPacketType() == PacketType.Play.Server.ENTITY_TELEPORT) {
+            			WrapperPlayServerEntityTeleport packet = new WrapperPlayServerEntityTeleport(event.getPacket());
+
+            			if (entityLookup.containsKey(packet.getEntityID()) && entityLookup.get(packet.getEntityID()).equalsIgnoreCase(p.getName())) {
+            				Location loc = packet.getEntity(p.getWorld()).getLocation();
+
+            				addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), packet.getPitch(), packet.getYaw()));
+            			}
+            		}
+
             }
             
             
@@ -322,6 +340,11 @@ public class PacketRecorder extends AbstractListener{
 	
 	
 	public void addData(String name, PacketData data) {
+		if (data instanceof MovingData) {
+			MovingData mv = (MovingData) data;
+			if (!optimizer.shouldRecordPlayerMovement(mv)) return;
+		}
+		
 		List<PacketData> list = new ArrayList<PacketData>();
 		if(this.packetData.containsKey(name)) {
 			list = this.packetData.get(name);
