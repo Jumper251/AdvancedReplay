@@ -1,7 +1,9 @@
-package me.jumper251.replay.replaysystem.recording;
+package me.jumper251.replay.replaysystem.recording.optimization;
 
 
 import java.util.ArrayList;
+
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,15 +12,33 @@ import java.util.stream.Collectors;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ActionData;
+import me.jumper251.replay.replaysystem.data.types.EntityData;
+import me.jumper251.replay.replaysystem.data.types.EntityMovingData;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
-import me.jumper251.replay.replaysystem.utils.ReplayQuality;
+import me.jumper251.replay.replaysystem.data.types.PacketData;
+import me.jumper251.replay.replaysystem.data.types.VelocityData;
 
 public class ReplayOptimizer {
 
 	private MovingData lastMovement;
 	
 	private int playerCount;
+	
+	private int entityMovementCount;
+	
+	private int velocityCount;
 
+	
+	public boolean shouldRecord(PacketData data) {
+		if (data instanceof MovingData) {
+			return shouldRecordPlayerMovement((MovingData) data);
+		} else if (data instanceof EntityMovingData || data instanceof VelocityData) {
+			return shouldRecordEntityMovement(data);
+		} else {
+			return true;
+		}
+	}
+	
 	public boolean shouldRecordPlayerMovement(MovingData data) {
 		if (this.lastMovement == null) {
 			this.lastMovement = data;
@@ -28,6 +48,19 @@ public class ReplayOptimizer {
 		this.playerCount = this.playerCount >= countToRemove() ? 0 : this.playerCount + 1;
 		
 		return calculateDifference(data) > requiredDifference() && (ConfigManager.QUALITY == ReplayQuality.HIGH || this.playerCount != countToRemove());
+	}
+	
+	public boolean shouldRecordEntityMovement(PacketData data) {
+		if (ConfigManager.QUALITY == ReplayQuality.HIGH) return true;
+		boolean isMovingData = data instanceof EntityMovingData;
+		
+		if (isMovingData) {
+			this.entityMovementCount = this.entityMovementCount >= countToRemove() ? 0 : this.entityMovementCount + 1;
+		} else {
+			this.velocityCount = this.velocityCount >= countToRemove() ? 0 : this.velocityCount + 1;
+		}
+		
+		return (this.entityMovementCount != countToRemove() && isMovingData) || (this.velocityCount != countToRemove() && !isMovingData);
 	}
 	
 	public int countToRemove() {
@@ -55,18 +88,28 @@ public class ReplayOptimizer {
 	
 	
 	
-	public static Map<Object, Long> analyzeReplay(Replay replay) {
+	public static ReplayStats analyzeReplay(Replay replay) {
 		HashMap<Integer, List<ActionData>> data = replay.getData().getActions();
 		
 		List<ActionData> merged = new ArrayList<>();
 		data.values().forEach(merged::addAll);
-		merged = merged.stream()
-				.filter(action -> action.getPacketData() != null)
+		
+		long entityCount = merged.stream()
+				.filter(action -> action.getPacketData() instanceof EntityData && ((EntityData)action.getPacketData()).getAction() == 0)
+				.count();
+		
+		List<String> players = merged.stream()
+				.map(action -> action.getName())
+				.distinct()
 				.collect(Collectors.toList());
-	
-		return merged.stream()
+
+		Map<Object, Long> actions = merged.stream()
+				.filter(action -> action.getPacketData() != null)
 				.map(action -> action.getPacketData().getClass().getSimpleName())
 				.collect(Collectors.groupingBy(type -> type, Collectors.counting()));
+		
+		return new ReplayStats(actions, players, entityCount);
+				
 	}
 	
 	

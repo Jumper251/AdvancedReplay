@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
+import me.jumper251.replay.replaysystem.recording.optimization.ReplayQuality;
 
 
 public class ReplayData implements Serializable{
@@ -21,9 +23,15 @@ public class ReplayData implements Serializable{
 	
 	private int duration;
 	
+	private String creator;
+	
+	private ReplayQuality quality;
+	
 	public ReplayData() {
 		this.actions = new HashMap<Integer, List<ActionData>>();
 		this.watchers = new HashMap<String, PlayerWatcher>();
+		
+		this.quality = ConfigManager.QUALITY;
 	}
 	
 	public int getDuration() {
@@ -32,6 +40,18 @@ public class ReplayData implements Serializable{
 	
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+	
+	public String getCreator() {
+		return creator;
+	}
+	
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+	
+	public ReplayQuality getQuality() {
+		return quality;
 	}
 	
 	public HashMap<Integer, List<ActionData>> getActions() {

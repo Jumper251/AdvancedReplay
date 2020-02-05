@@ -26,6 +26,8 @@ public class ReplayMigrateCommand extends SubCommand {
 	
 	public ReplayMigrateCommand(AbstractCommand parent) {
 		super(parent, "migrate", "Migrate all replays", "migrate <File|Database>", false);
+		
+		this.setEnabled(false);
 	}
 
 	@Override

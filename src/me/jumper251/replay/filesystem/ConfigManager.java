@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.database.DatabaseRegistry;
 import me.jumper251.replay.database.MySQLDatabase;
-import me.jumper251.replay.replaysystem.utils.ReplayQuality;
+import me.jumper251.replay.replaysystem.recording.optimization.ReplayQuality;
 import me.jumper251.replay.utils.LogUtils;
 
 public class ConfigManager {

@@ -53,11 +53,11 @@ public class Updater {
 					HttpURLConnection con = (HttpURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=" + id).openConnection();
 		        	con.setDoOutput(true);
 		        	con.setRequestMethod("GET");
-		        	
+
 		        	String version;
 		        	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		        	version = bufferedReader.readLine();
-		        	
+
 		        	return version;
 		        	
 		        } catch(Exception e){

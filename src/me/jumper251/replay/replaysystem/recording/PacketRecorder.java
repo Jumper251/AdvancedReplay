@@ -56,6 +56,7 @@ import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
 import me.jumper251.replay.replaysystem.data.types.VelocityData;
+import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
@@ -340,10 +341,7 @@ public class PacketRecorder extends AbstractListener{
 	
 	
 	public void addData(String name, PacketData data) {
-		if (data instanceof MovingData) {
-			MovingData mv = (MovingData) data;
-			if (!optimizer.shouldRecordPlayerMovement(mv)) return;
-		}
+		if (!optimizer.shouldRecord(data)) return;
 		
 		List<PacketData> list = new ArrayList<PacketData>();
 		if(this.packetData.containsKey(name)) {

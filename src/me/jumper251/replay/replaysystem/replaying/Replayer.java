@@ -40,7 +40,7 @@ public class Replayer {
 	
 	private Replay replay;
 	
-	BukkitRunnable run;
+	private BukkitRunnable run;
 	
 	private int currentTicks;
 	private double speed, tmpTicks;

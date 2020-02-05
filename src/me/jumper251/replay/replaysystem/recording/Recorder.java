@@ -143,6 +143,7 @@ public class Recorder {
 
 		if (save) {
 			this.data.setDuration(this.currentTick);
+			this.data.setCreator(this.sender.getName());
 			this.data.setWatchers(new HashMap<String, PlayerWatcher>());
 			this.replay.setData(this.data);
 			this.replay.setReplayInfo(new ReplayInfo(this.replay.getId(), this.sender.getName(), System.currentTimeMillis(), this.currentTick));
