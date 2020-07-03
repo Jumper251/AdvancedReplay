@@ -70,7 +70,7 @@ public class Recorder {
 		for (String names : this.players) {
 			if (Bukkit.getPlayer(names) != null) {
 				Player player = Bukkit.getPlayer(names);
-				createSpawnAction(player, player.getLocation());
+				createSpawnAction(player, player.getLocation(), true);
 			}
 		}
 		
@@ -160,7 +160,7 @@ public class Recorder {
 		}
 	}
 	
-	public void createSpawnAction(Player player, Location loc) {
+	public void createSpawnAction(Player player, Location loc, boolean first) {
 		SignatureData[] signArr = new SignatureData[1];
 		
 		if (!Bukkit.getOnlineMode() && ConfigManager.USE_OFFLINE_SKINS) {
@@ -178,10 +178,10 @@ public class Recorder {
 					}
 					
 					ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0]));
-					addData(currentTick, spawnData);
+					addData(first ? 0 : currentTick, spawnData);
 				
 					ActionData invData = new ActionData(0, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));
-					addData(currentTick, invData);
+					addData(first ? 0 : currentTick, invData);
 				}
 			}.runTaskAsynchronously(ReplaySystem.getInstance());
 		}

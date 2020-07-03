@@ -233,7 +233,7 @@ public class RecordingListener extends AbstractListener {
 		if (!this.recorder.getPlayers().contains(p.getName()) && (this.replayLeft.contains(p.getName())) || ConfigManager.ADD_PLAYERS) {
 			this.recorder.getPlayers().add(p.getName());
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
-			this.recorder.createSpawnAction(p, p.getLocation());
+			this.recorder.createSpawnAction(p, p.getLocation(), false);
 		
 		}
 	}
@@ -251,7 +251,7 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 
-			this.recorder.createSpawnAction(p, e.getRespawnLocation());
+			this.recorder.createSpawnAction(p, e.getRespawnLocation(), false);
 		}
 
 	}
