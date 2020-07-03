@@ -15,10 +15,13 @@ public class ItemConfigOption {
 	
 	private int data;
 	
+	private boolean enabled;
+	
 	public ItemConfigOption(Material material, String name, int slot) {
 		this.material = material;
 		this.name = name;
 		this.slot = slot;
+		this.enabled = true;
 	}
 	
 	public ItemConfigOption(Material material, String name, int slot, String owner, int data) {
@@ -56,5 +59,14 @@ public class ItemConfigOption {
 		return data;
 	}
 
+	public ItemConfigOption enable(boolean enabled) {
+		this.enabled = enabled;
+		
+		return this;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
 	
 }

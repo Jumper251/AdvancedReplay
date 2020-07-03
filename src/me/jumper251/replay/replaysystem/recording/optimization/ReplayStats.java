@@ -27,6 +27,7 @@ public class ReplayStats {
 	
 
 	public Map<Object, Object> getSortedActions() {
+		
 		return this.actions.entrySet().stream()
 				.sorted((Map.Entry.<Object, Long>comparingByValue().reversed()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o, n) -> n, LinkedHashMap::new));

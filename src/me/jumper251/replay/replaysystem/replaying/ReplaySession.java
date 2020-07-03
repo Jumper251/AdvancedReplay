@@ -1,5 +1,8 @@
 package me.jumper251.replay.replaysystem.replaying;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 
 import org.bukkit.GameMode;
@@ -49,13 +52,14 @@ public class ReplaySession {
 		ItemConfigOption forward = ItemConfig.getItem(ItemConfigType.FORWARD);
 		ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.RESUME);
 
+		List<ItemConfigOption> configItems = Arrays.asList(teleport, time, leave, backward, forward, pauseResume);
+
+		configItems.stream()
+			.filter(ItemConfigOption::isEnabled)
+			.forEach(item -> {
+				this.player.getInventory().setItem(item.getSlot(), ReplayHelper.createItem(item));
+			});
 		
-		this.player.getInventory().setItem(teleport.getSlot(), ReplayHelper.createItem(teleport));
-		this.player.getInventory().setItem(time.getSlot(), ReplayHelper.createItem(time));
-		this.player.getInventory().setItem(backward.getSlot(), ReplayHelper.createItem(backward));
-		this.player.getInventory().setItem(pauseResume.getSlot(), ReplayHelper.getPauseItem());
-		this.player.getInventory().setItem(forward.getSlot(), ReplayHelper.createItem(forward));
-		this.player.getInventory().setItem(leave.getSlot(), ReplayHelper.createItem(leave));
 		
 		this.player.setAllowFlight(true);
 		this.player.setFlying(true);

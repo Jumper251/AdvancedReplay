@@ -10,6 +10,7 @@ import me.jumper251.replay.filesystem.saving.DatabaseReplaySaver;
 import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.replaysystem.Replay;
+import me.jumper251.replay.replaysystem.utils.ReplayCleanup;
 import me.jumper251.replay.utils.LogUtils;
 import me.jumper251.replay.utils.Metrics;
 import me.jumper251.replay.utils.ReplayManager;
@@ -52,6 +53,10 @@ public class ReplaySystem extends JavaPlugin {
 		
 		updater = new Updater();
 		metrics = new Metrics(this);
+		
+		if (ConfigManager.CLEANUP_REPLAYS > 0) {
+			ReplayCleanup.cleanupReplays();
+		}
 		
 		LogUtils.log("Finished (" + (System.currentTimeMillis() - start) + "ms)");
 

@@ -1,6 +1,7 @@
 package me.jumper251.replay.replaysystem.data;
 
 
+
 public class ReplayInfo {
 	
 	private String id;
@@ -34,7 +35,6 @@ public class ReplayInfo {
 	public Long getTime() {
 		return time;
 	}
-	
 	
 
 }

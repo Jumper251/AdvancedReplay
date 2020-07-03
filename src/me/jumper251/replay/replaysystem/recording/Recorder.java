@@ -178,10 +178,10 @@ public class Recorder {
 					}
 					
 					ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0]));
-					addData(0, spawnData);
+					addData(currentTick, spawnData);
 				
 					ActionData invData = new ActionData(0, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));
-					addData(0, invData);
+					addData(currentTick, invData);
 				}
 			}.runTaskAsynchronously(ReplaySystem.getInstance());
 		}

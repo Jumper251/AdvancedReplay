@@ -23,12 +23,12 @@ public class ConfigManager {
 	public static File file = new File(ReplaySystem.getInstance().getDataFolder(), "config.yml");
 	public static FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 	
-	public static int MAX_LENGTH;
+	public static int MAX_LENGTH, CLEANUP_REPLAYS;
 	
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
 	public static boolean RECORD_CHAT;
-	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE;
+	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
@@ -55,7 +55,9 @@ public class ConfigManager {
 			cfg.set("general.use_mysql", false);
 			cfg.set("general.use_offline_skins", true);
 			cfg.set("general.quality", "high");
+			cfg.set("general.cleanup_replays", -1);
 			cfg.set("general.hide_players", false);
+			cfg.set("general.add_new_players", false);	
 			cfg.set("general.update_notifications", true);
 			
 			cfg.set("general.death_message", "&6{name} &7died.");
@@ -88,6 +90,8 @@ public class ConfigManager {
 		USE_OFFLINE_SKINS = cfg.getBoolean("general.use_offline_skins");
 		QUALITY = ReplayQuality.valueOf(cfg.getString("general.quality", "high").toUpperCase());
 		HIDE_PLAYERS = cfg.getBoolean("general.hide_players");
+		CLEANUP_REPLAYS = cfg.getInt("general.cleanup_replays", -1);
+		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
 

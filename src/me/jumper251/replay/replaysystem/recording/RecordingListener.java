@@ -1,5 +1,7 @@
 package me.jumper251.replay.replaysystem.recording;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
@@ -22,6 +24,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
@@ -35,10 +38,13 @@ public class RecordingListener extends AbstractListener {
 	private PacketRecorder packetRecorder;
 	private Recorder recorder;
 	
+	private List<String> replayLeft;
+	
 	public RecordingListener(PacketRecorder packetRecorder) {
 		this.packetRecorder = packetRecorder;
 		
 		this.recorder = this.packetRecorder.getRecorder();
+		this.replayLeft = new ArrayList<String>();
 	}
 	
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -216,6 +222,19 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DESPAWN, p.getName(), null));
 			this.recorder.getPlayers().remove(p.getName());
+			
+			if (!this.replayLeft.contains(p.getName())) this.replayLeft.add(p.getName());
+		}
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
+		if (!this.recorder.getPlayers().contains(p.getName()) && (this.replayLeft.contains(p.getName())) || ConfigManager.ADD_PLAYERS) {
+			this.recorder.getPlayers().add(p.getName());
+			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
+			this.recorder.createSpawnAction(p, p.getLocation());
+		
 		}
 	}
 	
