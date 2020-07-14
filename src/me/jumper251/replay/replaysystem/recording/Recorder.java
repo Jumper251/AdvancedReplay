@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
@@ -108,11 +109,12 @@ public class Recorder {
 					
 					for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
 						for (String names : players) {
-							PacketData customData = hook.onRecord(names);
-							if (customData != null) {
+							List<PacketData> customList = hook.onRecord(names);
+							customList.stream().filter(Objects::nonNull).forEach(customData -> {
 								ActionData customAction = new ActionData(currentTick, ActionType.CUSTOM, names, customData);
 								addData(currentTick, customAction);
-							}
+							});
+
 						}
 					}
 				}

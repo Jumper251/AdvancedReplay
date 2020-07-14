@@ -2,6 +2,7 @@ package me.jumper251.replay.replaysystem.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
+import com.comphenix.protocol.wrappers.Pair;
 
 import me.jumper251.replay.replaysystem.data.types.InvData;
 import me.jumper251.replay.replaysystem.data.types.ItemData;
@@ -31,9 +33,28 @@ public class NPCManager {
 	});
 	
 	
+	public static List<WrapperPlayServerEntityEquipment> updateEquipmentv16(int id, InvData data) {
+		List<Pair<ItemSlot, ItemStack>> items = new ArrayList<>();
+		items.add(new Pair<>(ItemSlot.HEAD, fromID(data.getHead())));
+		items.add(new Pair<>(ItemSlot.CHEST, fromID(data.getChest())));
+		items.add(new Pair<>(ItemSlot.LEGS, fromID(data.getLeg())));
+		items.add(new Pair<>(ItemSlot.FEET, fromID(data.getBoots())));
+		items.add(new Pair<>(ItemSlot.MAINHAND, fromID(data.getMainHand())));
+		items.add(new Pair<>(ItemSlot.OFFHAND, fromID(data.getOffHand())));
+
+		WrapperPlayServerEntityEquipment packet = new WrapperPlayServerEntityEquipment();
+
+		packet.setEntityID(id);
+		packet.getHandle().getSlotStackPairLists().write(0, items);
+		
+		return Collections.singletonList(packet);
+	}
+
+	
 	public static List<WrapperPlayServerEntityEquipment> updateEquipment(int id, InvData data) {
 		List<WrapperPlayServerEntityEquipment> list = new ArrayList<WrapperPlayServerEntityEquipment>();
-
+		
+		
 			WrapperPlayServerEntityEquipment packet = new WrapperPlayServerEntityEquipment();
 			packet.setEntityID(id);
 			packet.setSlot(ItemSlot.HEAD);
@@ -70,11 +91,11 @@ public class NPCManager {
 		
 		
 		if(!VersionUtil.isCompatible(VersionEnum.V1_8)) {
-			WrapperPlayServerEntityEquipment oacket5 = new WrapperPlayServerEntityEquipment();
-			oacket5.setEntityID(id);
-			oacket5.setSlot(ItemSlot.OFFHAND);
-			oacket5.setItem(fromID(data.getOffHand()));
-			list.add(oacket5);
+			WrapperPlayServerEntityEquipment packet5 = new WrapperPlayServerEntityEquipment();
+			packet5.setEntityID(id);
+			packet5.setSlot(ItemSlot.OFFHAND);
+			packet5.setItem(fromID(data.getOffHand()));
+			list.add(packet5);
 		}
 		
 		return list;

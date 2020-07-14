@@ -2,11 +2,12 @@ package me.jumper251.replay.replaysystem.replaying;
 
 
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
-
-
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
@@ -56,8 +57,10 @@ import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 public class ReplayingUtils {
 
 	private Replayer replayer;
+		
+	private Map<String, SignatureData> signatures;
 	
-	private ActionData lastSpawnAction;
+	private Deque<ActionData> lastSpawnActions;
 	
 	private HashMap<Integer, Entity> itemEntities;
 	
@@ -67,6 +70,9 @@ public class ReplayingUtils {
 		this.replayer = replayer;
 		this.itemEntities = new HashMap<Integer, Entity>();
 		this.hooks = new HashMap<Integer, Integer>();
+		
+		this.lastSpawnActions = new ArrayDeque<>();
+		this.signatures = new HashMap<>();
 	}
 	
 	public void handleAction(ActionData action, ReplayData data, boolean reversed) {
@@ -137,7 +143,7 @@ public class ReplayingUtils {
 				InvData invData = (InvData) action.getPacketData();
 				
 				if (!VersionUtil.isCompatible(VersionEnum.V1_8)) {
-					List<WrapperPlayServerEntityEquipment> equipment = NPCManager.updateEquipment(npc.getId(), invData);
+					List<WrapperPlayServerEntityEquipment> equipment = VersionUtil.isBelow(VersionEnum.V1_15) ? NPCManager.updateEquipment(npc.getId(), invData) : NPCManager.updateEquipmentv16(npc.getId(), invData);
 					npc.setLastEquipment(equipment);
 					
 					for (WrapperPlayServerEntityEquipment packet : equipment) {
@@ -316,6 +322,9 @@ public class ReplayingUtils {
 				npc.remove();
 				replayer.getNPCList().remove(action.getName());
 				
+				SpawnData oldSpawnData = new SpawnData(npc.getUuid(), LocationData.fromLocation(npc.getLocation()), signatures.get(action.getName()));
+				this.lastSpawnActions.addLast(new ActionData(0, ActionType.SPAWN, action.getName(), oldSpawnData));
+				
 				if (action.getType() == ActionType.DESPAWN) {
 					replayer.sendMessage(new MessageBuilder(ConfigManager.LEAVE_MESSAGE)
 							.set("name", action.getName())
@@ -328,9 +337,10 @@ public class ReplayingUtils {
 				
 			} else {
 
-				if (lastSpawnAction != null) {
-					spawnNPC(lastSpawnAction);
+				if (!this.lastSpawnActions.isEmpty()) {
+					spawnNPC(this.lastSpawnActions.pollLast());
 				}
+				
 			}
 
 		}
@@ -392,13 +402,14 @@ public class ReplayingUtils {
 			WrappedSignedProperty signed = new WrappedSignedProperty(spawnData.getSignature().getName(), spawnData.getSignature().getValue(), spawnData.getSignature().getSignature());
 			profile.getProperties().put(spawnData.getSignature().getName(), signed);
 			npc.setProfile(profile);
+			
+			if (!this.signatures.containsKey(action.getName())) {
+				this.signatures.put(action.getName(), spawnData.getSignature());
+			}
 		}
 
 		npc.spawn(spawn, tabMode, this.replayer.getWatchingPlayer());
-		npc.look(spawnData.getLocation().getYaw(), spawnData.getLocation().getPitch());
-
-		this.lastSpawnAction = action;
-	  
+		npc.look(spawnData.getLocation().getYaw(), spawnData.getLocation().getPitch());	  
 	}
 	
 	private void spawnProjectile(ProjectileData projData, FishingData fishing, World world, int id) {
@@ -442,13 +453,13 @@ public class ReplayingUtils {
 				if (id == 11) id = 10;
 				
 				if (ConfigManager.REAL_CHANGES) {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16)) {
 						loc.getBlock().setType(MaterialBridge.fromID(id), true);
 					} else {
 						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
 					}
 				} else {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16)) {
 						replayer.getWatchingPlayer().sendBlockChange(loc, MaterialBridge.fromID(id), (byte) subId);
 					} else {
 						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
