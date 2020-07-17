@@ -64,15 +64,7 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (recorder.getPlayers().contains(p.getName())) {
 			ItemStack stack = p.getInventory().getItem(e.getNewSlot());
-			InvData data = NPCManager.copyFromPlayer(p, true, true);
-			data.setMainHand(NPCManager.fromItemStack(stack));
-			
-			this.packetRecorder.addData(p.getName(), data);
-			
-			if (recorder.getData().getWatcher(p.getName()).isBlocking()) {
-   				recorder.getData().getWatcher(p.getName()).setBlocking(false);
-   				this.packetRecorder.addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false));
-			}
+			itemInHand(p, stack);
 		}
 
 		
@@ -284,6 +276,16 @@ public class RecordingListener extends AbstractListener {
 			}
 		}
 	}
+
+	@SuppressWarnings("deprecation")
+	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPickup(PlayerPickupItemEvent e) {
+		Player p = e.getPlayer();
+		if (this.recorder.getPlayers().contains(p.getName())) {
+			// Change PlayerItemInHand
+			itemInHand(p, e.getItem().getItemStack());
+		}
+	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -296,6 +298,12 @@ public class RecordingListener extends AbstractListener {
 			ItemData after = new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
+
+			// Change PlayerItemInHand when last block in hand
+			if (e.getItemInHand().getAmount() == 1) {
+				ItemStack stack = new ItemStack(Material.AIR, 1);
+				itemInHand(p, stack);
+			}
 		}
 
 	}
@@ -326,6 +334,15 @@ public class RecordingListener extends AbstractListener {
 			ItemData after = new ItemData(0, 0);
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
+
+			// Change PlayerItemInHand when fill bucket
+			ItemStack stack;
+			if (e.getBlockClicked().getState().getType().equals(Material.LAVA)) {
+				stack = new ItemStack(Material.LAVA_BUCKET, 1);
+			} else {
+				stack = new ItemStack(Material.WATER_BUCKET, 1);
+			}
+			itemInHand(p, stack);
 		}
 	}
 	
@@ -341,6 +358,10 @@ public class RecordingListener extends AbstractListener {
 			ItemData after = new ItemData(e.getBucket() == Material.WATER_BUCKET ? 9 : 11, 0);
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
+
+			// Change PlayerItemInHand
+			ItemStack stack = new ItemStack(Material.BUCKET, 1);
+			itemInHand(p, stack);
 		}
 	}
 	
@@ -354,5 +375,17 @@ public class RecordingListener extends AbstractListener {
 			this.packetRecorder.addData(p.getName(), new WorldChangeData(location));
 		}
 
+	}
+
+	public void itemInHand(Player p, ItemStack stack) {
+		InvData data = NPCManager.copyFromPlayer(p, true, true);
+		data.setMainHand(NPCManager.fromItemStack(stack));
+
+		this.packetRecorder.addData(p.getName(), data);
+
+		if (recorder.getData().getWatcher(p.getName()).isBlocking()) {
+			recorder.getData().getWatcher(p.getName()).setBlocking(false);
+			this.packetRecorder.addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false));
+		}
 	}
 }
