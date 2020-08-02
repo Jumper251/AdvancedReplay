@@ -337,7 +337,7 @@ public class RecordingListener extends AbstractListener {
 
 			// Change PlayerItemInHand when fill bucket
 			ItemStack stack;
-			if (e.getBlockClicked().getState().getType().equals(Material.LAVA)) {
+			if (e.getBlockClicked().getState().getType().getId() == 10 || e.getBlockClicked().getState().getType().getId() == 11) {
 				stack = new ItemStack(Material.LAVA_BUCKET, 1);
 			} else {
 				stack = new ItemStack(Material.WATER_BUCKET, 1);
