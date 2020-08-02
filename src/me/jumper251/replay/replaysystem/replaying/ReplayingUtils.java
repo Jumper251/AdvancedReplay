@@ -353,12 +353,14 @@ public class ReplayingUtils {
 		int duration = this.replayer.getReplay().getData().getDuration();
 		
 		if ((forwardTicks + 2) < duration) {
-			for (int i = currentTick; i < forwardTicks; i++) {
-				this.replayer.executeTick(i, false);
-			}
-			this.replayer.setCurrentTicks(forwardTicks);
-			this.replayer.setPaused(false);
+			forwardTicks = duration - 20;
 		}
+
+		for (int i = currentTick; i < forwardTicks; i++) {
+			this.replayer.executeTick(i, false);
+		}
+		this.replayer.setCurrentTicks(forwardTicks);
+		this.replayer.setPaused(false);
 	}
 	
 	public void backward() {
@@ -367,13 +369,41 @@ public class ReplayingUtils {
 		int backwardTicks = currentTick - (10 * 20);
 		
 		if ((backwardTicks - 2) > 0) {
-			for (int i = currentTick; i > backwardTicks; i--) {
-				
-				this.replayer.executeTick(i, true);
+			backwardTicks = 1;
+		}
+
+		for (int i = currentTick; i > backwardTicks; i--) {
+			this.replayer.executeTick(i, true);
+		}
+		this.replayer.setCurrentTicks(backwardTicks);
+		this.replayer.setPaused(false);
+	}
+
+	public void jumpTo(Integer seconds) {
+		int targetTicks = (seconds * 20);
+		int currentTick = replayer.getCurrentTicks();
+		if (currentTick > targetTicks) {
+			this.replayer.setPaused(true);
+
+			if ((targetTicks - 2) > 0) {
+				for (int i = currentTick; i > targetTicks; i--) {
+					this.replayer.executeTick(i, true);
+				}
+
+				this.replayer.setCurrentTicks(targetTicks);
+				this.replayer.setPaused(false);
 			}
-			
-			this.replayer.setCurrentTicks(backwardTicks);
-			this.replayer.setPaused(false);
+		} else if (currentTick < targetTicks) {
+			this.replayer.setPaused(true);
+			int duration = replayer.getReplay().getData().getDuration();
+
+			if ((targetTicks + 2) < duration) {
+				for (int i = currentTick; i < targetTicks; i++) {
+					this.replayer.executeTick(i, false);
+				}
+				this.replayer.setCurrentTicks(targetTicks);
+				this.replayer.setPaused(false);
+			}
 		}
 	}
 	
