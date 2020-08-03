@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.jumper251.replay.replaysystem.replaying.Replayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -69,6 +70,18 @@ public class ReplayAPI {
 					
 				}
 			});
+		}
+	}
+
+	public void jumpToReplayTime(Player watcher, Integer second) {
+		if (ReplayHelper.replaySessions.containsKey(watcher.getName())) {
+			Replayer replayer = ReplayHelper.replaySessions.get(watcher.getName());
+			if (replayer != null) {
+				int duration = replayer.getReplay().getData().getDuration() / 20;
+				if (second > 0 && second <= duration) {
+					replayer.getUtils().jumpTo(second);
+				}
+			}
 		}
 	}
 	
