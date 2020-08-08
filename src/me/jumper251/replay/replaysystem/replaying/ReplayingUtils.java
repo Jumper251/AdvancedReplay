@@ -351,8 +351,8 @@ public class ReplayingUtils {
 		int currentTick = this.replayer.getCurrentTicks();
 		int forwardTicks = currentTick + (10 * 20);
 		int duration = this.replayer.getReplay().getData().getDuration();
-		
-		if ((forwardTicks + 2) < duration) {
+
+		if ((forwardTicks + 2) >= duration) {
 			forwardTicks = duration - 20;
 		}
 
@@ -367,8 +367,8 @@ public class ReplayingUtils {
 		this.replayer.setPaused(true);
 		int currentTick = this.replayer.getCurrentTicks();
 		int backwardTicks = currentTick - (10 * 20);
-		
-		if ((backwardTicks - 2) > 0) {
+
+		if ((backwardTicks - 2) <= 0) {
 			backwardTicks = 1;
 		}
 
