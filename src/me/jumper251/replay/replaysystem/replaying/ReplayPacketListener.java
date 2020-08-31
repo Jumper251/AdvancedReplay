@@ -79,7 +79,9 @@ public class ReplayPacketListener extends AbstractListener {
 	
 	@Override
 	public void unregister() {
-		ProtocolLibrary.getProtocolManager().removePacketListener(this.packetAdapter);
+		if (!VersionUtil.isAbove(VersionEnum.V1_16)) {
+			ProtocolLibrary.getProtocolManager().removePacketListener(this.packetAdapter);
+		}
 		
 	}
 	
