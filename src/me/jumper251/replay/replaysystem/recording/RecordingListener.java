@@ -25,6 +25,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import me.jumper251.replay.filesystem.ConfigManager;
+import me.jumper251.replay.filesystem.MessageBuilder;
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
@@ -226,6 +227,7 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().add(p.getName());
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
 			this.recorder.createSpawnAction(p, p.getLocation(), false);
+			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(new MessageBuilder(ConfigManager.JOIN_MESSAGE).set("name", p.getName()).build())));
 		
 		}
 	}
@@ -277,7 +279,6 @@ public class RecordingListener extends AbstractListener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPickup(PlayerPickupItemEvent e) {
 		Player p = e.getPlayer();

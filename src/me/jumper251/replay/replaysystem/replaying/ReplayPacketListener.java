@@ -18,6 +18,8 @@ import com.comphenix.protocol.wrappers.EnumWrappers.EntityUseAction;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.listener.AbstractListener;
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class ReplayPacketListener extends AbstractListener {
 	
@@ -34,7 +36,8 @@ public class ReplayPacketListener extends AbstractListener {
 		this.spectating = new HashMap<Player, Integer>();
 		this.previous = -1;
 		
-		if (!isRegistered()) register();
+		// Disable spectator function for 1.16
+		if (!isRegistered() && !VersionUtil.isAbove(VersionEnum.V1_16)) register();
 	}
 
 	@Override

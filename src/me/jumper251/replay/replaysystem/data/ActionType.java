@@ -7,5 +7,6 @@ public enum ActionType {
 	DESPAWN,
 	DEATH,
 	WORLD,
+	MESSAGE,
 	CUSTOM;
 }

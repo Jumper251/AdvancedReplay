@@ -88,6 +88,11 @@ public class ReplayingUtils {
 			}
 		}	
 		
+		if (action.getType() == ActionType.MESSAGE && !reversed) {
+			ChatData message = (ChatData) action.getPacketData();
+			replayer.sendMessage(message.getMessage());
+		}
+		
 		if (action.getType() == ActionType.PACKET && this.replayer.getNPCList().containsKey(action.getName())) {
 			INPC npc = this.replayer.getNPCList().get(action.getName());
 
