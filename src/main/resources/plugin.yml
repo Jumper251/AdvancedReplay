@@ -1,0 +1,9 @@
+name: AdvancedReplay
+version: 1.6.1
+main: me.jumper251.replay.ReplaySystem
+author: Jumper251
+depend: [ProtocolLib]
+commands:
+  replay:
+    description: Main Replay command
+    aliases: [rp]
