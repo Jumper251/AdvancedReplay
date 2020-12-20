@@ -26,6 +26,10 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
 
+/**
+ * This packet has been removed from Minecraft and is no longer supported.
+ */
+@Deprecated
 public class WrapperPlayServerBed extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.BED;
 

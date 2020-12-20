@@ -1,6 +1,5 @@
 /**
  * PacketWrapper - ProtocolLib wrappers for Minecraft packets
-
  * Copyright (C) dmulloy2 <http://dmulloy2.net>
  * Copyright (C) Kristian S. Strangeland
  *
@@ -25,13 +24,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
+import com.comphenix.packetwrapper.util.Removed;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-
-import me.jumper251.replay.utils.VersionUtil;
-import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
 	public static final PacketType TYPE =
@@ -193,6 +190,7 @@ public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
 	 * 
 	 * @return The current Metadata
 	 */
+	@Removed
 	public WrappedDataWatcher getMetadata() {
 		return handle.getDataWatcherModifier().read(0);
 	}
@@ -202,9 +200,8 @@ public class WrapperPlayServerNamedEntitySpawn extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
+	@Removed
 	public void setMetadata(WrappedDataWatcher value) {
-		if (VersionUtil.isBelow(VersionEnum.V1_14)) {
-			handle.getDataWatcherModifier().write(0, value);
-		}
+		handle.getDataWatcherModifier().write(0, value);
 	}
 }

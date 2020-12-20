@@ -78,33 +78,99 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 		return getEntity(event.getPlayer().getWorld());
 	}
 
-	public int getDx() {
-		return handle.getIntegers().read(1);
+	/**
+	 * Retrieve DX.
+	 *
+	 * @return The current DX
+	 */
+	public double getDx() {
+		return handle.getShorts().read(0) / 4096D;
 	}
 
-	public void setDx(int value) {
-		handle.getIntegers().write(1, value);
+	/**
+	 * Set DX.
+	 *
+	 * @param value - new value.
+	 */
+	public void setDx(double value) {
+		handle.getShorts().write(0, (short) (value * 4096));
 	}
 
-	public int getDy() {
-		return handle.getIntegers().read(2);
+	/**
+	 * Retrieve DY.
+	 *
+	 * @return The current DY
+	 */
+	public double getDy() {
+		return handle.getShorts().read(1) / 4096D;
 	}
 
-	public void setDy(int value) {
-		handle.getIntegers().write(2, value);
+	/**
+	 * Set DY.
+	 *
+	 * @param value - new value.
+	 */
+	public void setDy(double value) {
+		handle.getShorts().write(1, (short) (value * 4096));
 	}
 
-	public int getDz() {
-		return handle.getIntegers().read(3);
+	/**
+	 * Retrieve DZ.
+	 *
+	 * @return The current DZ
+	 */
+	public double getDz() {
+		return handle.getShorts().read(2) / 4096D;
 	}
 
-	public void setDz(int value) {
-		handle.getIntegers().write(3, value);
+	/**
+	 * Set DZ.
+	 *
+	 * @param value - new value.
+	 */
+	public void setDz(double value) {
+		handle.getShorts().write(2, (short) (value * 4096));
+	}
+
+	/**
+	 * Retrieve the yaw of the current entity.
+	 *
+	 * @return The current Yaw
+	 */
+	public float getYaw() {
+		return (handle.getBytes().read(0) * 360.F) / 256.0F;
+	}
+
+	/**
+	 * Set the yaw of the current entity.
+	 *
+	 * @param value - new yaw.
+	 */
+	public void setYaw(float value) {
+		handle.getBytes().write(0, (byte) (value * 256.0F / 360.0F));
+	}
+
+	/**
+	 * Retrieve the pitch of the current entity.
+	 *
+	 * @return The current pitch
+	 */
+	public float getPitch() {
+		return (handle.getBytes().read(1) * 360.F) / 256.0F;
+	}
+
+	/**
+	 * Set the pitch of the current entity.
+	 *
+	 * @param value - new pitch.
+	 */
+	public void setPitch(float value) {
+		handle.getBytes().write(1, (byte) (value * 256.0F / 360.0F));
 	}
 
 	/**
 	 * Retrieve On Ground.
-	 * 
+	 *
 	 * @return The current On Ground
 	 */
 	public boolean getOnGround() {
@@ -113,7 +179,7 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 
 	/**
 	 * Set On Ground.
-	 * 
+	 *
 	 * @param value - new value.
 	 */
 	public void setOnGround(boolean value) {

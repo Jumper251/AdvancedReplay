@@ -84,7 +84,7 @@ public class WrapperPlayServerRelEntityMoveLook extends AbstractPacket {
 	 * @return The current DX
 	 */
 	public double getDx() {
-		return handle.getIntegers().read(1) / 4096D;
+		return handle.getShorts().read(0) / 4096D;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class WrapperPlayServerRelEntityMoveLook extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	public void setDx(double value) {
-		handle.getIntegers().write(1, (int) (value * 4096));
+		handle.getShorts().write(0, (short) (value * 4096));
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class WrapperPlayServerRelEntityMoveLook extends AbstractPacket {
 	 * @return The current DY
 	 */
 	public double getDy() {
-		return handle.getIntegers().read(2) / 4096D;
+		return handle.getShorts().read(1) / 4096D;
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class WrapperPlayServerRelEntityMoveLook extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	public void setDy(double value) {
-		handle.getIntegers().write(2, (int) (value * 4096));
+		handle.getShorts().write(1, (short) (value * 4096));
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class WrapperPlayServerRelEntityMoveLook extends AbstractPacket {
 	 * @return The current DZ
 	 */
 	public double getDz() {
-		return handle.getIntegers().read(3) / 4096D;
+		return handle.getShorts().read(2) / 4096D;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class WrapperPlayServerRelEntityMoveLook extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	public void setDz(double value) {
-		handle.getIntegers().write(3, (int) (value * 4096));
+		handle.getShorts().write(2, (short) (value * 4096));
 	}
 
 	/**
