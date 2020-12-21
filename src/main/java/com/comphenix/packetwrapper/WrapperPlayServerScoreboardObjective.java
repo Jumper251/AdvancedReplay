@@ -24,16 +24,15 @@ import com.comphenix.protocol.reflect.IntEnum;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 
 public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
+	public static final PacketType TYPE = PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
 
-	public WrapperPlayServerScoreboardObjective() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerScoreboardObjective () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerScoreboardObjective(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerScoreboardObjective (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -42,13 +41,13 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * @author dmulloy2
 	 */
 	public static class Mode extends IntEnum {
-		public static final int ADD_OBJECTIVE = 0;
+		public static final int ADD_OBJECTIVE    = 0;
 		public static final int REMOVE_OBJECTIVE = 1;
-		public static final int UPDATE_VALUE = 2;
+		public static final int UPDATE_VALUE     = 2;
 
-		private static final Mode INSTANCE = new Mode();
+		private static final Mode INSTANCE = new Mode ();
 
-		public static Mode getInstance() {
+		public static Mode getInstance () {
 			return INSTANCE;
 		}
 	}
@@ -60,8 +59,8 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * 
 	 * @return The current Objective name
 	 */
-	public String getName() {
-		return handle.getStrings().read(0);
+	public String getName () {
+		return handle.getStrings ().read (0);
 	}
 
 	/**
@@ -69,8 +68,8 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setName(String value) {
-		handle.getStrings().write(0, value);
+	public void setName (String value) {
+		handle.getStrings ().write (0, value);
 	}
 
 	/**
@@ -80,8 +79,8 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * 
 	 * @return The current Objective value
 	 */
-	public WrappedChatComponent getDisplayName() {
-		return handle.getChatComponents().read(0);
+	public WrappedChatComponent getDisplayName () {
+		return handle.getChatComponents ().read (0);
 	}
 
 	/**
@@ -89,8 +88,8 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setDisplayName(WrappedChatComponent value) {
-		handle.getChatComponents().write(0, value);
+	public void setDisplayName (WrappedChatComponent value) {
+		handle.getChatComponents ().write (0, value);
 	}
 
 	/**
@@ -100,8 +99,8 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * 
 	 * @return the current health display value
 	 */
-	public HealthDisplay getHealthDisplay() {
-		return handle.getEnumModifier(HealthDisplay.class, 2).read(0);
+	public HealthDisplay getHealthDisplay () {
+		return handle.getEnumModifier (HealthDisplay.class, 2).read (0);
 	}
 
 	/**
@@ -110,8 +109,8 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * @param value - value
 	 * @see #getHealthDisplay()
 	 */
-	public void setHealthDisplay(HealthDisplay value) {
-		handle.getEnumModifier(HealthDisplay.class, 2).write(0, value);
+	public void setHealthDisplay (HealthDisplay value) {
+		handle.getEnumModifier (HealthDisplay.class, 2).write (0, value);
 	}
 
 	/**
@@ -122,8 +121,8 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * 
 	 * @return The current Mode
 	 */
-	public int getMode() {
-		return handle.getIntegers().read(0);
+	public int getMode () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -131,11 +130,12 @@ public class WrapperPlayServerScoreboardObjective extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setMode(int value) {
-		handle.getIntegers().write(0, value);
+	public void setMode (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	public enum HealthDisplay {
-		INTEGER, HEARTS
+		INTEGER,
+		HEARTS
 	}
 }

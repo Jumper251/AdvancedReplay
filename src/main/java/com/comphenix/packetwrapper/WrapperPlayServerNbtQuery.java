@@ -24,51 +24,50 @@ import com.comphenix.protocol.wrappers.nbt.NbtBase;
 
 public class WrapperPlayServerNbtQuery extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.NBT_QUERY;
-    
-    public WrapperPlayServerNbtQuery() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerNbtQuery(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Server.NBT_QUERY;
+
+	public WrapperPlayServerNbtQuery () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerNbtQuery (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Transaction ID.
      * <p>
      * Notes: can be compared to the one sent in the original query packet.
      * @return The current Transaction ID
      */
-    public int getTransactionId() {
-        return handle.getIntegers().read(0);
-    }
-    
-    /**
+	public int getTransactionId () {
+		return handle.getIntegers ().read (0);
+	}
+
+	/**
      * Set Transaction ID.
      * @param value - new value.
      */
-    public void setTransactionId(int value) {
-        handle.getIntegers().write(0, value);
-    }
-    
-    /**
+	public void setTransactionId (int value) {
+		handle.getIntegers ().write (0, value);
+	}
+
+	/**
      * Retrieve NBT.
      * <p>
      * Notes: the NBT of the block or entity. May be a TAG_END (0) in which case no NBT is present.
      * @return The current NBT
      */
-    public NbtBase<?> getNbt() {
-        return handle.getNbtModifier().read(0);
-    }
-    
-    /**
+	public NbtBase<?> getNbt () {
+		return handle.getNbtModifier ().read (0);
+	}
+
+	/**
      * Set NBT.
      * @param value - new value.
      */
-    public void setNbt(NbtBase<?> value) {
-        handle.getNbtModifier().write(0, value);
-    }
-    
+	public void setNbt (NbtBase<?> value) {
+		handle.getNbtModifier ().write (0, value);
+	}
 }

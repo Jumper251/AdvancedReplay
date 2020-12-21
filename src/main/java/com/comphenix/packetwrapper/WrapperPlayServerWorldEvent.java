@@ -25,13 +25,13 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.WORLD_EVENT;
 
-	public WrapperPlayServerWorldEvent() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerWorldEvent () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerWorldEvent(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerWorldEvent (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @return The current Effect ID
 	 */
-	public int getEffectId() {
-		return handle.getIntegers().read(0);
+	public int getEffectId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEffectId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEffectId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @return The current Location
 	 */
-	public BlockPosition getLocation() {
-		return handle.getBlockPositionModifier().read(0);
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLocation(BlockPosition value) {
-		handle.getBlockPositionModifier().write(0, value);
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
 	}
 
 	/**
@@ -81,8 +81,8 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @return The current Data
 	 */
-	public int getData() {
-		return handle.getIntegers().read(1);
+	public int getData () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setData(int value) {
-		handle.getIntegers().write(1, value);
+	public void setData (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @return The current Disable relative volume
 	 */
-	public boolean getDisableRelativeVolume() {
-		return handle.getBooleans().read(0);
+	public boolean getDisableRelativeVolume () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -110,8 +110,7 @@ public class WrapperPlayServerWorldEvent extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setDisableRelativeVolume(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setDisableRelativeVolume (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
-
 }

@@ -24,16 +24,15 @@ import com.comphenix.protocol.wrappers.ChunkCoordIntPair;
 import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 
 public class WrapperPlayServerMultiBlockChange extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.MULTI_BLOCK_CHANGE;
+	public static final PacketType TYPE = PacketType.Play.Server.MULTI_BLOCK_CHANGE;
 
-	public WrapperPlayServerMultiBlockChange() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerMultiBlockChange () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerMultiBlockChange(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerMultiBlockChange (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +40,8 @@ public class WrapperPlayServerMultiBlockChange extends AbstractPacket {
 	 * 
 	 * @return The current chunk
 	 */
-	public ChunkCoordIntPair getChunk() {
-		return handle.getChunkCoordIntPairs().read(0);
+	public ChunkCoordIntPair getChunk () {
+		return handle.getChunkCoordIntPairs ().read (0);
 	}
 
 	/**
@@ -50,8 +49,8 @@ public class WrapperPlayServerMultiBlockChange extends AbstractPacket {
 	 * 
 	 * @param value - new value
 	 */
-	public void setChunk(ChunkCoordIntPair value) {
-		handle.getChunkCoordIntPairs().write(0, value);
+	public void setChunk (ChunkCoordIntPair value) {
+		handle.getChunkCoordIntPairs ().write (0, value);
 	}
 
 	/**
@@ -59,8 +58,8 @@ public class WrapperPlayServerMultiBlockChange extends AbstractPacket {
 	 * 
 	 * @return The copied block change array.
 	 */
-	public MultiBlockChangeInfo[] getRecords() {
-		return handle.getMultiBlockChangeInfoArrays().read(0);
+	public MultiBlockChangeInfo[] getRecords () {
+		return handle.getMultiBlockChangeInfoArrays ().read (0);
 	}
 
 	/**
@@ -68,7 +67,7 @@ public class WrapperPlayServerMultiBlockChange extends AbstractPacket {
 	 * 
 	 * @param value - new value
 	 */
-	public void setRecords(MultiBlockChangeInfo[] value) {
-		handle.getMultiBlockChangeInfoArrays().write(0, value);
+	public void setRecords (MultiBlockChangeInfo[] value) {
+		handle.getMultiBlockChangeInfoArrays ().write (0, value);
 	}
 }

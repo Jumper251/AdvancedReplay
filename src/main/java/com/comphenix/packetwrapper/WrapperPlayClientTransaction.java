@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayClientTransaction extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.TRANSACTION;
 
-	public WrapperPlayClientTransaction() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientTransaction () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientTransaction(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientTransaction (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayClientTransaction extends AbstractPacket {
 	 * 
 	 * @return The current Window ID
 	 */
-	public int getWindowId() {
-		return handle.getIntegers().read(0);
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayClientTransaction extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowId(byte value) {
-		handle.getIntegers().write(0, (int) value);
+	public void setWindowId (byte value) {
+		handle.getIntegers ().write (0, (int)value);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class WrapperPlayClientTransaction extends AbstractPacket {
 	 * 
 	 * @return The current Action number
 	 */
-	public short getActionNumber() {
-		return handle.getShorts().read(0);
+	public short getActionNumber () {
+		return handle.getShorts ().read (0);
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class WrapperPlayClientTransaction extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setActionNumber(short value) {
-		handle.getShorts().write(0, value);
+	public void setActionNumber (short value) {
+		handle.getShorts ().write (0, value);
 	}
 
 	/**
@@ -81,8 +81,8 @@ public class WrapperPlayClientTransaction extends AbstractPacket {
 	 * 
 	 * @return The current Accepted
 	 */
-	public boolean getAccepted() {
-		return handle.getBooleans().read(0);
+	public boolean getAccepted () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -90,8 +90,7 @@ public class WrapperPlayClientTransaction extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setAccepted(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setAccepted (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
-
 }

@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayClientKeepAlive extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.KEEP_ALIVE;
 
-	public WrapperPlayClientKeepAlive() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientKeepAlive () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientKeepAlive(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientKeepAlive (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -38,8 +38,8 @@ public class WrapperPlayClientKeepAlive extends AbstractPacket {
 	 * 
 	 * @return The current Keep Alive ID
 	 */
-	public long getKeepAliveId() {
-		return handle.getLongs().read(0);
+	public long getKeepAliveId () {
+		return handle.getLongs ().read (0);
 	}
 
 	/**
@@ -47,8 +47,7 @@ public class WrapperPlayClientKeepAlive extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setKeepAliveId(long value) {
-		handle.getLongs().write(0, value);
+	public void setKeepAliveId (long value) {
+		handle.getLongs ().write (0, value);
 	}
-
 }

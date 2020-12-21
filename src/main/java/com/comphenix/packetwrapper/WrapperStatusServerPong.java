@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperStatusServerPong extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Status.Server.PONG;
 
-	public WrapperStatusServerPong() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperStatusServerPong () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperStatusServerPong(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperStatusServerPong (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperStatusServerPong extends AbstractPacket {
 	 * 
 	 * @return The current Time
 	 */
-	public long getTime() {
-		return handle.getLongs().read(0);
+	public long getTime () {
+		return handle.getLongs ().read (0);
 	}
 
 	/**
@@ -49,8 +49,7 @@ public class WrapperStatusServerPong extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTime(long value) {
-		handle.getLongs().write(0, value);
+	public void setTime (long value) {
+		handle.getLongs ().write (0, value);
 	}
-
 }

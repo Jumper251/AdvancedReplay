@@ -23,16 +23,15 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 
 public class WrapperPlayServerKickDisconnect extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.KICK_DISCONNECT;
+	public static final PacketType TYPE = PacketType.Play.Server.KICK_DISCONNECT;
 
-	public WrapperPlayServerKickDisconnect() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerKickDisconnect () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerKickDisconnect(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerKickDisconnect (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -43,8 +42,8 @@ public class WrapperPlayServerKickDisconnect extends AbstractPacket {
 	 * 
 	 * @return The current Reason
 	 */
-	public WrappedChatComponent getReason() {
-		return handle.getChatComponents().read(0);
+	public WrappedChatComponent getReason () {
+		return handle.getChatComponents ().read (0);
 	}
 
 	/**
@@ -52,8 +51,7 @@ public class WrapperPlayServerKickDisconnect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setReason(WrappedChatComponent value) {
-		handle.getChatComponents().write(0, value);
+	public void setReason (WrappedChatComponent value) {
+		handle.getChatComponents ().write (0, value);
 	}
-
 }

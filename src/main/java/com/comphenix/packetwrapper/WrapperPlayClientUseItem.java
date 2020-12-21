@@ -33,13 +33,13 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 
 	public static final PacketType TYPE = PacketType.Play.Client.USE_ITEM;
 
-	public WrapperPlayClientUseItem() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientUseItem () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientUseItem(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientUseItem (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @return The current Location
 	 */
 	@Removed
-	public BlockPosition getLocation() {
-		return handle.getBlockPositionModifier().read(0);
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
 	}
 
 	/**
@@ -60,26 +60,26 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	@Removed
-	public void setLocation(BlockPosition value) {
-		handle.getBlockPositionModifier().write(0, value);
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
 	}
 
 	@Removed
-	public Direction getFace() {
-		return handle.getDirections().read(0);
+	public Direction getFace () {
+		return handle.getDirections ().read (0);
 	}
 
 	@Removed
-	public void setFace(Direction value) {
-		handle.getDirections().write(0, value);
+	public void setFace (Direction value) {
+		handle.getDirections ().write (0, value);
 	}
 
-	public Hand getHand() {
-		return handle.getHands().read(0);
+	public Hand getHand () {
+		return handle.getHands ().read (0);
 	}
 
-	public void setHand(Hand value) {
-		handle.getHands().write(0, value);
+	public void setHand (Hand value) {
+		handle.getHands ().write (0, value);
 	}
 
 	/**
@@ -91,8 +91,8 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @return The current Cursor Position X
 	 */
 	@Removed
-	public float getCursorPositionX() {
-		return handle.getFloat().read(0);
+	public float getCursorPositionX () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	@Removed
-	public void setCursorPositionX(float value) {
-		handle.getFloat().write(0, value);
+	public void setCursorPositionX (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -114,8 +114,8 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @return The current Cursor Position Y
 	 */
 	@Removed
-	public float getCursorPositionY() {
-		return handle.getFloat().read(1);
+	public float getCursorPositionY () {
+		return handle.getFloat ().read (1);
 	}
 
 	/**
@@ -124,8 +124,8 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	@Removed
-	public void setCursorPositionY(float value) {
-		handle.getFloat().write(1, value);
+	public void setCursorPositionY (float value) {
+		handle.getFloat ().write (1, value);
 	}
 
 	/**
@@ -137,8 +137,8 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @return The current Cursor Position Z
 	 */
 	@Removed
-	public float getCursorPositionZ() {
-		return handle.getFloat().read(2);
+	public float getCursorPositionZ () {
+		return handle.getFloat ().read (2);
 	}
 
 	/**
@@ -147,8 +147,8 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	@Removed
-	public void setCursorPositionZ(float value) {
-		handle.getFloat().write(2, value);
+	public void setCursorPositionZ (float value) {
+		handle.getFloat ().write (2, value);
 	}
 
 	public static class MovingObjectPosition {
@@ -157,17 +157,17 @@ public class WrapperPlayClientUseItem extends AbstractPacket {
 		public boolean insideBlock;
 	}
 
-	private static final Class<?> POSITION_CLASS = MinecraftReflection.getMinecraftClass("MovingObjectPositionBlock");
+	private static final Class<?> POSITION_CLASS = MinecraftReflection.getMinecraftClass ("MovingObjectPositionBlock");
 
-	private static final AutoWrapper<MovingObjectPosition> AUTO_WRAPPER = AutoWrapper.wrap(MovingObjectPosition.class, POSITION_CLASS)
-			.field(0, EnumWrappers.getDirectionConverter())
-			.field(1, BlockPosition.getConverter());
+	private static final AutoWrapper<MovingObjectPosition> AUTO_WRAPPER = AutoWrapper.wrap (MovingObjectPosition.class, POSITION_CLASS)
+																			  .field (0, EnumWrappers.getDirectionConverter ())
+																			  .field (1, BlockPosition.getConverter ());
 
-	public MovingObjectPosition getPosition() {
-		return handle.getModifier().withType(POSITION_CLASS, AUTO_WRAPPER).read(0);
+	public MovingObjectPosition getPosition () {
+		return handle.getModifier ().withType (POSITION_CLASS, AUTO_WRAPPER).read (0);
 	}
 
-	public void setPosition(MovingObjectPosition position) {
-		handle.getModifier().withType(POSITION_CLASS, AUTO_WRAPPER).write(0, position);
+	public void setPosition (MovingObjectPosition position) {
+		handle.getModifier ().withType (POSITION_CLASS, AUTO_WRAPPER).write (0, position);
 	}
 }

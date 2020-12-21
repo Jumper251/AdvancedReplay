@@ -23,16 +23,15 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.ResourcePackStatus;
 
 public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Client.RESOURCE_PACK_STATUS;
+	public static final PacketType TYPE = PacketType.Play.Client.RESOURCE_PACK_STATUS;
 
-	public WrapperPlayClientResourcePackStatus() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientResourcePackStatus () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientResourcePackStatus(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientResourcePackStatus (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -43,8 +42,8 @@ public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
 	 * 
 	 * @return The current Result
 	 */
-	public ResourcePackStatus getResult() {
-		return handle.getResourcePackStatus().read(0);
+	public ResourcePackStatus getResult () {
+		return handle.getResourcePackStatus ().read (0);
 	}
 
 	/**
@@ -52,7 +51,7 @@ public class WrapperPlayClientResourcePackStatus extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setResult(ResourcePackStatus value) {
-		handle.getResourcePackStatus().write(0, value);
+	public void setResult (ResourcePackStatus value) {
+		handle.getResourcePackStatus ().write (0, value);
 	}
 }

@@ -24,22 +24,22 @@ import com.comphenix.protocol.wrappers.MinecraftKey;
 
 public class WrapperPlayServerSelectAdvancementTab extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.SELECT_ADVANCEMENT_TAB;
-    
-    public WrapperPlayServerSelectAdvancementTab() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerSelectAdvancementTab(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    public MinecraftKey getKey() {
-        return handle.getMinecraftKeys().readSafely(0);
-    }
+	public static final PacketType TYPE = PacketType.Play.Server.SELECT_ADVANCEMENT_TAB;
 
-    public void setKey(MinecraftKey key) {
-        handle.getMinecraftKeys().writeSafely(0, key);
-    }
+	public WrapperPlayServerSelectAdvancementTab () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerSelectAdvancementTab (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	public MinecraftKey getKey () {
+		return handle.getMinecraftKeys ().readSafely (0);
+	}
+
+	public void setKey (MinecraftKey key) {
+		handle.getMinecraftKeys ().writeSafely (0, key);
+	}
 }

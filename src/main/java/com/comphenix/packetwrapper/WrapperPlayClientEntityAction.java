@@ -18,24 +18,23 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayClientEntityAction extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.ENTITY_ACTION;
 
-	public WrapperPlayClientEntityAction() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientEntityAction () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientEntityAction(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientEntityAction (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -45,8 +44,8 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -54,8 +53,8 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -64,8 +63,8 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -74,8 +73,8 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -85,8 +84,8 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * 
 	 * @return The current Action ID
 	 */
-	public PlayerAction getAction() {
-		return handle.getPlayerActions().read(0);
+	public PlayerAction getAction () {
+		return handle.getPlayerActions ().read (0);
 	}
 
 	/**
@@ -94,8 +93,8 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setAction(PlayerAction value) {
-		handle.getPlayerActions().write(0, value);
+	public void setAction (PlayerAction value) {
+		handle.getPlayerActions ().write (0, value);
 	}
 
 	/**
@@ -105,8 +104,8 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * 
 	 * @return The current Jump Boost
 	 */
-	public int getJumpBoost() {
-		return handle.getIntegers().read(1);
+	public int getJumpBoost () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -114,8 +113,7 @@ public class WrapperPlayClientEntityAction extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setJumpBoost(int value) {
-		handle.getIntegers().write(1, value);
+	public void setJumpBoost (int value) {
+		handle.getIntegers ().write (1, value);
 	}
-
 }

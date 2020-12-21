@@ -24,33 +24,32 @@ import com.comphenix.protocol.wrappers.EnumWrappers.Difficulty;
 
 public class WrapperPlayClientDifficultyChange extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Client.DIFFICULTY_CHANGE;
-    
-    public WrapperPlayClientDifficultyChange() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientDifficultyChange(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Client.DIFFICULTY_CHANGE;
+
+	public WrapperPlayClientDifficultyChange () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayClientDifficultyChange (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve New difficulty.
      * <p>
      * Notes: 0: peaceful, 1: easy, 2: normal, 3: hard
      * @return The current New difficulty
      */
-    public Difficulty getNewDifficulty() {
-        return handle.getDifficulties().read(0);
-    }
-    
-    /**
+	public Difficulty getNewDifficulty () {
+		return handle.getDifficulties ().read (0);
+	}
+
+	/**
      * Set New difficulty.
      * @param value - new value.
      */
-    public void setNewDifficulty(Difficulty value) {
-        handle.getDifficulties().write(0, value);
-    }
-    
+	public void setNewDifficulty (Difficulty value) {
+		handle.getDifficulties ().write (0, value);
+	}
 }

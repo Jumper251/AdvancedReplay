@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerStatistic extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.STATISTIC;
 
-	public WrapperPlayServerStatistic() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerStatistic () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerStatistic(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerStatistic (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	// TODO fix upon request

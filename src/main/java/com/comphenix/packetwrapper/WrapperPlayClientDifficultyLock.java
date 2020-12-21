@@ -23,31 +23,30 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayClientDifficultyLock extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Client.DIFFICULTY_LOCK;
-    
-    public WrapperPlayClientDifficultyLock() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientDifficultyLock(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Client.DIFFICULTY_LOCK;
+
+	public WrapperPlayClientDifficultyLock () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayClientDifficultyLock (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Locked.
      * @return The current Locked
      */
-    public boolean getLocked() {
-        return handle.getBooleans().read(0);
-    }
-    
-    /**
+	public boolean getLocked () {
+		return handle.getBooleans ().read (0);
+	}
+
+	/**
      * Set Locked.
      * @param value - new value.
      */
-    public void setLocked(boolean value) {
-        handle.getBooleans().write(0, value);
-    }
-    
+	public void setLocked (boolean value) {
+		handle.getBooleans ().write (0, value);
+	}
 }

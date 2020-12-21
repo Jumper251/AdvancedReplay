@@ -22,16 +22,15 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayServerScoreboardDisplayObjective extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
+	public static final PacketType TYPE = PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
 
-	public WrapperPlayServerScoreboardDisplayObjective() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerScoreboardDisplayObjective () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerScoreboardDisplayObjective(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerScoreboardDisplayObjective (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -42,8 +41,8 @@ public class WrapperPlayServerScoreboardDisplayObjective extends AbstractPacket 
 	 * 
 	 * @return The current Position
 	 */
-	public int getPosition() {
-		return handle.getIntegers().read(0);
+	public int getPosition () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -51,8 +50,8 @@ public class WrapperPlayServerScoreboardDisplayObjective extends AbstractPacket 
 	 * 
 	 * @param value - new value.
 	 */
-	public void setPosition(int value) {
-		handle.getIntegers().write(0, value);
+	public void setPosition (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -62,8 +61,8 @@ public class WrapperPlayServerScoreboardDisplayObjective extends AbstractPacket 
 	 * 
 	 * @return The current Score Name
 	 */
-	public String getScoreName() {
-		return handle.getStrings().read(0);
+	public String getScoreName () {
+		return handle.getStrings ().read (0);
 	}
 
 	/**
@@ -71,8 +70,7 @@ public class WrapperPlayServerScoreboardDisplayObjective extends AbstractPacket 
 	 * 
 	 * @param value - new value.
 	 */
-	public void setScoreName(String value) {
-		handle.getStrings().write(0, value);
+	public void setScoreName (String value) {
+		handle.getStrings ().write (0, value);
 	}
-
 }

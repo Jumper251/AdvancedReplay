@@ -18,24 +18,22 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.SPAWN_ENTITY_WEATHER;
+	public static final PacketType TYPE = PacketType.Play.Server.SPAWN_ENTITY_WEATHER;
 
-	public WrapperPlayServerSpawnEntityWeather() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerSpawnEntityWeather () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerSpawnEntityWeather(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerSpawnEntityWeather (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -45,8 +43,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -54,8 +52,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -64,8 +62,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -74,8 +72,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -85,8 +83,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @return The current Type
 	 */
-	public int getType() {
-		return handle.getIntegers().read(1);
+	public int getType () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -94,8 +92,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setType(int value) {
-		handle.getIntegers().write(1, value);
+	public void setType (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -105,8 +103,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @return The current X
 	 */
-	public double getX() {
-		return handle.getDoubles().read(0);
+	public double getX () {
+		return handle.getDoubles ().read (0);
 	}
 
 	/**
@@ -114,8 +112,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setX(double value) {
-		handle.getDoubles().write(0, value);
+	public void setX (double value) {
+		handle.getDoubles ().write (0, value);
 	}
 
 	/**
@@ -125,8 +123,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @return The current y
 	 */
-	public double getY() {
-		return handle.getDoubles().read(1);
+	public double getY () {
+		return handle.getDoubles ().read (1);
 	}
 
 	/**
@@ -134,8 +132,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setY(double value) {
-		handle.getDoubles().write(1, value);
+	public void setY (double value) {
+		handle.getDoubles ().write (1, value);
 	}
 
 	/**
@@ -145,8 +143,8 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @return The current z
 	 */
-	public double getZ() {
-		return handle.getDoubles().read(2);
+	public double getZ () {
+		return handle.getDoubles ().read (2);
 	}
 
 	/**
@@ -154,7 +152,7 @@ public class WrapperPlayServerSpawnEntityWeather extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setZ(double value) {
-		handle.getDoubles().write(2, value);
+	public void setZ (double value) {
+		handle.getDoubles ().write (2, value);
 	}
 }

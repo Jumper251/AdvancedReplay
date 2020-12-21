@@ -18,13 +18,12 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
 
 /**
  * Used to process a chunk.
@@ -44,16 +43,16 @@ public class ChunkPacketProcessor {
 		private int skylightOffset;
 		private int extraOffset;
 
-		private ChunkOffsets(int blockIdOffset, int dataOffset,
-				int lightOffset, int skylightOffset, int extraOffset) {
-			this.blockIdOffset = blockIdOffset;
-			this.dataOffset = dataOffset;
-			this.lightOffset = lightOffset;
+		private ChunkOffsets (int blockIdOffset, int dataOffset,
+			int lightOffset, int skylightOffset, int extraOffset) {
+			this.blockIdOffset  = blockIdOffset;
+			this.dataOffset     = dataOffset;
+			this.lightOffset    = lightOffset;
 			this.skylightOffset = skylightOffset;
-			this.extraOffset = extraOffset;
+			this.extraOffset    = extraOffset;
 		}
 
-		private void incrementIdIndex() {
+		private void incrementIdIndex () {
 			blockIdOffset += ChunkPacketProcessor.BLOCK_ID_LENGTH;
 			dataOffset += ChunkPacketProcessor.BYTES_PER_NIBBLE_PART;
 			dataOffset += ChunkPacketProcessor.BYTES_PER_NIBBLE_PART;
@@ -63,7 +62,7 @@ public class ChunkPacketProcessor {
 			}
 		}
 
-		private void incrementExtraIndex() {
+		private void incrementExtraIndex () {
 			if (extraOffset >= 0) {
 				extraOffset += ChunkPacketProcessor.BYTES_PER_NIBBLE_PART;
 			}
@@ -77,7 +76,7 @@ public class ChunkPacketProcessor {
 		 * 
 		 * @return The starting location of the block ID data.
 		 */
-		public int getBlockIdOffset() {
+		public int getBlockIdOffset () {
 			return blockIdOffset;
 		}
 
@@ -89,7 +88,7 @@ public class ChunkPacketProcessor {
 		 * 
 		 * @return The starting location of the block meta data.
 		 */
-		public int getDataOffset() {
+		public int getDataOffset () {
 			return dataOffset;
 		}
 
@@ -102,7 +101,7 @@ public class ChunkPacketProcessor {
 		 * 
 		 * @return The starting location of the torch light data.
 		 */
-		public int getLightOffset() {
+		public int getLightOffset () {
 			return lightOffset;
 		}
 
@@ -114,7 +113,7 @@ public class ChunkPacketProcessor {
 		 * 
 		 * @return The starting location of the skylight data.
 		 */
-		public int getSkylightOffset() {
+		public int getSkylightOffset () {
 			return skylightOffset;
 		}
 
@@ -123,7 +122,7 @@ public class ChunkPacketProcessor {
 		 * 
 		 * @return TRUE if it does, FALSE otherwise.
 		 */
-		public boolean hasSkylightOffset() {
+		public boolean hasSkylightOffset () {
 			return skylightOffset >= 0;
 		}
 
@@ -135,7 +134,7 @@ public class ChunkPacketProcessor {
 		 * 
 		 * @return The starting location of the extra data.
 		 */
-		public int getExtraOffset() {
+		public int getExtraOffset () {
 			return extraOffset;
 		}
 
@@ -144,7 +143,7 @@ public class ChunkPacketProcessor {
 		 * 
 		 * @return TRUE if it does, FALSE otherwise.
 		 */
-		public boolean hasExtraOffset() {
+		public boolean hasExtraOffset () {
 			return extraOffset > 0;
 		}
 	}
@@ -163,8 +162,8 @@ public class ChunkPacketProcessor {
 		 * @param data - the data array.
 		 * @param offsets - the offsets with the data for the given chunklet.
 		 */
-		public void processChunklet(Location origin, byte[] data,
-				ChunkOffsets offsets);
+		public void processChunklet (Location origin, byte[] data,
+			ChunkOffsets offsets);
 
 		/**
 		 * Process the biome array for a chunk (16x256x16).
@@ -178,14 +177,14 @@ public class ChunkPacketProcessor {
 		 * @param biomeIndex - the starting index of the biome data (256 bytes
 		 *        in lenght).
 		 */
-		public void processBiomeArray(Location origin, byte[] data,
-				int biomeIndex);
+		public void processBiomeArray (Location origin, byte[] data,
+			int biomeIndex);
 	}
 
 	// Useful Minecraft constants
 	protected static final int BYTES_PER_NIBBLE_PART = 2048;
-	protected static final int CHUNK_SEGMENTS = 16;
-	protected static final int NIBBLES_REQUIRED = 4;
+	protected static final int CHUNK_SEGMENTS        = 16;
+	protected static final int NIBBLES_REQUIRED      = 4;
 
 	/**Misspelled.
 	 * @see #BLOCK_ID_LENGTH
@@ -195,13 +194,13 @@ public class ChunkPacketProcessor {
 
 	public static final int BLOCK_ID_LENGTH = 4096;
 
-    /**Misspelled.
+	/**Misspelled.
      * @see #DATA_LENGTH
      */
 	@Deprecated
 	public static final int DATA_LENGHT = 2048;
 
-    public static final int DATA_LENGTH = 2048;
+	public static final int DATA_LENGTH        = 2048;
 	public static final int BIOME_ARRAY_LENGTH = 256;
 
 	private int chunkX;
@@ -218,7 +217,7 @@ public class ChunkPacketProcessor {
 	private byte[] data;
 	private World world;
 
-	private ChunkPacketProcessor() {
+	private ChunkPacketProcessor () {
 		// Use factory methods
 	}
 
@@ -228,27 +227,27 @@ public class ChunkPacketProcessor {
 	 * @param packet - the map chunk packet.
 	 * @return The chunk packet processor.
 	 */
-	public static ChunkPacketProcessor fromMapPacket(PacketContainer packet,
-			World world) {
-		if (!packet.getType().equals(PacketType.Play.Server.MAP_CHUNK))
-			throw new IllegalArgumentException(packet
-					+ " must be a MAP_CHUNK packet.");
+	public static ChunkPacketProcessor fromMapPacket (PacketContainer packet,
+		World world) {
+		if (!packet.getType ().equals (PacketType.Play.Server.MAP_CHUNK))
+			throw new IllegalArgumentException (packet
+												+ " must be a MAP_CHUNK packet.");
 
-		StructureModifier<Integer> ints = packet.getIntegers();
-		StructureModifier<byte[]> byteArray = packet.getByteArrays();
+		StructureModifier<Integer> ints     = packet.getIntegers ();
+		StructureModifier<byte[]> byteArray = packet.getByteArrays ();
 
 		// Create an info objects
-		ChunkPacketProcessor processor = new ChunkPacketProcessor();
-		processor.world = world;
-		processor.chunkX = ints.read(0); 	 // packet.a;
-		processor.chunkZ = ints.read(1); 	 // packet.b;
-		processor.chunkMask = ints.read(2);  // packet.c;
-		processor.extraMask = ints.read(3);  // packet.d;
-		processor.data = byteArray.read(1);  // packet.inflatedBuffer;
-		processor.startIndex = 0;
+		ChunkPacketProcessor processor = new ChunkPacketProcessor ();
+		processor.world                = world;
+		processor.chunkX               = ints.read (0);      // packet.a;
+		processor.chunkZ               = ints.read (1);      // packet.b;
+		processor.chunkMask            = ints.read (2);      // packet.c;
+		processor.extraMask            = ints.read (3);      // packet.d;
+		processor.data                 = byteArray.read (1); // packet.inflatedBuffer;
+		processor.startIndex           = 0;
 
-		if (packet.getBooleans().size() > 0) {
-			processor.hasContinuous = packet.getBooleans().read(0);
+		if (packet.getBooleans ().size () > 0) {
+			processor.hasContinuous = packet.getBooleans ().read (0);
 		}
 		return processor;
 	}
@@ -304,7 +303,7 @@ public class ChunkPacketProcessor {
 	 * 
 	 * @param processor - the processor that will process the chunk.
 	 */
-	public void process(ChunkletProcessor processor) {
+	public void process (ChunkletProcessor processor) {
 		// Compute chunk number
 		for (int i = 0; i < CHUNK_SEGMENTS; i++) {
 			if ((chunkMask & (1 << i)) > 0) {
@@ -315,7 +314,7 @@ public class ChunkPacketProcessor {
 			}
 		}
 
-		int skylightCount = getSkylightCount();
+		int skylightCount = getSkylightCount ();
 
 		// The total size of a chunk is the number of blocks sent (depends on the number of sections) multiplied by the
 		// amount of bytes per block. This last figure can be calculated by adding together all the data parts:
@@ -331,19 +330,19 @@ public class ChunkPacketProcessor {
 		//    * Biome array       -   256 bytes
 		//
 		// A section has 16 * 16 * 16 = 4096 blocks.
-		size =
-				BYTES_PER_NIBBLE_PART
-						* ((NIBBLES_REQUIRED + skylightCount)
-								* chunkSectionNumber + extraSectionNumber)
-						+ (hasContinuous ? BIOME_ARRAY_LENGTH : 0);
+		size = BYTES_PER_NIBBLE_PART
+				   * ((NIBBLES_REQUIRED + skylightCount)
+						   * chunkSectionNumber
+					   + extraSectionNumber)
+			   + (hasContinuous ? BIOME_ARRAY_LENGTH : 0);
 
-		if ((getOffset(2) - startIndex) > data.length) {
+		if ((getOffset (2) - startIndex) > data.length) {
 			return;
 		}
 
 		// Make sure the chunk is loaded
-		if (isChunkLoaded(world, chunkX, chunkZ)) {
-			translate(processor);
+		if (isChunkLoaded (world, chunkX, chunkZ)) {
+			translate (processor);
 		}
 	}
 
@@ -355,47 +354,46 @@ public class ChunkPacketProcessor {
 	 * 
 	 * @return Number of skylight byte segments.
 	 */
-	protected int getSkylightCount() {
+	protected int getSkylightCount () {
 		// There's no sun/moon in the end or in the nether, so Minecraft doesn't sent any skylight information
 		// This optimization was added in 1.4.6. Note that ideally you should get this from the "f" (skylight) field.
-		return world.getEnvironment() == Environment.NORMAL ? 1 : 0;
+		return world.getEnvironment () == Environment.NORMAL ? 1 : 0;
 	}
 
-	private int getOffset(int nibbles) {
+	private int getOffset (int nibbles) {
 		return startIndex
-				+ (nibbles * chunkSectionNumber * ChunkPacketProcessor.BYTES_PER_NIBBLE_PART);
+			+ (nibbles * chunkSectionNumber * ChunkPacketProcessor.BYTES_PER_NIBBLE_PART);
 	}
 
-	private void translate(ChunkletProcessor processor) {
+	private void translate (ChunkletProcessor processor) {
 		// Loop over 16x16x16 chunks in the 16x256x16 column
-		int current = 4;
-		ChunkOffsets offsets =
-				new ChunkOffsets(getOffset(0), getOffset(2), getOffset(3),
-						getSkylightCount() > 0 ? getOffset(current++) : -1,
-						extraSectionNumber > 0 ? getOffset(current++) : -1);
+		int current          = 4;
+		ChunkOffsets offsets = new ChunkOffsets (getOffset (0), getOffset (2), getOffset (3),
+			getSkylightCount () > 0 ? getOffset (current++) : -1,
+			extraSectionNumber > 0 ? getOffset (current++) : -1);
 
 		for (int i = 0; i < 16; i++) {
 			// If the bitmask indicates this chunk is sent
 			if ((chunkMask & 1 << i) > 0) {
 				// The lowest block (in x, y, z) in this chunklet
-				Location origin =
-						new Location(world, chunkX << 4, i * 16, chunkZ << 4);
+				Location origin = new Location (world, chunkX << 4, i * 16, chunkZ << 4);
 
-				processor.processChunklet(origin, data, offsets);
-				offsets.incrementIdIndex();
+				processor.processChunklet (origin, data, offsets);
+				offsets.incrementIdIndex ();
 			}
 			if ((extraMask & 1 << i) > 0) {
-				offsets.incrementExtraIndex();
+				offsets.incrementExtraIndex ();
 			}
 		}
 
 		if (hasContinuous) {
-			processor.processBiomeArray(new Location(world, chunkX << 4, 0,
-					chunkZ << 4), data, startIndex + size - BIOME_ARRAY_LENGTH);
+			processor.processBiomeArray (new Location (world, chunkX << 4, 0,
+											 chunkZ << 4),
+				data, startIndex + size - BIOME_ARRAY_LENGTH);
 		}
 	}
 
-	private boolean isChunkLoaded(World world, int x, int z) {
-		return world.isChunkLoaded(x, z);
+	private boolean isChunkLoaded (World world, int x, int z) {
+		return world.isChunkLoaded (x, z);
 	}
 }

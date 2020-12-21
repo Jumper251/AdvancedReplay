@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerEntityDestroy extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.ENTITY_DESTROY;
 
-	public WrapperPlayServerEntityDestroy() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerEntityDestroy () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerEntityDestroy(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerEntityDestroy (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayServerEntityDestroy extends AbstractPacket {
 	 * 
 	 * @return The current Count
 	 */
-	public int getCount() {
-		return handle.getIntegerArrays().read(0).length;
+	public int getCount () {
+		return handle.getIntegerArrays ().read (0).length;
 	}
 
 	/**
@@ -51,8 +51,8 @@ public class WrapperPlayServerEntityDestroy extends AbstractPacket {
 	 * 
 	 * @return The current Entity IDs
 	 */
-	public int[] getEntityIDs() {
-		return handle.getIntegerArrays().read(0);
+	public int[] getEntityIDs () {
+		return handle.getIntegerArrays ().read (0);
 	}
 
 	/**
@@ -60,8 +60,7 @@ public class WrapperPlayServerEntityDestroy extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityIds(int[] value) {
-		handle.getIntegerArrays().write(0, value);
+	public void setEntityIds (int[] value) {
+		handle.getIntegerArrays ().write (0, value);
 	}
-
 }

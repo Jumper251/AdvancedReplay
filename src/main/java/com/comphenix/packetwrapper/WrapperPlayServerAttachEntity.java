@@ -18,23 +18,22 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerAttachEntity extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.ATTACH_ENTITY;
 
-	public WrapperPlayServerAttachEntity() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerAttachEntity () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerAttachEntity(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerAttachEntity (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -44,8 +43,8 @@ public class WrapperPlayServerAttachEntity extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -53,8 +52,8 @@ public class WrapperPlayServerAttachEntity extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -63,8 +62,8 @@ public class WrapperPlayServerAttachEntity extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -73,8 +72,8 @@ public class WrapperPlayServerAttachEntity extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -84,8 +83,8 @@ public class WrapperPlayServerAttachEntity extends AbstractPacket {
 	 * 
 	 * @return The current Vehicle ID
 	 */
-	public int getVehicleId() {
-		return handle.getIntegers().read(1);
+	public int getVehicleId () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class WrapperPlayServerAttachEntity extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setVehicleId(int value) {
-		handle.getIntegers().write(1, value);
+	public void setVehicleId (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 }

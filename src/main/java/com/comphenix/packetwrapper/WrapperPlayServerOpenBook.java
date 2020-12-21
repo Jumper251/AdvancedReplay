@@ -24,33 +24,32 @@ import com.comphenix.protocol.wrappers.EnumWrappers.Hand;
 
 public class WrapperPlayServerOpenBook extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.OPEN_BOOK;
-    
-    public WrapperPlayServerOpenBook() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerOpenBook(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Server.OPEN_BOOK;
+
+	public WrapperPlayServerOpenBook () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerOpenBook (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Hand.
      * <p>
      * Notes: 0: Main hand, 1: Off hand
      * @return The current Hand
      */
-    public Hand getHand() {
-        return handle.getHands().read(0);
-    }
-    
-    /**
+	public Hand getHand () {
+		return handle.getHands ().read (0);
+	}
+
+	/**
      * Set Hand.
      * @param value - new value.
      */
-    public void setHand(Hand value) {
-        handle.getHands().write(0, value);
-    }
-    
+	public void setHand (Hand value) {
+		handle.getHands ().write (0, value);
+	}
 }

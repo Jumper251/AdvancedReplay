@@ -18,21 +18,20 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.inventory.ItemStack;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import org.bukkit.inventory.ItemStack;
 
 public class WrapperPlayClientWindowClick extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.WINDOW_CLICK;
 
-	public WrapperPlayClientWindowClick() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientWindowClick () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientWindowClick(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientWindowClick (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -42,8 +41,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @return The current Window ID
 	 */
-	public int getWindowId() {
-		return handle.getIntegers().read(0);
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -51,8 +50,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setWindowId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -62,8 +61,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @return The current Slot
 	 */
-	public int getSlot() {
-		return handle.getIntegers().read(1);
+	public int getSlot () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -71,8 +70,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setSlot(int value) {
-		handle.getIntegers().write(1, value);
+	public void setSlot (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -82,8 +81,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @return The current Button
 	 */
-	public int getButton() {
-		return handle.getIntegers().read(2);
+	public int getButton () {
+		return handle.getIntegers ().read (2);
 	}
 
 	/**
@@ -91,8 +90,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setButton(int value) {
-		handle.getIntegers().write(2, value);
+	public void setButton (int value) {
+		handle.getIntegers ().write (2, value);
 	}
 
 	/**
@@ -103,8 +102,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @return The current Action number
 	 */
-	public short getActionNumber() {
-		return handle.getShorts().read(0);
+	public short getActionNumber () {
+		return handle.getShorts ().read (0);
 	}
 
 	/**
@@ -112,8 +111,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setActionNumber(short value) {
-		handle.getShorts().write(0, value);
+	public void setActionNumber (short value) {
+		handle.getShorts ().write (0, value);
 	}
 
 	/**
@@ -121,8 +120,8 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @return The current Clicked item
 	 */
-	public ItemStack getClickedItem() {
-		return handle.getItemModifier().read(0);
+	public ItemStack getClickedItem () {
+		return handle.getItemModifier ().read (0);
 	}
 
 	/**
@@ -130,19 +129,25 @@ public class WrapperPlayClientWindowClick extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setClickedItem(ItemStack value) {
-		handle.getItemModifier().write(0, value);
+	public void setClickedItem (ItemStack value) {
+		handle.getItemModifier ().write (0, value);
 	}
 
-	public InventoryClickType getShift() {
-		return handle.getEnumModifier(InventoryClickType.class, 5).read(0);
+	public InventoryClickType getShift () {
+		return handle.getEnumModifier (InventoryClickType.class, 5).read (0);
 	}
 
-	public void setShift(InventoryClickType value) {
-		handle.getEnumModifier(InventoryClickType.class, 5).write(0, value);
+	public void setShift (InventoryClickType value) {
+		handle.getEnumModifier (InventoryClickType.class, 5).write (0, value);
 	}
 
 	public enum InventoryClickType {
-		PICKUP, QUICK_MOVE, SWAP, CLONE, THROW, QUICK_CRAFT, PICKUP_ALL;
+		PICKUP,
+		QUICK_MOVE,
+		SWAP,
+		CLONE,
+		THROW,
+		QUICK_CRAFT,
+		PICKUP_ALL;
 	}
 }

@@ -25,13 +25,13 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 public class WrapperPlayServerSpawnPosition extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.SPAWN_POSITION;
 
-	public WrapperPlayServerSpawnPosition() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerSpawnPosition () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerSpawnPosition(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerSpawnPosition (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class WrapperPlayServerSpawnPosition extends AbstractPacket {
 	 * 
 	 * @return The current Location
 	 */
-	public BlockPosition getLocation() {
-		return handle.getBlockPositionModifier().read(0);
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
 	}
 
 	/**
@@ -50,8 +50,7 @@ public class WrapperPlayServerSpawnPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLocation(BlockPosition value) {
-		handle.getBlockPositionModifier().write(0, value);
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
 	}
-
 }

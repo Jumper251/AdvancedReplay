@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayClientPosition extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.POSITION;
 
-	public WrapperPlayClientPosition() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientPosition () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientPosition(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientPosition (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @return The current X
 	 */
-	public double getX() {
-		return handle.getDoubles().read(0);
+	public double getX () {
+		return handle.getDoubles ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setX(double value) {
-		handle.getDoubles().write(0, value);
+	public void setX (double value) {
+		handle.getDoubles ().write (0, value);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @return The current FeetY
 	 */
-	public double getY() {
-		return handle.getDoubles().read(1);
+	public double getY () {
+		return handle.getDoubles ().read (1);
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setY(double value) {
-		handle.getDoubles().write(1, value);
+	public void setY (double value) {
+		handle.getDoubles ().write (1, value);
 	}
 
 	/**
@@ -81,8 +81,8 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @return The current Z
 	 */
-	public double getZ() {
-		return handle.getDoubles().read(2);
+	public double getZ () {
+		return handle.getDoubles ().read (2);
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setZ(double value) {
-		handle.getDoubles().write(2, value);
+	public void setZ (double value) {
+		handle.getDoubles ().write (2, value);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @return The current On Ground
 	 */
-	public boolean getOnGround() {
-		return handle.getBooleans().read(0);
+	public boolean getOnGround () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -110,8 +110,7 @@ public class WrapperPlayClientPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setOnGround(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setOnGround (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
-
 }

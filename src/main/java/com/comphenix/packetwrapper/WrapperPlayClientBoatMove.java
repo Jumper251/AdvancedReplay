@@ -25,29 +25,28 @@ public class WrapperPlayClientBoatMove extends AbstractPacket {
 
 	public static final PacketType TYPE = PacketType.Play.Client.BOAT_MOVE;
 
-	public WrapperPlayClientBoatMove() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientBoatMove () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientBoatMove(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientBoatMove (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
-	public boolean getLeftOar() {
-		return handle.getBooleans().read(0);
+	public boolean getLeftOar () {
+		return handle.getBooleans ().read (0);
 	}
 
-	public void setLeftOar(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setLeftOar (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
 
-	public boolean getRightOar() {
-		return handle.getBooleans().read(1);
+	public boolean getRightOar () {
+		return handle.getBooleans ().read (1);
 	}
 
-	public void setRightOar(boolean value) {
-		handle.getBooleans().write(1, value);
+	public void setRightOar (boolean value) {
+		handle.getBooleans ().write (1, value);
 	}
-
 }

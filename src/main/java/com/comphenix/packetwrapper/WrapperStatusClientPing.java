@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperStatusClientPing extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Status.Client.PING;
 
-	public WrapperStatusClientPing() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperStatusClientPing () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperStatusClientPing(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperStatusClientPing (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -38,8 +38,8 @@ public class WrapperStatusClientPing extends AbstractPacket {
 	 * 
 	 * @return The current Time
 	 */
-	public long getTime() {
-		return handle.getLongs().read(0);
+	public long getTime () {
+		return handle.getLongs ().read (0);
 	}
 
 	/**
@@ -47,8 +47,7 @@ public class WrapperStatusClientPing extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTime(long value) {
-		handle.getLongs().write(0, value);
+	public void setTime (long value) {
+		handle.getLongs ().write (0, value);
 	}
-
 }

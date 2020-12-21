@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerUpdateTime extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.UPDATE_TIME;
 
-	public WrapperPlayServerUpdateTime() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerUpdateTime () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerUpdateTime(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerUpdateTime (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayServerUpdateTime extends AbstractPacket {
 	 * 
 	 * @return The current Age of the world
 	 */
-	public long getAgeOfTheWorld() {
-		return handle.getLongs().read(0);
+	public long getAgeOfTheWorld () {
+		return handle.getLongs ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayServerUpdateTime extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setAgeOfTheWorld(long value) {
-		handle.getLongs().write(0, value);
+	public void setAgeOfTheWorld (long value) {
+		handle.getLongs ().write (0, value);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class WrapperPlayServerUpdateTime extends AbstractPacket {
 	 * 
 	 * @return The current Time of day
 	 */
-	public long getTimeOfDay() {
-		return handle.getLongs().read(1);
+	public long getTimeOfDay () {
+		return handle.getLongs ().read (1);
 	}
 
 	/**
@@ -70,8 +70,7 @@ public class WrapperPlayServerUpdateTime extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTimeOfDay(long value) {
-		handle.getLongs().write(1, value);
+	public void setTimeOfDay (long value) {
+		handle.getLongs ().write (1, value);
 	}
-
 }

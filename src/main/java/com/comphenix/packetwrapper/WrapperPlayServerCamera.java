@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerCamera extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.CAMERA;
 
-	public WrapperPlayServerCamera() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerCamera () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerCamera(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerCamera (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -38,8 +38,8 @@ public class WrapperPlayServerCamera extends AbstractPacket {
 	 * 
 	 * @return The current Camera ID
 	 */
-	public int getCameraId() {
-		return handle.getIntegers().read(0);
+	public int getCameraId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -47,8 +47,7 @@ public class WrapperPlayServerCamera extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setCameraId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setCameraId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
-
 }

@@ -18,22 +18,20 @@
  */
 package com.comphenix.packetwrapper;
 
-import java.security.PublicKey;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import java.security.PublicKey;
 
 public class WrapperLoginServerEncryptionBegin extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Login.Server.ENCRYPTION_BEGIN;
+	public static final PacketType TYPE = PacketType.Login.Server.ENCRYPTION_BEGIN;
 
-	public WrapperLoginServerEncryptionBegin() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperLoginServerEncryptionBegin () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperLoginServerEncryptionBegin(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperLoginServerEncryptionBegin (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -43,8 +41,8 @@ public class WrapperLoginServerEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @return The current Server ID
 	 */
-	public String getServerId() {
-		return handle.getStrings().read(0);
+	public String getServerId () {
+		return handle.getStrings ().read (0);
 	}
 
 	/**
@@ -52,8 +50,8 @@ public class WrapperLoginServerEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setServerId(String value) {
-		handle.getStrings().write(0, value);
+	public void setServerId (String value) {
+		handle.getStrings ().write (0, value);
 	}
 
 	/**
@@ -61,8 +59,8 @@ public class WrapperLoginServerEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @return The current Public Key
 	 */
-	public PublicKey getPublicKey() {
-		return handle.getSpecificModifier(PublicKey.class).read(0);
+	public PublicKey getPublicKey () {
+		return handle.getSpecificModifier (PublicKey.class).read (0);
 	}
 
 	/**
@@ -70,8 +68,8 @@ public class WrapperLoginServerEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setPublicKey(PublicKey value) {
-		handle.getSpecificModifier(PublicKey.class).write(0, value);
+	public void setPublicKey (PublicKey value) {
+		handle.getSpecificModifier (PublicKey.class).write (0, value);
 	}
 
 	/**
@@ -79,8 +77,8 @@ public class WrapperLoginServerEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @return The current Verify Token
 	 */
-	public byte[] getVerifyToken() {
-		return handle.getByteArrays().read(0);
+	public byte[] getVerifyToken () {
+		return handle.getByteArrays ().read (0);
 	}
 
 	/**
@@ -88,7 +86,7 @@ public class WrapperLoginServerEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setVerifyToken(byte[] value) {
-		handle.getByteArrays().write(0, value);
+	public void setVerifyToken (byte[] value) {
+		handle.getByteArrays ().write (0, value);
 	}
 }

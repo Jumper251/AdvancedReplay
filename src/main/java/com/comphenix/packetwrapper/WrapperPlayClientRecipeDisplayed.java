@@ -22,45 +22,45 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayClientRecipeDisplayed extends AbstractPacket {
-    public static final PacketType TYPE = PacketType.Play.Client.RECIPE_DISPLAYED;
-    
-    public WrapperPlayClientRecipeDisplayed() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientRecipeDisplayed(PacketContainer packet) {
-        super(packet, TYPE);
-    }
+	public static final PacketType TYPE = PacketType.Play.Client.RECIPE_DISPLAYED;
 
-    public Status getStatus() {
-        return handle.getEnumModifier(Status.class, 0).readSafely(0);
-    }
+	public WrapperPlayClientRecipeDisplayed () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
 
-    public void setStatus(Status value) {
-        handle.getEnumModifier(Status.class, 0).writeSafely(0, value);
-    }
+	public WrapperPlayClientRecipeDisplayed (PacketContainer packet) {
+		super (packet, TYPE);
+	}
 
-    // Modifier for recipe can be created upon request
+	public Status getStatus () {
+		return handle.getEnumModifier (Status.class, 0).readSafely (0);
+	}
 
-    public boolean isBookOpen() {
-        return handle.getBooleans().read(0);
-    }
+	public void setStatus (Status value) {
+		handle.getEnumModifier (Status.class, 0).writeSafely (0, value);
+	}
 
-    public void setBookOpen(boolean value) {
-        handle.getBooleans().write(0, value);
-    }
+	// Modifier for recipe can be created upon request
 
-    public boolean isFilterActive() {
-        return handle.getBooleans().read(1);
-    }
+	public boolean isBookOpen () {
+		return handle.getBooleans ().read (0);
+	}
 
-    public void setFilterActive(boolean value) {
-        handle.getBooleans().write(1, value);
-    }
+	public void setBookOpen (boolean value) {
+		handle.getBooleans ().write (0, value);
+	}
 
-    public enum Status {
-        SHOWN,
-        SETTINGS;
-    }
+	public boolean isFilterActive () {
+		return handle.getBooleans ().read (1);
+	}
+
+	public void setFilterActive (boolean value) {
+		handle.getBooleans ().write (1, value);
+	}
+
+	public enum Status {
+		SHOWN,
+		SETTINGS;
+	}
 }

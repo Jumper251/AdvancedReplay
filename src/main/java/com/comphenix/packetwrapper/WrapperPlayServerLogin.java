@@ -18,27 +18,26 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.WorldType;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.packetwrapper.util.Removed;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.Difficulty;
 import com.comphenix.protocol.wrappers.EnumWrappers.NativeGameMode;
+import org.bukkit.World;
+import org.bukkit.WorldType;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerLogin extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.LOGIN;
 
-	public WrapperPlayServerLogin() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerLogin () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerLogin(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerLogin (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -48,8 +47,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -57,8 +56,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -67,8 +66,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -77,8 +76,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -89,8 +88,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @return The current Gamemode
 	 */
-	public NativeGameMode getGamemode() {
-		return handle.getGameModes().read(0);
+	public NativeGameMode getGamemode () {
+		return handle.getGameModes ().read (0);
 	}
 
 	/**
@@ -98,8 +97,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setGamemode(NativeGameMode value) {
-		handle.getGameModes().write(0, value);
+	public void setGamemode (NativeGameMode value) {
+		handle.getGameModes ().write (0, value);
 	}
 
 	/**
@@ -109,8 +108,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @return The current Dimension
 	 */
-	public int getDimension() {
-		return handle.getIntegers().read(0);
+	public int getDimension () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -118,8 +117,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setDimension(int value) {
-		handle.getIntegers().write(0, value);
+	public void setDimension (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -130,8 +129,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * @return The current Difficulty
 	 */
 	@Removed
-	public Difficulty getDifficulty() {
-		return handle.getDifficulties().read(0);
+	public Difficulty getDifficulty () {
+		return handle.getDifficulties ().read (0);
 	}
 
 	/**
@@ -140,8 +139,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	@Removed
-	public void setDifficulty(Difficulty value) {
-		handle.getDifficulties().write(0, value);
+	public void setDifficulty (Difficulty value) {
+		handle.getDifficulties ().write (0, value);
 	}
 
 	/**
@@ -151,8 +150,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @return The current Max Players
 	 */
-	public int getMaxPlayers() {
-		return handle.getIntegers().read(1);
+	public int getMaxPlayers () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -160,8 +159,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setMaxPlayers(int value) {
-		handle.getIntegers().write(0, value);
+	public void setMaxPlayers (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -171,8 +170,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @return The current Level Type
 	 */
-	public WorldType getLevelType() {
-		return handle.getWorldTypeModifier().read(0);
+	public WorldType getLevelType () {
+		return handle.getWorldTypeModifier ().read (0);
 	}
 
 	/**
@@ -180,8 +179,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLevelType(WorldType value) {
-		handle.getWorldTypeModifier().write(0, value);
+	public void setLevelType (WorldType value) {
+		handle.getWorldTypeModifier ().write (0, value);
 	}
 
 	/**
@@ -189,8 +188,8 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @return The current Reduced Debug Info
 	 */
-	public boolean getReducedDebugInfo() {
-		return handle.getBooleans().read(0);
+	public boolean getReducedDebugInfo () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -198,7 +197,7 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setReducedDebugInfo(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setReducedDebugInfo (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
 }

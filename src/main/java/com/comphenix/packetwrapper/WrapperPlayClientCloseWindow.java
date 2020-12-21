@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayClientCloseWindow extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.CLOSE_WINDOW;
 
-	public WrapperPlayClientCloseWindow() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientCloseWindow () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientCloseWindow(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientCloseWindow (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayClientCloseWindow extends AbstractPacket {
 	 * 
 	 * @return The current Window id
 	 */
-	public int getWindowId() {
-		return handle.getIntegers().read(0);
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -49,8 +49,7 @@ public class WrapperPlayClientCloseWindow extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setWindowId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
-
 }

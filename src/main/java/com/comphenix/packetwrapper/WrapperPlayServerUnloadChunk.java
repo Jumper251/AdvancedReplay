@@ -25,13 +25,13 @@ public class WrapperPlayServerUnloadChunk extends AbstractPacket {
 
 	public static final PacketType TYPE = PacketType.Play.Server.UNLOAD_CHUNK;
 
-	public WrapperPlayServerUnloadChunk() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerUnloadChunk () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerUnloadChunk(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerUnloadChunk (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class WrapperPlayServerUnloadChunk extends AbstractPacket {
 	 * 
 	 * @return The current Chunk X
 	 */
-	public int getChunkX() {
-		return handle.getIntegers().read(0);
+	public int getChunkX () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class WrapperPlayServerUnloadChunk extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setChunkX(int value) {
-		handle.getIntegers().write(0, value);
+	public void setChunkX (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class WrapperPlayServerUnloadChunk extends AbstractPacket {
 	 * 
 	 * @return The current Chunk Z
 	 */
-	public int getChunkZ() {
-		return handle.getIntegers().read(1);
+	public int getChunkZ () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -70,8 +70,7 @@ public class WrapperPlayServerUnloadChunk extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setChunkZ(int value) {
-		handle.getIntegers().write(1, value);
+	public void setChunkZ (int value) {
+		handle.getIntegers ().write (1, value);
 	}
-
 }

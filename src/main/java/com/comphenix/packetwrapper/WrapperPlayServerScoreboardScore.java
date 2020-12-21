@@ -23,16 +23,15 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 public class WrapperPlayServerScoreboardScore extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.SCOREBOARD_SCORE;
+	public static final PacketType TYPE = PacketType.Play.Server.SCOREBOARD_SCORE;
 
-	public WrapperPlayServerScoreboardScore() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerScoreboardScore () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerScoreboardScore(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerScoreboardScore (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -42,8 +41,8 @@ public class WrapperPlayServerScoreboardScore extends AbstractPacket {
 	 * 
 	 * @return The current Score name
 	 */
-	public String getScoreName() {
-		return handle.getStrings().read(0);
+	public String getScoreName () {
+		return handle.getStrings ().read (0);
 	}
 
 	/**
@@ -51,8 +50,8 @@ public class WrapperPlayServerScoreboardScore extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setScoreName(String value) {
-		handle.getStrings().write(0, value);
+	public void setScoreName (String value) {
+		handle.getStrings ().write (0, value);
 	}
 
 	/**
@@ -62,8 +61,8 @@ public class WrapperPlayServerScoreboardScore extends AbstractPacket {
 	 * 
 	 * @return The current Objective Name
 	 */
-	public String getObjectiveName() {
-		return handle.getStrings().read(1);
+	public String getObjectiveName () {
+		return handle.getStrings ().read (1);
 	}
 
 	/**
@@ -71,8 +70,8 @@ public class WrapperPlayServerScoreboardScore extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setObjectiveName(String value) {
-		handle.getStrings().write(1, value);
+	public void setObjectiveName (String value) {
+		handle.getStrings ().write (1, value);
 	}
 
 	/**
@@ -83,8 +82,8 @@ public class WrapperPlayServerScoreboardScore extends AbstractPacket {
 	 * 
 	 * @return The current Value
 	 */
-	public int getValue() {
-		return handle.getIntegers().read(0);
+	public int getValue () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -92,16 +91,15 @@ public class WrapperPlayServerScoreboardScore extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setValue(int value) {
-		handle.getIntegers().write(0, value);
+	public void setValue (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
-	public ScoreboardAction getAction() {
-		return handle.getScoreboardActions().read(0);
+	public ScoreboardAction getAction () {
+		return handle.getScoreboardActions ().read (0);
 	}
 
-	public void setScoreboardAction(ScoreboardAction value) {
-		handle.getScoreboardActions().write(0, value);
+	public void setScoreboardAction (ScoreboardAction value) {
+		handle.getScoreboardActions ().write (0, value);
 	}
-
 }

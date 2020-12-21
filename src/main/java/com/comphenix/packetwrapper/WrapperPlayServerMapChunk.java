@@ -18,23 +18,22 @@
  */
 package com.comphenix.packetwrapper;
 
-import java.util.List;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
+import java.util.List;
 
 public class WrapperPlayServerMapChunk extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.MAP_CHUNK;
 
-	public WrapperPlayServerMapChunk() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerMapChunk () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerMapChunk(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerMapChunk (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -44,8 +43,8 @@ public class WrapperPlayServerMapChunk extends AbstractPacket {
 	 * 
 	 * @return The current Chunk X
 	 */
-	public int getChunkX() {
-		return handle.getIntegers().read(0);
+	public int getChunkX () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -53,8 +52,8 @@ public class WrapperPlayServerMapChunk extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setChunkX(int value) {
-		handle.getIntegers().write(0, value);
+	public void setChunkX (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -64,8 +63,8 @@ public class WrapperPlayServerMapChunk extends AbstractPacket {
 	 * 
 	 * @return The current Chunk Z
 	 */
-	public int getChunkZ() {
-		return handle.getIntegers().read(1);
+	public int getChunkZ () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -73,8 +72,8 @@ public class WrapperPlayServerMapChunk extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setChunkZ(int value) {
-		handle.getIntegers().write(1, value);
+	public void setChunkZ (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -86,8 +85,8 @@ public class WrapperPlayServerMapChunk extends AbstractPacket {
 	 * 
 	 * @return The current Ground-Up continuous
 	 */
-	public boolean getGroundUpContinuous() {
-		return handle.getBooleans().read(0);
+	public boolean getGroundUpContinuous () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -95,8 +94,8 @@ public class WrapperPlayServerMapChunk extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setGroundUpContinuous(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setGroundUpContinuous (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
 
 	/**
@@ -105,34 +104,34 @@ public class WrapperPlayServerMapChunk extends AbstractPacket {
 	 * the bottom of the chunk column (from y=0 to y=15).
 	 * @return the bitmask
 	 */
-	public int getBitmask() {
-		return handle.getIntegers().read(2);
+	public int getBitmask () {
+		return handle.getIntegers ().read (2);
 	}
 
-	public void setBitmask(int value) {
-		handle.getIntegers().write(2, value);
+	public void setBitmask (int value) {
+		handle.getIntegers ().write (2, value);
 	}
 
 	/**
 	 * See <a href="http://wiki.vg/Chunk_Format#Data_structure">the wiki</a>
 	 * @return the data array
 	 */
-	public byte[] getData() {
-		return handle.getByteArrays().read(0);
+	public byte[] getData () {
+		return handle.getByteArrays ().read (0);
 	}
 
-	public void setData(byte[] value) {
-		handle.getByteArrays().write(0, value);
+	public void setData (byte[] value) {
+		handle.getByteArrays ().write (0, value);
 	}
 
 	/**
 	 * @return all block entities in the chunk
 	 */
-	public List<NbtBase<?>> getTileEntities() {
-		return handle.getListNbtModifier().read(0);
+	public List<NbtBase<?>> getTileEntities () {
+		return handle.getListNbtModifier ().read (0);
 	}
 
-	public void setTileEntities(List<NbtBase<?>> value) {
-		handle.getListNbtModifier().write(0, value);
+	public void setTileEntities (List<NbtBase<?>> value) {
+		handle.getListNbtModifier ().write (0, value);
 	}
 }

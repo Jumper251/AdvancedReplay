@@ -18,25 +18,23 @@
  */
 package com.comphenix.packetwrapper.v15;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.packetwrapper.AbstractPacket;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerRelEntityMove extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.REL_ENTITY_MOVE;
+	public static final PacketType TYPE = PacketType.Play.Server.REL_ENTITY_MOVE;
 
-	public WrapperPlayServerRelEntityMove() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerRelEntityMove () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerRelEntityMove(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerRelEntityMove (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -46,8 +44,8 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -55,8 +53,8 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -65,8 +63,8 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -75,32 +73,32 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
-	public short getDx() {
-		return handle.getShorts().read(0);
+	public short getDx () {
+		return handle.getShorts ().read (0);
 	}
 
-	public void setDx(short value) {
-		handle.getShorts().write(0, value);
+	public void setDx (short value) {
+		handle.getShorts ().write (0, value);
 	}
 
-	public short getDy() {
-		return handle.getShorts().read(1);
+	public short getDy () {
+		return handle.getShorts ().read (1);
 	}
 
-	public void setDy(short value) {
-		handle.getShorts().write(1, value);
+	public void setDy (short value) {
+		handle.getShorts ().write (1, value);
 	}
 
-	public short getDz() {
-		return handle.getShorts().read(2);
+	public short getDz () {
+		return handle.getShorts ().read (2);
 	}
 
-	public void setDz(short value) {
-		handle.getShorts().write(2, value);
+	public void setDz (short value) {
+		handle.getShorts ().write (2, value);
 	}
 
 	/**
@@ -108,8 +106,8 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 	 * 
 	 * @return The current On Ground
 	 */
-	public boolean getOnGround() {
-		return handle.getBooleans().read(0);
+	public boolean getOnGround () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -117,7 +115,7 @@ public class WrapperPlayServerRelEntityMove extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setOnGround(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setOnGround (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
 }

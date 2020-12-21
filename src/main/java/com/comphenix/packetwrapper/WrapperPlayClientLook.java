@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayClientLook extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.LOOK;
 
-	public WrapperPlayClientLook() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientLook () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientLook(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientLook (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayClientLook extends AbstractPacket {
 	 * 
 	 * @return The current Yaw
 	 */
-	public float getYaw() {
-		return handle.getFloat().read(0);
+	public float getYaw () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayClientLook extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setYaw(float value) {
-		handle.getFloat().write(0, value);
+	public void setYaw (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class WrapperPlayClientLook extends AbstractPacket {
 	 * 
 	 * @return The current Pitch
 	 */
-	public float getPitch() {
-		return handle.getFloat().read(1);
+	public float getPitch () {
+		return handle.getFloat ().read (1);
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class WrapperPlayClientLook extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setPitch(float value) {
-		handle.getFloat().write(1, value);
+	public void setPitch (float value) {
+		handle.getFloat ().write (1, value);
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class WrapperPlayClientLook extends AbstractPacket {
 	 * 
 	 * @return The current On Ground
 	 */
-	public boolean getOnGround() {
-		return handle.getBooleans().read(0);
+	public boolean getOnGround () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -89,8 +89,7 @@ public class WrapperPlayClientLook extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setOnGround(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setOnGround (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
-
 }

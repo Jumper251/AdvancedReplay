@@ -23,16 +23,15 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayClientTeleportAccept extends AbstractPacket {
 
-	public static final PacketType TYPE =
-			PacketType.Play.Client.TELEPORT_ACCEPT;
+	public static final PacketType TYPE = PacketType.Play.Client.TELEPORT_ACCEPT;
 
-	public WrapperPlayClientTeleportAccept() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientTeleportAccept () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientTeleportAccept(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientTeleportAccept (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -42,8 +41,8 @@ public class WrapperPlayClientTeleportAccept extends AbstractPacket {
 	 * 
 	 * @return The current Teleport ID
 	 */
-	public int getTeleportId() {
-		return handle.getIntegers().read(0);
+	public int getTeleportId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -51,8 +50,7 @@ public class WrapperPlayClientTeleportAccept extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTeleportId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setTeleportId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
-
 }

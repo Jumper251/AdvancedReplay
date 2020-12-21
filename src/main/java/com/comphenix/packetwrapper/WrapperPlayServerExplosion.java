@@ -18,22 +18,21 @@
  */
 package com.comphenix.packetwrapper;
 
-import java.util.List;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import java.util.List;
 
 public class WrapperPlayServerExplosion extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.EXPLOSION;
 
-	public WrapperPlayServerExplosion() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerExplosion () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerExplosion(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerExplosion (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +40,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @return The current X
 	 */
-	public double getX() {
-		return handle.getDoubles().read(0);
+	public double getX () {
+		return handle.getDoubles ().read (0);
 	}
 
 	/**
@@ -50,8 +49,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setX(double value) {
-		handle.getDoubles().write(0, value);
+	public void setX (double value) {
+		handle.getDoubles ().write (0, value);
 	}
 
 	/**
@@ -59,8 +58,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @return The current Y
 	 */
-	public double getY() {
-		return handle.getDoubles().read(1);
+	public double getY () {
+		return handle.getDoubles ().read (1);
 	}
 
 	/**
@@ -68,8 +67,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setY(double value) {
-		handle.getDoubles().write(1, value);
+	public void setY (double value) {
+		handle.getDoubles ().write (1, value);
 	}
 
 	/**
@@ -77,8 +76,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @return The current Z
 	 */
-	public double getZ() {
-		return handle.getDoubles().read(2);
+	public double getZ () {
+		return handle.getDoubles ().read (2);
 	}
 
 	/**
@@ -86,8 +85,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setZ(double value) {
-		handle.getDoubles().write(2, value);
+	public void setZ (double value) {
+		handle.getDoubles ().write (2, value);
 	}
 
 	/**
@@ -97,8 +96,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @return The current Radius
 	 */
-	public float getRadius() {
-		return handle.getFloat().read(0);
+	public float getRadius () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -106,8 +105,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setRadius(float value) {
-		handle.getFloat().write(0, value);
+	public void setRadius (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -117,8 +116,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 *
 	 * @return The current Record count
 	 */
-	public List<BlockPosition> getRecords() {
-		return handle.getBlockPositionCollectionModifier().read(0);
+	public List<BlockPosition> getRecords () {
+		return handle.getBlockPositionCollectionModifier ().read (0);
 	}
 
 	/**
@@ -131,8 +130,8 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @see #getRecords()
 	 */
 	@Deprecated
-	public List<BlockPosition> getRecors() {
-		return handle.getBlockPositionCollectionModifier().read(0);
+	public List<BlockPosition> getRecors () {
+		return handle.getBlockPositionCollectionModifier ().read (0);
 	}
 
 	/**
@@ -140,32 +139,31 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setRecords(List<BlockPosition> value) {
-		handle.getBlockPositionCollectionModifier().write(0, value);
+	public void setRecords (List<BlockPosition> value) {
+		handle.getBlockPositionCollectionModifier ().write (0, value);
 	}
 
-	public float getPlayerVelocityX() {
-		return handle.getFloat().read(1);
+	public float getPlayerVelocityX () {
+		return handle.getFloat ().read (1);
 	}
 
-	public void setPlayerVelocityX(float value) {
-		handle.getFloat().write(1, value);
+	public void setPlayerVelocityX (float value) {
+		handle.getFloat ().write (1, value);
 	}
 
-	public float getPlayerVelocityY() {
-		return handle.getFloat().read(2);
+	public float getPlayerVelocityY () {
+		return handle.getFloat ().read (2);
 	}
 
-	public void setPlayerVelocityY(float value) {
-		handle.getFloat().write(2, value);
+	public void setPlayerVelocityY (float value) {
+		handle.getFloat ().write (2, value);
 	}
 
-	public float getPlayerVelocityZ() {
-		return handle.getFloat().read(3);
+	public float getPlayerVelocityZ () {
+		return handle.getFloat ().read (3);
 	}
 
-	public void setPlayerVelocityZ(float value) {
-		handle.getFloat().write(3, value);
+	public void setPlayerVelocityZ (float value) {
+		handle.getFloat ().write (3, value);
 	}
-
 }

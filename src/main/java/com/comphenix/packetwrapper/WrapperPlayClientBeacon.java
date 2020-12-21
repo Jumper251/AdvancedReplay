@@ -23,51 +23,50 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayClientBeacon extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Client.BEACON;
-    
-    public WrapperPlayClientBeacon() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientBeacon(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Client.BEACON;
+
+	public WrapperPlayClientBeacon () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayClientBeacon (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Primary Effect.
      * <p>
      * Notes: a Potion ID. (Was a full Integer for the plugin message)
      * @return The current Primary Effect
      */
-    public int getPrimaryEffect() {
-        return handle.getIntegers().read(0);
-    }
-    
-    /**
+	public int getPrimaryEffect () {
+		return handle.getIntegers ().read (0);
+	}
+
+	/**
      * Set Primary Effect.
      * @param value - new value.
      */
-    public void setPrimaryEffect(int value) {
-        handle.getIntegers().write(0, value);
-    }
-    
-    /**
+	public void setPrimaryEffect (int value) {
+		handle.getIntegers ().write (0, value);
+	}
+
+	/**
      * Retrieve Secondary Effect.
      * <p>
      * Notes: a Potion ID. (Was a full Integer for the plugin message)
      * @return The current Secondary Effect
      */
-    public int getSecondaryEffect() {
-        return handle.getIntegers().read(1);
-    }
-    
-    /**
+	public int getSecondaryEffect () {
+		return handle.getIntegers ().read (1);
+	}
+
+	/**
      * Set Secondary Effect.
      * @param value - new value.
      */
-    public void setSecondaryEffect(int value) {
-        handle.getIntegers().write(1, value);
-    }
-    
+	public void setSecondaryEffect (int value) {
+		handle.getIntegers ().write (1, value);
+	}
 }

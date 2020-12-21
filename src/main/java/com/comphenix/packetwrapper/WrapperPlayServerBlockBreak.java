@@ -26,87 +26,86 @@ import com.comphenix.protocol.wrappers.WrappedBlockData;
 
 public class WrapperPlayServerBlockBreak extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.BLOCK_BREAK;
-    
-    public WrapperPlayServerBlockBreak() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerBlockBreak(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Server.BLOCK_BREAK;
+
+	public WrapperPlayServerBlockBreak () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerBlockBreak (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Location.
      * <p>
      * Notes: position where the digging was happening
      * @return The current Location
      */
-    public BlockPosition getLocation() {
-        return handle.getBlockPositionModifier().read(0);
-    }
-    
-    /**
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
+	}
+
+	/**
      * Set Location.
      * @param value - new value.
      */
-    public void setLocation(BlockPosition value) {
-        handle.getBlockPositionModifier().write(0, value);
-    }
-    
-    /**
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
+	}
+
+	/**
      * Retrieve Block.
      * <p>
      * Notes: block state ID of the block that should be at that position now.
      * @return The current Block
      */
-    public WrappedBlockData getBlock() {
-        return handle.getBlockData().read(0);
-    }
-    
-    /**
+	public WrappedBlockData getBlock () {
+		return handle.getBlockData ().read (0);
+	}
+
+	/**
      * Set Block.
      * @param value - new value.
      */
-    public void setBlock(WrappedBlockData value) {
-        handle.getBlockData().write(0, value);
-    }
-    
-    /**
+	public void setBlock (WrappedBlockData value) {
+		handle.getBlockData ().write (0, value);
+	}
+
+	/**
      * Retrieve Status.
      * <p>
      * Notes: same as Player Digging. Only Started digging (0), Cancelled digging (1), and Finished digging (2) are used.
      * @return The current Status
      */
-    public PlayerDigType getStatus() {
-        return handle.getPlayerDigTypes().read(0);
-    }
-    
-    /**
+	public PlayerDigType getStatus () {
+		return handle.getPlayerDigTypes ().read (0);
+	}
+
+	/**
      * Set Status.
      * @param value - new value.
      */
-    public void setStatus(PlayerDigType value) {
-        handle.getPlayerDigTypes().write(0, value);
-    }
-    
-    /**
+	public void setStatus (PlayerDigType value) {
+		handle.getPlayerDigTypes ().write (0, value);
+	}
+
+	/**
      * Retrieve Successful.
      * <p>
      * Notes: true if the digging succeeded; false if the client should undo any changes it made locally. (How does this work?)
      * @return The current Successful
      */
-    public boolean getSuccessful() {
-        return handle.getBooleans().read(0);
-    }
-    
-    /**
+	public boolean getSuccessful () {
+		return handle.getBooleans ().read (0);
+	}
+
+	/**
      * Set Successful.
      * @param value - new value.
      */
-    public void setSuccessful(boolean value) {
-        handle.getBooleans().write(0, value);
-    }
-    
+	public void setSuccessful (boolean value) {
+		handle.getBooleans ().write (0, value);
+	}
 }

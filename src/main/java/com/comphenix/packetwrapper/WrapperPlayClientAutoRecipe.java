@@ -23,42 +23,42 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayClientAutoRecipe extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Client.AUTO_RECIPE;
-    
-    public WrapperPlayClientAutoRecipe() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientAutoRecipe(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Client.AUTO_RECIPE;
+
+	public WrapperPlayClientAutoRecipe () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayClientAutoRecipe (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Window ID.
      * <p>
      * Notes: the window id.
      * @return The current Window ID
      */
-    public int getWindowId() {
-        return handle.getIntegers().read(0);
-    }
-    
-    /**
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
+	}
+
+	/**
      * Set Window ID.
      * @param value - new value.
      */
-    public void setWindowId(int value) {
-        handle.getIntegers().write(0, value);
-    }
+	public void setWindowId (int value) {
+		handle.getIntegers ().write (0, value);
+	}
 
-    // Modifier for recipe can be created upon request
+	// Modifier for recipe can be created upon request
 
-    public boolean isMakeAll() {
-        return handle.getBooleans().read(0);
-    }
+	public boolean isMakeAll () {
+		return handle.getBooleans ().read (0);
+	}
 
-    public void setMakeAll(boolean value) {
-        handle.getBooleans().write(0, value);
-    }
+	public void setMakeAll (boolean value) {
+		handle.getBooleans ().write (0, value);
+	}
 }

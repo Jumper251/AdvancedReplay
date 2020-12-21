@@ -23,33 +23,32 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayServerViewDistance extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.VIEW_DISTANCE;
-    
-    public WrapperPlayServerViewDistance() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerViewDistance(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Server.VIEW_DISTANCE;
+
+	public WrapperPlayServerViewDistance () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerViewDistance (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve View Distance.
      * <p>
      * Notes: render distance (2-32)
      * @return The current View Distance
      */
-    public int getViewDistance() {
-        return handle.getIntegers().read(0);
-    }
-    
-    /**
+	public int getViewDistance () {
+		return handle.getIntegers ().read (0);
+	}
+
+	/**
      * Set View Distance.
      * @param value - new value.
      */
-    public void setViewDistance(int value) {
-        handle.getIntegers().write(0, value);
-    }
-    
+	public void setViewDistance (int value) {
+		handle.getIntegers ().write (0, value);
+	}
 }

@@ -18,21 +18,20 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.inventory.ItemStack;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import org.bukkit.inventory.ItemStack;
 
 public class WrapperPlayServerSetSlot extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.SET_SLOT;
 
-	public WrapperPlayServerSetSlot() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerSetSlot () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerSetSlot(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerSetSlot (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -47,8 +46,8 @@ public class WrapperPlayServerSetSlot extends AbstractPacket {
 	 * 
 	 * @return The current Window ID
 	 */
-	public int getWindowId() {
-		return handle.getIntegers().read(0);
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -56,8 +55,8 @@ public class WrapperPlayServerSetSlot extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setWindowId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -67,8 +66,8 @@ public class WrapperPlayServerSetSlot extends AbstractPacket {
 	 * 
 	 * @return The current Slot
 	 */
-	public int getSlot() {
-		return handle.getIntegers().read(1);
+	public int getSlot () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -76,8 +75,8 @@ public class WrapperPlayServerSetSlot extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setSlot(int value) {
-		handle.getIntegers().write(1, value);
+	public void setSlot (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -85,8 +84,8 @@ public class WrapperPlayServerSetSlot extends AbstractPacket {
 	 * 
 	 * @return The current Slot data
 	 */
-	public ItemStack getSlotData() {
-		return handle.getItemModifier().read(0);
+	public ItemStack getSlotData () {
+		return handle.getItemModifier ().read (0);
 	}
 
 	/**
@@ -94,8 +93,7 @@ public class WrapperPlayServerSetSlot extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setSlotData(ItemStack value) {
-		handle.getItemModifier().write(0, value);
+	public void setSlotData (ItemStack value) {
+		handle.getItemModifier ().write (0, value);
 	}
-
 }

@@ -22,16 +22,15 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperLoginServerSetCompression extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Login.Server.SET_COMPRESSION;
+	public static final PacketType TYPE = PacketType.Login.Server.SET_COMPRESSION;
 
-	public WrapperLoginServerSetCompression() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperLoginServerSetCompression () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperLoginServerSetCompression(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperLoginServerSetCompression (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +40,8 @@ public class WrapperLoginServerSetCompression extends AbstractPacket {
 	 * 
 	 * @return The current Threshold
 	 */
-	public int getThreshold() {
-		return handle.getIntegers().read(0);
+	public int getThreshold () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -50,8 +49,7 @@ public class WrapperLoginServerSetCompression extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setThreshold(int value) {
-		handle.getIntegers().write(0, value);
+	public void setThreshold (int value) {
+		handle.getIntegers ().write (0, value);
 	}
-
 }

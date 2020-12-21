@@ -18,23 +18,22 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.ENTITY_EFFECT;
 
-	public WrapperPlayServerEntityEffect() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerEntityEffect () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerEntityEffect(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerEntityEffect (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -44,8 +43,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -53,8 +52,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -63,8 +62,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -73,8 +72,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -84,8 +83,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @return The current Effect ID
 	 */
-	public byte getEffectID() {
-		return handle.getBytes().read(0);
+	public byte getEffectID () {
+		return handle.getBytes ().read (0);
 	}
 
 	/**
@@ -93,8 +92,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEffectID(byte value) {
-		handle.getBytes().write(0, (byte) (value & 255));
+	public void setEffectID (byte value) {
+		handle.getBytes ().write (0, (byte)(value & 255));
 	}
 
 	/**
@@ -102,8 +101,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @return The current Amplifier
 	 */
-	public byte getAmplifier() {
-		return handle.getBytes().read(1);
+	public byte getAmplifier () {
+		return handle.getBytes ().read (1);
 	}
 
 	/**
@@ -111,8 +110,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setAmplifier(byte value) {
-		handle.getBytes().write(1, (byte) (value & 255));
+	public void setAmplifier (byte value) {
+		handle.getBytes ().write (1, (byte)(value & 255));
 	}
 
 	/**
@@ -120,8 +119,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @return The current Duration
 	 */
-	public int getDuration() {
-		return handle.getIntegers().read(1);
+	public int getDuration () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -129,8 +128,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setDuration(int value) {
-		handle.getIntegers().write(1, value);
+	public void setDuration (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -138,8 +137,8 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @return The current Hide Particles
 	 */
-	public boolean getHideParticles() {
-		return handle.getBytes().read(2) == 0;
+	public boolean getHideParticles () {
+		return handle.getBytes ().read (2) == 0;
 	}
 
 	/**
@@ -147,8 +146,7 @@ public class WrapperPlayServerEntityEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setHideParticles(boolean value) {
-		handle.getBytes().write(2, (byte) (value ? 0 : 1));
+	public void setHideParticles (boolean value) {
+		handle.getBytes ().write (2, (byte)(value ? 0 : 1));
 	}
-
 }

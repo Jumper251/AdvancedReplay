@@ -22,16 +22,15 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayServerResourcePackSend extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.RESOURCE_PACK_SEND;
+	public static final PacketType TYPE = PacketType.Play.Server.RESOURCE_PACK_SEND;
 
-	public WrapperPlayServerResourcePackSend() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerResourcePackSend () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerResourcePackSend(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerResourcePackSend (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +40,8 @@ public class WrapperPlayServerResourcePackSend extends AbstractPacket {
 	 * 
 	 * @return The current URL
 	 */
-	public String getUrl() {
-		return handle.getStrings().read(0);
+	public String getUrl () {
+		return handle.getStrings ().read (0);
 	}
 
 	/**
@@ -50,8 +49,8 @@ public class WrapperPlayServerResourcePackSend extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setUrl(String value) {
-		handle.getStrings().write(0, value);
+	public void setUrl (String value) {
+		handle.getStrings ().write (0, value);
 	}
 
 	/**
@@ -65,8 +64,8 @@ public class WrapperPlayServerResourcePackSend extends AbstractPacket {
 	 * 
 	 * @return The current Hash
 	 */
-	public String getHash() {
-		return handle.getStrings().read(1);
+	public String getHash () {
+		return handle.getStrings ().read (1);
 	}
 
 	/**
@@ -74,8 +73,7 @@ public class WrapperPlayServerResourcePackSend extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setHash(String value) {
-		handle.getStrings().write(1, value);
+	public void setHash (String value) {
+		handle.getStrings ().write (1, value);
 	}
-
 }

@@ -25,13 +25,13 @@ import com.comphenix.protocol.wrappers.WrappedServerPing;
 public class WrapperStatusServerServerInfo extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Status.Server.SERVER_INFO;
 
-	public WrapperStatusServerServerInfo() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperStatusServerServerInfo () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperStatusServerServerInfo(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperStatusServerServerInfo (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class WrapperStatusServerServerInfo extends AbstractPacket {
 	 * 
 	 * @return The current JSON Response
 	 */
-	public WrappedServerPing getJsonResponse() {
-		return handle.getServerPings().read(0);
+	public WrappedServerPing getJsonResponse () {
+		return handle.getServerPings ().read (0);
 	}
 
 	/**
@@ -50,8 +50,7 @@ public class WrapperStatusServerServerInfo extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setJsonResponse(WrappedServerPing value) {
-		handle.getServerPings().write(0, value);
+	public void setJsonResponse (WrappedServerPing value) {
+		handle.getServerPings ().write (0, value);
 	}
-
 }

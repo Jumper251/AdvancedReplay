@@ -18,23 +18,22 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerAnimation extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.ANIMATION;
 
-	public WrapperPlayServerAnimation() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerAnimation () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerAnimation(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerAnimation (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -44,8 +43,8 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -53,8 +52,8 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -63,8 +62,8 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -73,8 +72,8 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -84,8 +83,8 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 	 * 
 	 * @return The current Animation
 	 */
-	public int getAnimation() {
-		return handle.getIntegers().read(1);
+	public int getAnimation () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -93,8 +92,7 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setAnimation(int value) {
-		handle.getIntegers().write(1, value);
+	public void setAnimation (int value) {
+		handle.getIntegers ().write (1, value);
 	}
-
 }

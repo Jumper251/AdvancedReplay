@@ -23,18 +23,18 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayServerTags extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.TAGS;
-    
-    public WrapperPlayServerTags() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerTags(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    // Cannot find type for a
-    // Cannot find type for a
-    // Cannot find type for a
+	public static final PacketType TYPE = PacketType.Play.Server.TAGS;
+
+	public WrapperPlayServerTags () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerTags (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	// Cannot find type for a
+	// Cannot find type for a
+	// Cannot find type for a
 }

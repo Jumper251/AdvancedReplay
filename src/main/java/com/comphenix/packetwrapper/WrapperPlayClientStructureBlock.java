@@ -24,16 +24,16 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 
 public class WrapperPlayClientStructureBlock extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Client.STRUCT;
-    
-    public WrapperPlayClientStructureBlock() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientStructureBlock(PacketContainer packet) {
-        super(packet, TYPE);
-    }
+	public static final PacketType TYPE = PacketType.Play.Client.STRUCT;
 
-    // TODO manually upon request
+	public WrapperPlayClientStructureBlock () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayClientStructureBlock (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	// TODO manually upon request
 }

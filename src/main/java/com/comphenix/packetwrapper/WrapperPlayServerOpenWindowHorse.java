@@ -21,87 +21,85 @@ package com.comphenix.packetwrapper;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerOpenWindowHorse extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.OPEN_WINDOW_HORSE;
-    
-    public WrapperPlayServerOpenWindowHorse() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerOpenWindowHorse(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Server.OPEN_WINDOW_HORSE;
+
+	public WrapperPlayServerOpenWindowHorse () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerOpenWindowHorse (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Window ID?.
      * @return The current Window ID?
      */
-    public int getWindowId() {
-        return handle.getIntegers().read(0);
-    }
-    
-    /**
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
+	}
+
+	/**
      * Set Window ID?.
      * @param value - new value.
      */
-    public void setWindowId(int value) {
-        handle.getIntegers().write(0, value);
-    }
-    
-    /**
+	public void setWindowId (int value) {
+		handle.getIntegers ().write (0, value);
+	}
+
+	/**
      * Retrieve Number of slots?.
      * @return The current Number of slots?
      */
-    public int getNumberOfSlots() {
-        return handle.getIntegers().read(1);
-    }
-    
-    /**
+	public int getNumberOfSlots () {
+		return handle.getIntegers ().read (1);
+	}
+
+	/**
      * Set Number of slots?.
      * @param value - new value.
      */
-    public void setNumberOfSlots(int value) {
-        handle.getIntegers().write(1, value);
-    }
-    
-    /**
+	public void setNumberOfSlots (int value) {
+		handle.getIntegers ().write (1, value);
+	}
+
+	/**
      * Retrieve Entity ID?.
      * @return The current Entity ID?
      */
-    public int getEntityID() {
-        return handle.getIntegers().read(2);
-    }
-    
-    /**
+	public int getEntityID () {
+		return handle.getIntegers ().read (2);
+	}
+
+	/**
      * Retrieve the entity involved in this event.
      * @param world - the current world of the entity.
      * @return The involved entity.
      */
-    public Entity getEntity(World world) {
-        return handle.getEntityModifier(world).read(2);
-    }
-    
-    /**
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (2);
+	}
+
+	/**
      * Retrieve the entity involved in this event.
      * @param event - the packet event.
      * @return The involved entity.
      */
-    public Entity getEntity(PacketEvent event) {
-        return getEntity(event.getPlayer().getWorld());
-    }
-    
-    /**
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
+	}
+
+	/**
      * Set Entity ID?.
      * @param value - new value.
      */
-    public void setEntityID(int value) {
-        handle.getIntegers().write(2, value);
-    }
-    
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (2, value);
+	}
 }

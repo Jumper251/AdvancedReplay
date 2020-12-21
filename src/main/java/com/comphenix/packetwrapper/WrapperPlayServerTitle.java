@@ -26,13 +26,13 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 public class WrapperPlayServerTitle extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.TITLE;
 
-	public WrapperPlayServerTitle() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerTitle () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerTitle(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerTitle (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @return The current Action
 	 */
-	public TitleAction getAction() {
-		return handle.getTitleActions().read(0);
+	public TitleAction getAction () {
+		return handle.getTitleActions ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setAction(TitleAction value) {
-		handle.getTitleActions().write(0, value);
+	public void setAction (TitleAction value) {
+		handle.getTitleActions ().write (0, value);
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @return The current 0 (TITLE)
 	 */
-	public WrappedChatComponent getTitle() {
-		return handle.getChatComponents().read(0);
+	public WrappedChatComponent getTitle () {
+		return handle.getChatComponents ().read (0);
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTitle(WrappedChatComponent value) {
-		handle.getChatComponents().write(0, value);
+	public void setTitle (WrappedChatComponent value) {
+		handle.getChatComponents ().write (0, value);
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @return The current 2 (TIMES)
 	 */
-	public int getFadeIn() {
-		return handle.getIntegers().read(0);
+	public int getFadeIn () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -89,8 +89,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setFadeIn(int value) {
-		handle.getIntegers().write(0, value);
+	public void setFadeIn (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -98,8 +98,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @return The current Stay
 	 */
-	public int getStay() {
-		return handle.getIntegers().read(1);
+	public int getStay () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -107,8 +107,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setStay(int value) {
-		handle.getIntegers().write(1, value);
+	public void setStay (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @return The current Fade Out
 	 */
-	public int getFadeOut() {
-		return handle.getIntegers().read(2);
+	public int getFadeOut () {
+		return handle.getIntegers ().read (2);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class WrapperPlayServerTitle extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setFadeOut(int value) {
-		handle.getIntegers().write(2, value);
+	public void setFadeOut (int value) {
+		handle.getIntegers ().write (2, value);
 	}
 }

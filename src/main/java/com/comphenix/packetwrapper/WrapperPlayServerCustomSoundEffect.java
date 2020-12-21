@@ -25,16 +25,15 @@ import com.comphenix.protocol.wrappers.MinecraftKey;
 
 public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 
-	public static final PacketType TYPE =
-			PacketType.Play.Server.CUSTOM_SOUND_EFFECT;
+	public static final PacketType TYPE = PacketType.Play.Server.CUSTOM_SOUND_EFFECT;
 
-	public WrapperPlayServerCustomSoundEffect() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerCustomSoundEffect () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerCustomSoundEffect(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerCustomSoundEffect (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -44,8 +43,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @return The current Sound Name
 	 */
-	public MinecraftKey getSoundName() {
-		return handle.getMinecraftKeys().read(0);
+	public MinecraftKey getSoundName () {
+		return handle.getMinecraftKeys ().read (0);
 	}
 
 	/**
@@ -53,8 +52,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setSoundName(MinecraftKey value) {
-		handle.getMinecraftKeys().write(0, value);
+	public void setSoundName (MinecraftKey value) {
+		handle.getMinecraftKeys ().write (0, value);
 	}
 
 	/**
@@ -65,8 +64,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @return The current Sound Category
 	 */
-	public SoundCategory getSoundCategory() {
-		return handle.getSoundCategories().read(0);
+	public SoundCategory getSoundCategory () {
+		return handle.getSoundCategories ().read (0);
 	}
 
 	/**
@@ -74,8 +73,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setSoundCategory(SoundCategory value) {
-		handle.getSoundCategories().write(0, value);
+	public void setSoundCategory (SoundCategory value) {
+		handle.getSoundCategories ().write (0, value);
 	}
 
 	/**
@@ -86,8 +85,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @return The current Effect Position X
 	 */
-	public int getX() {
-		return handle.getIntegers().read(0);
+	public int getX () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -95,8 +94,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setX(int value) {
-		handle.getIntegers().write(0, value);
+	public void setX (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -107,8 +106,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @return The current Effect Position Y
 	 */
-	public int getY() {
-		return handle.getIntegers().read(1);
+	public int getY () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -116,8 +115,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setY(int value) {
-		handle.getIntegers().write(1, value);
+	public void setY (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -128,8 +127,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @return The current Effect Position Z
 	 */
-	public int getZ() {
-		return handle.getIntegers().read(2);
+	public int getZ () {
+		return handle.getIntegers ().read (2);
 	}
 
 	/**
@@ -137,8 +136,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setZ(int value) {
-		handle.getIntegers().write(2, value);
+	public void setZ (int value) {
+		handle.getIntegers ().write (2, value);
 	}
 
 	/**
@@ -148,8 +147,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @return The current Volume
 	 */
-	public float getVolume() {
-		return handle.getFloat().read(0);
+	public float getVolume () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -157,8 +156,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setVolume(float value) {
-		handle.getFloat().write(0, value);
+	public void setVolume (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -168,8 +167,8 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @return The current Pitch
 	 */
-	public float getPitch() {
-		return handle.getFloat().read(1);
+	public float getPitch () {
+		return handle.getFloat ().read (1);
 	}
 
 	/**
@@ -177,7 +176,7 @@ public class WrapperPlayServerCustomSoundEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setPitch(float value) {
-		handle.getFloat().write(1, value);
+	public void setPitch (float value) {
+		handle.getFloat ().write (1, value);
 	}
 }

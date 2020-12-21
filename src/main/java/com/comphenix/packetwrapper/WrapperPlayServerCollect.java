@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerCollect extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.COLLECT;
 
-	public WrapperPlayServerCollect() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerCollect () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerCollect(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerCollect (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -38,8 +38,8 @@ public class WrapperPlayServerCollect extends AbstractPacket {
 	 * 
 	 * @return The current Collected Entity ID
 	 */
-	public int getCollectedEntityId() {
-		return handle.getIntegers().read(0);
+	public int getCollectedEntityId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -47,8 +47,8 @@ public class WrapperPlayServerCollect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setCollectedEntityId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setCollectedEntityId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -56,8 +56,8 @@ public class WrapperPlayServerCollect extends AbstractPacket {
 	 * 
 	 * @return The current Collector Entity ID
 	 */
-	public int getCollectorEntityId() {
-		return handle.getIntegers().read(1);
+	public int getCollectorEntityId () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -65,8 +65,7 @@ public class WrapperPlayServerCollect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setCollectorEntityId(int value) {
-		handle.getIntegers().write(1, value);
+	public void setCollectorEntityId (int value) {
+		handle.getIntegers ().write (1, value);
 	}
-
 }

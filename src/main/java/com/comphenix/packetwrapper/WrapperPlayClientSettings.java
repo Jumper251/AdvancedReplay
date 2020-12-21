@@ -25,13 +25,13 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ChatVisibility;
 public class WrapperPlayClientSettings extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.SETTINGS;
 
-	public WrapperPlayClientSettings() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientSettings () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientSettings(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientSettings (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @return The current Locale
 	 */
-	public String getLocale() {
-		return handle.getStrings().read(0);
+	public String getLocale () {
+		return handle.getStrings ().read (0);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLocale(String value) {
-		handle.getStrings().write(0, value);
+	public void setLocale (String value) {
+		handle.getStrings ().write (0, value);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @return The current View distance
 	 */
-	public int getViewDistance() {
-		return handle.getIntegers().read(0);
+	public int getViewDistance () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setViewDistance(byte value) {
-		handle.getIntegers().write(0, (int) value);
+	public void setViewDistance (byte value) {
+		handle.getIntegers ().write (0, (int)value);
 	}
 
 	/**
@@ -81,8 +81,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @return The current Chat flags
 	 */
-	public ChatVisibility getChatFlags() {
-		return handle.getChatVisibilities().read(0);
+	public ChatVisibility getChatFlags () {
+		return handle.getChatVisibilities ().read (0);
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setChatFlags(ChatVisibility value) {
-		handle.getChatVisibilities().write(0, value);
+	public void setChatFlags (ChatVisibility value) {
+		handle.getChatVisibilities ().write (0, value);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @return The current Chat colours
 	 */
-	public boolean getChatColours() {
-		return handle.getBooleans().read(0);
+	public boolean getChatColours () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setChatColours(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setChatColours (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
 
 	/**
@@ -121,8 +121,8 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @return The current Displayed skin parts
 	 */
-	public int getDisplayedSkinParts() {
-		return handle.getIntegers().read(1);
+	public int getDisplayedSkinParts () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -130,8 +130,7 @@ public class WrapperPlayClientSettings extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setDisplayedSkinParts(int value) {
-		handle.getIntegers().write(1, value);
+	public void setDisplayedSkinParts (int value) {
+		handle.getIntegers ().write (1, value);
 	}
-
 }

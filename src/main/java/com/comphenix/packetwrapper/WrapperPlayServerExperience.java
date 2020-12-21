@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerExperience extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.EXPERIENCE;
 
-	public WrapperPlayServerExperience() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerExperience () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerExperience(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerExperience (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayServerExperience extends AbstractPacket {
 	 * 
 	 * @return The current Experience bar
 	 */
-	public float getExperienceBar() {
-		return handle.getFloat().read(0);
+	public float getExperienceBar () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayServerExperience extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setExperienceBar(float value) {
-		handle.getFloat().write(0, value);
+	public void setExperienceBar (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -58,8 +58,8 @@ public class WrapperPlayServerExperience extends AbstractPacket {
 	 * 
 	 * @return The current Level
 	 */
-	public int getLevel() {
-		return handle.getIntegers().read(1);
+	public int getLevel () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class WrapperPlayServerExperience extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLevel(int value) {
-		handle.getIntegers().write(1, value);
+	public void setLevel (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -76,8 +76,8 @@ public class WrapperPlayServerExperience extends AbstractPacket {
 	 * 
 	 * @return The current Total Experience
 	 */
-	public int getTotalExperience() {
-		return handle.getIntegers().read(0);
+	public int getTotalExperience () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -85,8 +85,7 @@ public class WrapperPlayServerExperience extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTotalExperience(int value) {
-		handle.getIntegers().write(0, value);
+	public void setTotalExperience (int value) {
+		handle.getIntegers ().write (0, value);
 	}
-
 }

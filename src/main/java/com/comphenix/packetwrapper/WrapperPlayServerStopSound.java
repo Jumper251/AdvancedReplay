@@ -25,30 +25,30 @@ import com.comphenix.protocol.wrappers.MinecraftKey;
 
 public class WrapperPlayServerStopSound extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.STOP_SOUND;
-    
-    public WrapperPlayServerStopSound() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerStopSound(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    public MinecraftKey getSoundEffect() {
-        return handle.getMinecraftKeys().readSafely(0);
-    }
+	public static final PacketType TYPE = PacketType.Play.Server.STOP_SOUND;
 
-    public void setSoundEffect(MinecraftKey value) {
-        handle.getMinecraftKeys().writeSafely(0, value);
-    }
+	public WrapperPlayServerStopSound () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
 
-    public EnumWrappers.SoundCategory getCategory() {
-    	return handle.getSoundCategories().readSafely(0);
-    }
+	public WrapperPlayServerStopSound (PacketContainer packet) {
+		super (packet, TYPE);
+	}
 
-    public void setCategory(EnumWrappers.SoundCategory value) {
-    	handle.getSoundCategories().writeSafely(0, value);
-    }
+	public MinecraftKey getSoundEffect () {
+		return handle.getMinecraftKeys ().readSafely (0);
+	}
+
+	public void setSoundEffect (MinecraftKey value) {
+		handle.getMinecraftKeys ().writeSafely (0, value);
+	}
+
+	public EnumWrappers.SoundCategory getCategory () {
+		return handle.getSoundCategories ().readSafely (0);
+	}
+
+	public void setCategory (EnumWrappers.SoundCategory value) {
+		handle.getSoundCategories ().writeSafely (0, value);
+	}
 }

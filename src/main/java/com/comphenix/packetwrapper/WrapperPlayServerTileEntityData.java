@@ -24,16 +24,15 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 
 public class WrapperPlayServerTileEntityData extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.TILE_ENTITY_DATA;
+	public static final PacketType TYPE = PacketType.Play.Server.TILE_ENTITY_DATA;
 
-	public WrapperPlayServerTileEntityData() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerTileEntityData () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerTileEntityData(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerTileEntityData (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +40,8 @@ public class WrapperPlayServerTileEntityData extends AbstractPacket {
 	 * 
 	 * @return The current Location
 	 */
-	public BlockPosition getLocation() {
-		return handle.getBlockPositionModifier().read(0);
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
 	}
 
 	/**
@@ -50,8 +49,8 @@ public class WrapperPlayServerTileEntityData extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLocation(BlockPosition value) {
-		handle.getBlockPositionModifier().write(0, value);
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
 	}
 
 	/**
@@ -61,8 +60,8 @@ public class WrapperPlayServerTileEntityData extends AbstractPacket {
 	 * 
 	 * @return The current Action
 	 */
-	public int getAction() {
-		return handle.getIntegers().read(0);
+	public int getAction () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -70,8 +69,8 @@ public class WrapperPlayServerTileEntityData extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setAction(int value) {
-		handle.getIntegers().write(0, value);
+	public void setAction (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -81,8 +80,8 @@ public class WrapperPlayServerTileEntityData extends AbstractPacket {
 	 * 
 	 * @return The current NBT Data
 	 */
-	public NbtBase<?> getNbtData() {
-		return handle.getNbtModifier().read(0);
+	public NbtBase<?> getNbtData () {
+		return handle.getNbtModifier ().read (0);
 	}
 
 	/**
@@ -90,8 +89,7 @@ public class WrapperPlayServerTileEntityData extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setNbtData(NbtBase<?> value) {
-		handle.getNbtModifier().write(0, value);
+	public void setNbtData (NbtBase<?> value) {
+		handle.getNbtModifier ().write (0, value);
 	}
-
 }

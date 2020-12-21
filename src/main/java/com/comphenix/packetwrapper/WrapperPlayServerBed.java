@@ -18,13 +18,12 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 /**
  * This packet has been removed from Minecraft and is no longer supported.
@@ -33,13 +32,13 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 public class WrapperPlayServerBed extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.BED;
 
-	public WrapperPlayServerBed() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerBed () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerBed(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerBed (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -49,8 +48,8 @@ public class WrapperPlayServerBed extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -58,8 +57,8 @@ public class WrapperPlayServerBed extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -68,8 +67,8 @@ public class WrapperPlayServerBed extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -78,8 +77,8 @@ public class WrapperPlayServerBed extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -89,8 +88,8 @@ public class WrapperPlayServerBed extends AbstractPacket {
 	 * 
 	 * @return The current Location
 	 */
-	public BlockPosition getLocation() {
-		return handle.getBlockPositionModifier().read(0);
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
 	}
 
 	/**
@@ -98,8 +97,7 @@ public class WrapperPlayServerBed extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLocation(BlockPosition value) {
-		handle.getBlockPositionModifier().write(0, value);
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
 	}
-
 }

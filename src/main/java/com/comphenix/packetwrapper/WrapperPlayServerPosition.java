@@ -18,24 +18,23 @@
  */
 package com.comphenix.packetwrapper;
 
-import java.util.Set;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import java.util.Set;
 
 public class WrapperPlayServerPosition extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.POSITION;
 
-	public WrapperPlayServerPosition() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerPosition () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerPosition(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerPosition (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -45,8 +44,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @return The current X
 	 */
-	public double getX() {
-		return handle.getDoubles().read(0);
+	public double getX () {
+		return handle.getDoubles ().read (0);
 	}
 
 	/**
@@ -54,8 +53,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setX(double value) {
-		handle.getDoubles().write(0, value);
+	public void setX (double value) {
+		handle.getDoubles ().write (0, value);
 	}
 
 	/**
@@ -65,8 +64,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @return The current Y
 	 */
-	public double getY() {
-		return handle.getDoubles().read(1);
+	public double getY () {
+		return handle.getDoubles ().read (1);
 	}
 
 	/**
@@ -74,8 +73,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setY(double value) {
-		handle.getDoubles().write(1, value);
+	public void setY (double value) {
+		handle.getDoubles ().write (1, value);
 	}
 
 	/**
@@ -85,8 +84,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @return The current Z
 	 */
-	public double getZ() {
-		return handle.getDoubles().read(2);
+	public double getZ () {
+		return handle.getDoubles ().read (2);
 	}
 
 	/**
@@ -94,8 +93,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setZ(double value) {
-		handle.getDoubles().write(2, value);
+	public void setZ (double value) {
+		handle.getDoubles ().write (2, value);
 	}
 
 	/**
@@ -105,8 +104,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @return The current Yaw
 	 */
-	public float getYaw() {
-		return handle.getFloat().read(0);
+	public float getYaw () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -114,8 +113,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setYaw(float value) {
-		handle.getFloat().write(0, value);
+	public void setYaw (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -125,8 +124,8 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @return The current Pitch
 	 */
-	public float getPitch() {
-		return handle.getFloat().read(1);
+	public float getPitch () {
+		return handle.getFloat ().read (1);
 	}
 
 	/**
@@ -134,28 +133,32 @@ public class WrapperPlayServerPosition extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setPitch(float value) {
-		handle.getFloat().write(1, value);
+	public void setPitch (float value) {
+		handle.getFloat ().write (1, value);
 	}
 
 	private static final Class<?> FLAGS_CLASS = MinecraftReflection
-			.getMinecraftClass("EnumPlayerTeleportFlags",
-					"PacketPlayOutPosition$EnumPlayerTeleportFlags");
+													.getMinecraftClass ("EnumPlayerTeleportFlags",
+														"PacketPlayOutPosition$EnumPlayerTeleportFlags");
 
 	public enum PlayerTeleportFlag {
-		X, Y, Z, Y_ROT, X_ROT
+		X,
+		Y,
+		Z,
+		Y_ROT,
+		X_ROT
 	}
 
-	private StructureModifier<Set<PlayerTeleportFlag>> getFlagsModifier() {
-		return handle.getSets(
-				EnumWrappers.getGenericConverter(FLAGS_CLASS, PlayerTeleportFlag.class));
+	private StructureModifier<Set<PlayerTeleportFlag>> getFlagsModifier () {
+		return handle.getSets (
+			EnumWrappers.getGenericConverter (FLAGS_CLASS, PlayerTeleportFlag.class));
 	}
 
-	public Set<PlayerTeleportFlag> getFlags() {
-		return getFlagsModifier().read(0);
+	public Set<PlayerTeleportFlag> getFlags () {
+		return getFlagsModifier ().read (0);
 	}
 
-	public void setFlags(Set<PlayerTeleportFlag> value) {
-		getFlagsModifier().write(0, value);
+	public void setFlags (Set<PlayerTeleportFlag> value) {
+		getFlagsModifier ().write (0, value);
 	}
 }

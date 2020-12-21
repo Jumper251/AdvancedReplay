@@ -23,34 +23,34 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayServerOpenWindowMerchant extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.OPEN_WINDOW_MERCHANT;
-    
-    public WrapperPlayServerOpenWindowMerchant() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerOpenWindowMerchant(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    // Cannot generate getter a
-    // Cannot generate setter a
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
-    // Cannot find type for b
+	public static final PacketType TYPE = PacketType.Play.Server.OPEN_WINDOW_MERCHANT;
+
+	public WrapperPlayServerOpenWindowMerchant () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerOpenWindowMerchant (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	// Cannot generate getter a
+	// Cannot generate setter a
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
+	// Cannot find type for b
 }

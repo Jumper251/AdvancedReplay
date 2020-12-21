@@ -25,13 +25,13 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 public class WrapperPlayClientUpdateSign extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.UPDATE_SIGN;
 
-	public WrapperPlayClientUpdateSign() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientUpdateSign () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientUpdateSign(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientUpdateSign (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class WrapperPlayClientUpdateSign extends AbstractPacket {
 	 * 
 	 * @return The current Location
 	 */
-	public BlockPosition getLocation() {
-		return handle.getBlockPositionModifier().read(0);
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class WrapperPlayClientUpdateSign extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLocation(BlockPosition value) {
-		handle.getBlockPositionModifier().write(0, value);
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class WrapperPlayClientUpdateSign extends AbstractPacket {
 	 * 
 	 * @return The current lines
 	 */
-	public String[] getLines() {
-		return handle.getStringArrays().read(0);
+	public String[] getLines () {
+		return handle.getStringArrays ().read (0);
 	}
 
 	/**
@@ -68,12 +68,12 @@ public class WrapperPlayClientUpdateSign extends AbstractPacket {
 	 * 
 	 * @param value - Lines, must be 4 elements long
 	 */
-	public void setLines(String[] value) {
+	public void setLines (String[] value) {
 		if (value == null)
-			throw new IllegalArgumentException("value cannot be null!");
+			throw new IllegalArgumentException ("value cannot be null!");
 		if (value.length != 4)
-			throw new IllegalArgumentException("value must have 4 elements!");
+			throw new IllegalArgumentException ("value must have 4 elements!");
 
-		handle.getStringArrays().write(0, value);
+		handle.getStringArrays ().write (0, value);
 	}
 }

@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.UPDATE_HEALTH;
 
-	public WrapperPlayServerUpdateHealth() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerUpdateHealth () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerUpdateHealth(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerUpdateHealth (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	 * 
 	 * @return The current Health
 	 */
-	public float getHealth() {
-		return handle.getFloat().read(0);
+	public float getHealth () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setHealth(float value) {
-		handle.getFloat().write(0, value);
+	public void setHealth (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	 * 
 	 * @return The current Food
 	 */
-	public int getFood() {
-		return handle.getIntegers().read(0);
+	public int getFood () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setFood(int value) {
-		handle.getIntegers().write(0, value);
+	public void setFood (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	 * 
 	 * @return The current Food Saturation
 	 */
-	public float getFoodSaturation() {
-		return handle.getFloat().read(1);
+	public float getFoodSaturation () {
+		return handle.getFloat ().read (1);
 	}
 
 	/**
@@ -89,8 +89,7 @@ public class WrapperPlayServerUpdateHealth extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setFoodSaturation(float value) {
-		handle.getFloat().write(1, value);
+	public void setFoodSaturation (float value) {
+		handle.getFloat ().write (1, value);
 	}
-
 }

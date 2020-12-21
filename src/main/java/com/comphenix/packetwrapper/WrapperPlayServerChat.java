@@ -18,24 +18,23 @@
  */
 package com.comphenix.packetwrapper;
 
-import java.util.Arrays;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.EnumWrappers.ChatType;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import java.util.Arrays;
 
 public class WrapperPlayServerChat extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.CHAT;
 
-	public WrapperPlayServerChat() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerChat () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerChat(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerChat (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -45,8 +44,8 @@ public class WrapperPlayServerChat extends AbstractPacket {
 	 * 
 	 * @return The current message
 	 */
-	public WrappedChatComponent getMessage() {
-		return handle.getChatComponents().read(0);
+	public WrappedChatComponent getMessage () {
+		return handle.getChatComponents ().read (0);
 	}
 
 	/**
@@ -54,16 +53,16 @@ public class WrapperPlayServerChat extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setMessage(WrappedChatComponent value) {
-		handle.getChatComponents().write(0, value);
+	public void setMessage (WrappedChatComponent value) {
+		handle.getChatComponents ().write (0, value);
 	}
 
-	public ChatType getChatType() {
-		return handle.getChatTypes().read(0);
+	public ChatType getChatType () {
+		return handle.getChatTypes ().read (0);
 	}
 
-	public void setChatType(ChatType type) {
-		handle.getChatTypes().write(0, type);
+	public void setChatType (ChatType type) {
+		handle.getChatTypes ().write (0, type);
 	}
 
 	/**
@@ -76,12 +75,12 @@ public class WrapperPlayServerChat extends AbstractPacket {
 	 * @deprecated Magic values replaced by enum
 	 */
 	@Deprecated
-	public byte getPosition() {
-		Byte position = handle.getBytes().readSafely(0);
+	public byte getPosition () {
+		Byte position = handle.getBytes ().readSafely (0);
 		if (position != null) {
 			return position;
 		} else {
-			return getChatType().getId();
+			return getChatType ().getId ();
 		}
 	}
 
@@ -92,13 +91,11 @@ public class WrapperPlayServerChat extends AbstractPacket {
 	 * @deprecated Magic values replaced by enum
 	 */
 	@Deprecated
-	public void setPosition(byte value) {
-		handle.getBytes().writeSafely(0, value);
+	public void setPosition (byte value) {
+		handle.getBytes ().writeSafely (0, value);
 
-		if (EnumWrappers.getChatTypeClass() != null)
-		{
-			Arrays.stream(ChatType.values()).filter(t -> t.getId() == value).findAny()
-			      .ifPresent(t -> handle.getChatTypes().writeSafely(0, t));
+		if (EnumWrappers.getChatTypeClass () != null) {
+			Arrays.stream (ChatType.values ()).filter (t -> t.getId () == value).findAny ().ifPresent (t -> handle.getChatTypes ().writeSafely (0, t));
 		}
 	}
 }

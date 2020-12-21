@@ -9,6 +9,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
+import com.comphenix.packetwrapper.WrapperPlayServerMultiBlockChange;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMove;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
@@ -20,6 +21,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
+import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,7 @@ import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -165,9 +168,6 @@ public class PacketRecorder extends AbstractListener {
 			@SuppressWarnings ("deprecation")
 			@Override
 			public void onPacketSending (PacketEvent event) {
-				// TODO add a lot of packets here
-				// Try, especially for block changes, to not apply it more than once a
-				// player
 				Player p = event.getPlayer ();
 				if (!recorder.getPlayers ().contains (p.getName ()))
 					return;
@@ -181,7 +181,7 @@ public class PacketRecorder extends AbstractListener {
 							event.getPacket ());
 					int type = VersionUtil.isCompatible (VersionEnum.V1_8)
 								   ? oldPacket.getType ()
-								   : packet.getType ();
+								   : packet.getType ().getTypeId ();
 
 					LocationData location = null;
 
@@ -203,7 +203,7 @@ public class PacketRecorder extends AbstractListener {
 							addData (p.getName (),
 								new EntityItemData (
 									0, packet.getEntityID (),
-									new ItemData (item.getItemStack ().getType ().getId (),
+									new ItemData (item.getItemStack ().getType (),
 										item.getItemStack ().getData ().getData ()),
 									location, velocity));
 
@@ -342,14 +342,24 @@ public class PacketRecorder extends AbstractListener {
 					}
 				}
 
-				// TODO Add block change
 				if (event.getPacketType () == PacketType.Play.Server.BLOCK_CHANGE) {
 					WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange (event.getPacket ());
 
-					// Before can be faked
+					LocationData loc = LocationData.fromLocation (packet.getBukkitLocation (event.getPlayer ().getWorld ()));
 					addData (
 						p.getName (),
-						new BlockChangeData (LocationData.fromLocation (packet.getBukkitLocation (), new ItemData (0, 0), new ItemData (packet.getBlockData ().getType ().getId (), packet.getBlockData ().getData ())));
+						new BlockChangeData (loc, new ItemData (Material.AIR, 0), new ItemData (packet.getBlockData ().getType (), packet.getBlockData ().getData ())));
+				}
+
+				if (event.getPacketType () == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
+					WrapperPlayServerMultiBlockChange packet = new WrapperPlayServerMultiBlockChange (event.getPacket ());
+
+					for (MultiBlockChangeInfo record : packet.getRecords ()) {
+						LocationData loc = LocationData.fromLocation (record.getLocation (event.getPlayer ().getWorld ()));
+						addData (
+							p.getName (),
+							new BlockChangeData (loc, new ItemData (Material.AIR, 0), new ItemData (record.getData ().getType (), record.getData ().getData ())));
+					}
 				}
 			}
 		};

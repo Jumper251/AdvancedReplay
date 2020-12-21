@@ -18,25 +18,24 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.EntityUseAction;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 
 public class WrapperPlayClientUseEntity extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.USE_ENTITY;
 
-	public WrapperPlayClientUseEntity() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientUseEntity () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientUseEntity(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientUseEntity (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -44,8 +43,8 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * 
 	 * @return The current entity ID
 	 */
-	public int getTargetID() {
-		return handle.getIntegers().read(0);
+	public int getTargetID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -54,8 +53,8 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The targeted entity.
 	 */
-	public Entity getTarget(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getTarget (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -64,8 +63,8 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The targeted entity.
 	 */
-	public Entity getTarget(PacketEvent event) {
-		return getTarget(event.getPlayer().getWorld());
+	public Entity getTarget (PacketEvent event) {
+		return getTarget (event.getPlayer ().getWorld ());
 	}
 
 	/**
@@ -73,8 +72,8 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTargetID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setTargetID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -82,8 +81,8 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * 
 	 * @return The current Type
 	 */
-	public EntityUseAction getType() {
-		return handle.getEntityUseActions().read(0);
+	public EntityUseAction getType () {
+		return handle.getEntityUseActions ().read (0);
 	}
 
 	/**
@@ -91,8 +90,8 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setType(EntityUseAction value) {
-		handle.getEntityUseActions().write(0, value);
+	public void setType (EntityUseAction value) {
+		handle.getEntityUseActions ().write (0, value);
 	}
 
 	/**
@@ -102,8 +101,8 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * 
 	 * @return The target vector or null
 	 */
-	public Vector getTargetVector() {
-		return handle.getVectors().read(0);
+	public Vector getTargetVector () {
+		return handle.getVectors ().read (0);
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTargetVector(Vector value) {
-		handle.getVectors().write(0, value);
+	public void setTargetVector (Vector value) {
+		handle.getVectors ().write (0, value);
 	}
 }

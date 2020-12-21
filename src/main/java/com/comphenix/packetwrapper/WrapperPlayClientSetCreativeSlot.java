@@ -18,22 +18,20 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.inventory.ItemStack;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import org.bukkit.inventory.ItemStack;
 
 public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Client.SET_CREATIVE_SLOT;
+	public static final PacketType TYPE = PacketType.Play.Client.SET_CREATIVE_SLOT;
 
-	public WrapperPlayClientSetCreativeSlot() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientSetCreativeSlot () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientSetCreativeSlot(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientSetCreativeSlot (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -43,8 +41,8 @@ public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
 	 * 
 	 * @return The current Slot
 	 */
-	public int getSlot() {
-		return handle.getIntegers().read(0);
+	public int getSlot () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -52,8 +50,8 @@ public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setSlot(int value) {
-		handle.getIntegers().write(0, value);
+	public void setSlot (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -61,8 +59,8 @@ public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
 	 * 
 	 * @return The current Clicked item
 	 */
-	public ItemStack getClickedItem() {
-		return handle.getItemModifier().read(0);
+	public ItemStack getClickedItem () {
+		return handle.getItemModifier ().read (0);
 	}
 
 	/**
@@ -70,8 +68,7 @@ public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setClickedItem(ItemStack value) {
-		handle.getItemModifier().write(0, value);
+	public void setClickedItem (ItemStack value) {
+		handle.getItemModifier ().write (0, value);
 	}
-
 }

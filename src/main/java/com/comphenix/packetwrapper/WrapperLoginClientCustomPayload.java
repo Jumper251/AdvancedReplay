@@ -23,35 +23,35 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperLoginClientCustomPayload extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Login.Client.CUSTOM_PAYLOAD;
-    
-    public WrapperLoginClientCustomPayload() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperLoginClientCustomPayload(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Login.Client.CUSTOM_PAYLOAD;
+
+	public WrapperLoginClientCustomPayload () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperLoginClientCustomPayload (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Message ID.
      * <p>
      * Notes: should match ID from server.
      * @return The current Message ID
      */
-    public int getMessageId() {
-        return handle.getIntegers().read(0);
-    }
-    
-    /**
+	public int getMessageId () {
+		return handle.getIntegers ().read (0);
+	}
+
+	/**
      * Set Message ID.
      * @param value - new value.
      */
-    public void setMessageId(int value) {
-        handle.getIntegers().write(0, value);
-    }
-    
-    // Cannot find type for b
-    // Cannot find type for b
+	public void setMessageId (int value) {
+		handle.getIntegers ().write (0, value);
+	}
+
+	// Cannot find type for b
+	// Cannot find type for b
 }

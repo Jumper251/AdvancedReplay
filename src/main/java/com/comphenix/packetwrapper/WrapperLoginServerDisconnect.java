@@ -25,13 +25,13 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 public class WrapperLoginServerDisconnect extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Login.Server.DISCONNECT;
 
-	public WrapperLoginServerDisconnect() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperLoginServerDisconnect () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperLoginServerDisconnect(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperLoginServerDisconnect (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -39,13 +39,13 @@ public class WrapperLoginServerDisconnect extends AbstractPacket {
 	 * 
 	 * @return The current reason
 	 */
-	public WrappedChatComponent getReason() {
-		return handle.getChatComponents().read(0);
+	public WrappedChatComponent getReason () {
+		return handle.getChatComponents ().read (0);
 	}
 
 	@Deprecated
-	public WrappedChatComponent getJsonData() {
-		return getReason();
+	public WrappedChatComponent getJsonData () {
+		return getReason ();
 	}
 
 	/**
@@ -53,12 +53,12 @@ public class WrapperLoginServerDisconnect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setReason(WrappedChatComponent value) {
-		handle.getChatComponents().write(0, value);
+	public void setReason (WrappedChatComponent value) {
+		handle.getChatComponents ().write (0, value);
 	}
 
 	@Deprecated
-	public void setJsonData(WrappedChatComponent value) {
-		setReason(value);
+	public void setJsonData (WrappedChatComponent value) {
+		setReason (value);
 	}
 }

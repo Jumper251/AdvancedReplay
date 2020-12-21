@@ -22,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class PacketWrapper extends JavaPlugin {
 	@Override
-	public void onEnable() {
+	public void onEnable () {
 		// We don't really do much ...
 	}
 }

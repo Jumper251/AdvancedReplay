@@ -18,25 +18,24 @@
  */
 package com.comphenix.packetwrapper;
 
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.packetwrapper.util.Removed;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.OPEN_WINDOW;
 
-	public WrapperPlayServerOpenWindow() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerOpenWindow () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerOpenWindow(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerOpenWindow (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -47,8 +46,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @return The current Window id
 	 */
-	public int getWindowID() {
-		return handle.getIntegers().read(0);
+	public int getWindowID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -56,8 +55,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setWindowID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -68,8 +67,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * @return The current Inventory Type
 	 */
 	@Removed
-	public String getInventoryType() {
-		return handle.getStrings().read(0);
+	public String getInventoryType () {
+		return handle.getStrings ().read (0);
 	}
 
 	/**
@@ -78,8 +77,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * @param value - new value.
 	 */
 	@Removed
-	public void setInventoryType(String value) {
-		handle.getStrings().write(0, value);
+	public void setInventoryType (String value) {
+		handle.getStrings ().write (0, value);
 	}
 
 	/**
@@ -89,8 +88,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @return The current Window title
 	 */
-	public WrappedChatComponent getWindowTitle() {
-		return handle.getChatComponents().read(0);
+	public WrappedChatComponent getWindowTitle () {
+		return handle.getChatComponents ().read (0);
 	}
 
 	/**
@@ -98,8 +97,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowTitle(WrappedChatComponent value) {
-		handle.getChatComponents().write(0, value);
+	public void setWindowTitle (WrappedChatComponent value) {
+		handle.getChatComponents ().write (0, value);
 	}
 
 	/**
@@ -110,8 +109,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @return The current Number of Slots
 	 */
-	public int getNumberOfSlots() {
-		return handle.getIntegers().read(1);
+	public int getNumberOfSlots () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -119,8 +118,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setNumberOfSlots(int value) {
-		handle.getIntegers().write(1, value);
+	public void setNumberOfSlots (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -130,8 +129,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -139,8 +138,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -149,8 +148,8 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -159,7 +158,7 @@ public class WrapperPlayServerOpenWindow extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 }

@@ -18,25 +18,23 @@
  */
 package com.comphenix.packetwrapper;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.potion.PotionEffectType;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-
 public class WrapperPlayServerRemoveEntityEffect extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.REMOVE_ENTITY_EFFECT;
+	public static final PacketType TYPE = PacketType.Play.Server.REMOVE_ENTITY_EFFECT;
 
-	public WrapperPlayServerRemoveEntityEffect() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerRemoveEntityEffect () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerRemoveEntityEffect(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerRemoveEntityEffect (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -46,8 +44,8 @@ public class WrapperPlayServerRemoveEntityEffect extends AbstractPacket {
 	 * 
 	 * @return The current Entity ID
 	 */
-	public int getEntityID() {
-		return handle.getIntegers().read(0);
+	public int getEntityID () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -55,8 +53,8 @@ public class WrapperPlayServerRemoveEntityEffect extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEntityID(int value) {
-		handle.getIntegers().write(0, value);
+	public void setEntityID (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -65,8 +63,8 @@ public class WrapperPlayServerRemoveEntityEffect extends AbstractPacket {
 	 * @param world - the current world of the entity.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(World world) {
-		return handle.getEntityModifier(world).read(0);
+	public Entity getEntity (World world) {
+		return handle.getEntityModifier (world).read (0);
 	}
 
 	/**
@@ -75,15 +73,15 @@ public class WrapperPlayServerRemoveEntityEffect extends AbstractPacket {
 	 * @param event - the packet event.
 	 * @return The spawned entity.
 	 */
-	public Entity getEntity(PacketEvent event) {
-		return getEntity(event.getPlayer().getWorld());
+	public Entity getEntity (PacketEvent event) {
+		return getEntity (event.getPlayer ().getWorld ());
 	}
 
-	public PotionEffectType getEffect() {
-		return handle.getEffectTypes().read(0);
+	public PotionEffectType getEffect () {
+		return handle.getEffectTypes ().read (0);
 	}
 
-	public void setEffect(PotionEffectType value) {
-		handle.getEffectTypes().write(0, value);
+	public void setEffect (PotionEffectType value) {
+		handle.getEffectTypes ().write (0, value);
 	}
 }

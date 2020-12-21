@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayServerWindowData extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.WINDOW_DATA;
 
-	public WrapperPlayServerWindowData() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerWindowData () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerWindowData(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerWindowData (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayServerWindowData extends AbstractPacket {
 	 * 
 	 * @return The current Window ID
 	 */
-	public int getWindowId() {
-		return handle.getIntegers().read(0);
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayServerWindowData extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowId(int value) {
-		handle.getIntegers().write(0, value);
+	public void setWindowId (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class WrapperPlayServerWindowData extends AbstractPacket {
 	 * 
 	 * @return The current Property
 	 */
-	public int getProperty() {
-		return handle.getIntegers().read(1);
+	public int getProperty () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class WrapperPlayServerWindowData extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setProperty(int value) {
-		handle.getIntegers().write(1, value);
+	public void setProperty (int value) {
+		handle.getIntegers ().write (1, value);
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class WrapperPlayServerWindowData extends AbstractPacket {
 	 * 
 	 * @return The current Value
 	 */
-	public int getValue() {
-		return handle.getIntegers().read(2);
+	public int getValue () {
+		return handle.getIntegers ().read (2);
 	}
 
 	/**
@@ -89,8 +89,7 @@ public class WrapperPlayServerWindowData extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setValue(int value) {
-		handle.getIntegers().write(2, value);
+	public void setValue (int value) {
+		handle.getIntegers ().write (2, value);
 	}
-
 }

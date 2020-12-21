@@ -27,13 +27,13 @@ import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 public class WrapperPlayClientBlockDig extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.BLOCK_DIG;
 
-	public WrapperPlayClientBlockDig() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientBlockDig () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientBlockDig(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientBlockDig (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -43,8 +43,8 @@ public class WrapperPlayClientBlockDig extends AbstractPacket {
 	 * 
 	 * @return The current Location
 	 */
-	public BlockPosition getLocation() {
-		return handle.getBlockPositionModifier().read(0);
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
 	}
 
 	/**
@@ -52,16 +52,16 @@ public class WrapperPlayClientBlockDig extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLocation(BlockPosition value) {
-		handle.getBlockPositionModifier().write(0, value);
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
 	}
 
-	public Direction getDirection() {
-		return handle.getDirections().read(0);
+	public Direction getDirection () {
+		return handle.getDirections ().read (0);
 	}
 
-	public void setDirection(Direction value) {
-		handle.getDirections().write(0, value);
+	public void setDirection (Direction value) {
+		handle.getDirections ().write (0, value);
 	}
 
 	/**
@@ -71,8 +71,8 @@ public class WrapperPlayClientBlockDig extends AbstractPacket {
 	 * 
 	 * @return The current Status
 	 */
-	public PlayerDigType getStatus() {
-		return handle.getPlayerDigTypes().read(0);
+	public PlayerDigType getStatus () {
+		return handle.getPlayerDigTypes ().read (0);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class WrapperPlayClientBlockDig extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setStatus(PlayerDigType value) {
-		handle.getPlayerDigTypes().write(0, value);
+	public void setStatus (PlayerDigType value) {
+		handle.getPlayerDigTypes ().write (0, value);
 	}
 }

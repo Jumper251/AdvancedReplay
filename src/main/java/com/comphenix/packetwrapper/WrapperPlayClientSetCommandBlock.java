@@ -25,87 +25,87 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 
 public class WrapperPlayClientSetCommandBlock extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Client.SET_COMMAND_BLOCK;
-    
-    public WrapperPlayClientSetCommandBlock() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientSetCommandBlock(PacketContainer packet) {
-        super(packet, TYPE);
-    }
+	public static final PacketType TYPE = PacketType.Play.Client.SET_COMMAND_BLOCK;
 
-    /**
+	public WrapperPlayClientSetCommandBlock () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayClientSetCommandBlock (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Location.
      * @return The current Location
      */
-    public BlockPosition getLocation() {
-        return handle.getBlockPositionModifier().readSafely(0);
-    }
-    
-    /**
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().readSafely (0);
+	}
+
+	/**
      * Set Location.
      * @param value - new value.
      */
-    public void setLocation(BlockPosition value) {
-        handle.getBlockPositionModifier().writeSafely(0,  value);
-    }
-    
-    /**
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().writeSafely (0, value);
+	}
+
+	/**
      * Retrieve Command.
      * @return The current Command
      */
-    public String getCommand() {
-        return handle.getStrings().read(0);
-    }
-    
-    /**
+	public String getCommand () {
+		return handle.getStrings ().read (0);
+	}
+
+	/**
      * Set Command.
      * @param value - new value.
      */
-    public void setCommand(String value) {
-        handle.getStrings().write(0, value);
-    }
+	public void setCommand (String value) {
+		handle.getStrings ().write (0, value);
+	}
 
 	/**
 	 * if false, the output of the previous command will not be stored within the command block
 	 */
-	public boolean isTrackOutput() {
-    	return handle.getBooleans().read(0);
-    }
+	public boolean isTrackOutput () {
+		return handle.getBooleans ().read (0);
+	}
 
-    public void setTrackOutput(boolean value) {
-		handle.getBooleans().write(0, value);
-    }
+	public void setTrackOutput (boolean value) {
+		handle.getBooleans ().write (0, value);
+	}
 
-    public boolean isConditional() {
-	    return handle.getBooleans().read(1);
-    }
+	public boolean isConditional () {
+		return handle.getBooleans ().read (1);
+	}
 
-    public void setConditional(boolean value) {
-	    handle.getBooleans().write(1, value);
-    }
+	public void setConditional (boolean value) {
+		handle.getBooleans ().write (1, value);
+	}
 
-    public boolean isAutomatic() {
-	    return handle.getBooleans().read(2);
-    }
+	public boolean isAutomatic () {
+		return handle.getBooleans ().read (2);
+	}
 
-    public void setAutomatic(boolean value) {
-	    handle.getBooleans().write(2, value);
-    }
+	public void setAutomatic (boolean value) {
+		handle.getBooleans ().write (2, value);
+	}
 
-    public Mode getMode() {
-		return handle.getEnumModifier(Mode.class, MinecraftReflection.getMinecraftClass("TileEntityCommand$Type")).readSafely(0);
-    }
+	public Mode getMode () {
+		return handle.getEnumModifier (Mode.class, MinecraftReflection.getMinecraftClass ("TileEntityCommand$Type")).readSafely (0);
+	}
 
-    public void setMode(Mode mode) {
-	    handle.getEnumModifier(Mode.class, MinecraftReflection.getMinecraftClass("TileEntityCommand$Type")).writeSafely(0, mode);
-    }
+	public void setMode (Mode mode) {
+		handle.getEnumModifier (Mode.class, MinecraftReflection.getMinecraftClass ("TileEntityCommand$Type")).writeSafely (0, mode);
+	}
 
-    public enum Mode {
-        SEQUENCE,
-        AUTO,
-        REDSTONE
-    }
+	public enum Mode {
+		SEQUENCE,
+		AUTO,
+		REDSTONE
+	}
 }

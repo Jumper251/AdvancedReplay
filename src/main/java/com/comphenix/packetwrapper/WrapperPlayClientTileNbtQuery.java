@@ -24,51 +24,50 @@ import com.comphenix.protocol.wrappers.BlockPosition;
 
 public class WrapperPlayClientTileNbtQuery extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Client.TILE_NBT_QUERY;
-    
-    public WrapperPlayClientTileNbtQuery() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayClientTileNbtQuery(PacketContainer packet) {
-        super(packet, TYPE);
-    }
-    
-    /**
+	public static final PacketType TYPE = PacketType.Play.Client.TILE_NBT_QUERY;
+
+	public WrapperPlayClientTileNbtQuery () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayClientTileNbtQuery (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Transaction ID.
      * <p>
      * Notes: an incremental ID so that the client can verify that the response matches.
      * @return The current Transaction ID
      */
-    public int getTransactionId() {
-        return handle.getIntegers().read(0);
-    }
-    
-    /**
+	public int getTransactionId () {
+		return handle.getIntegers ().read (0);
+	}
+
+	/**
      * Set Transaction ID.
      * @param value - new value.
      */
-    public void setTransactionId(int value) {
-        handle.getIntegers().write(0, value);
-    }
-    
-    /**
+	public void setTransactionId (int value) {
+		handle.getIntegers ().write (0, value);
+	}
+
+	/**
      * Retrieve Location.
      * <p>
      * Notes: the location of the block to check.
      * @return The current Location
      */
-    public BlockPosition getLocation() {
-        return handle.getBlockPositionModifier().read(0);
-    }
-    
-    /**
+	public BlockPosition getLocation () {
+		return handle.getBlockPositionModifier ().read (0);
+	}
+
+	/**
      * Set Location.
      * @param value - new value.
      */
-    public void setLocation(BlockPosition value) {
-        handle.getBlockPositionModifier().write(0, value);
-    }
-    
+	public void setLocation (BlockPosition value) {
+		handle.getBlockPositionModifier ().write (0, value);
+	}
 }

@@ -18,21 +18,20 @@
  */
 package com.comphenix.packetwrapper;
 
-import java.util.UUID;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import java.util.UUID;
 
 public class WrapperPlayClientSpectate extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.SPECTATE;
 
-	public WrapperPlayClientSpectate() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientSpectate () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientSpectate(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientSpectate (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +39,8 @@ public class WrapperPlayClientSpectate extends AbstractPacket {
 	 * 
 	 * @return The current Target Player
 	 */
-	public UUID getTargetPlayer() {
-		return handle.getUUIDs().read(0);
+	public UUID getTargetPlayer () {
+		return handle.getUUIDs ().read (0);
 	}
 
 	/**
@@ -49,8 +48,7 @@ public class WrapperPlayClientSpectate extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setTargetPlayer(UUID value) {
-		handle.getUUIDs().write(0, value);
+	public void setTargetPlayer (UUID value) {
+		handle.getUUIDs ().write (0, value);
 	}
-
 }

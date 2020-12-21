@@ -22,16 +22,15 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperLoginClientEncryptionBegin extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Login.Client.ENCRYPTION_BEGIN;
+	public static final PacketType TYPE = PacketType.Login.Client.ENCRYPTION_BEGIN;
 
-	public WrapperLoginClientEncryptionBegin() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperLoginClientEncryptionBegin () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperLoginClientEncryptionBegin(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperLoginClientEncryptionBegin (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -39,8 +38,8 @@ public class WrapperLoginClientEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @return The current Shared Secret
 	 */
-	public byte[] getSharedSecret() {
-		return handle.getByteArrays().read(0);
+	public byte[] getSharedSecret () {
+		return handle.getByteArrays ().read (0);
 	}
 
 	/**
@@ -48,8 +47,8 @@ public class WrapperLoginClientEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setSharedSecret(byte[] value) {
-		handle.getByteArrays().write(0, value);
+	public void setSharedSecret (byte[] value) {
+		handle.getByteArrays ().write (0, value);
 	}
 
 	/**
@@ -57,8 +56,8 @@ public class WrapperLoginClientEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @return The current Verify Token
 	 */
-	public byte[] getVerifyToken() {
-		return handle.getByteArrays().read(1);
+	public byte[] getVerifyToken () {
+		return handle.getByteArrays ().read (1);
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class WrapperLoginClientEncryptionBegin extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setVerifyToken(byte[] value) {
-		handle.getByteArrays().write(1, value);
+	public void setVerifyToken (byte[] value) {
+		handle.getByteArrays ().write (1, value);
 	}
 }

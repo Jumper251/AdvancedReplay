@@ -22,32 +22,31 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.MinecraftKey;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class WrapperPlayClientCustomPayload extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.CUSTOM_PAYLOAD;
 
-	public WrapperPlayClientCustomPayload() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientCustomPayload () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientCustomPayload(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientCustomPayload (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
-	public MinecraftKey getChannel() {
-		return handle.getMinecraftKeys().readSafely(0);
+	public MinecraftKey getChannel () {
+		return handle.getMinecraftKeys ().readSafely (0);
 	}
 
 	/**
 	 * Starting in 1.13, channel names need to be lower case, in the new identifier format,
 	 * i.e. {@code minecraft:brand}. The previously standard {@code |} is no longer allowed.
 	 */
-	public void setChannel(MinecraftKey value) {
-		handle.getMinecraftKeys().writeSafely(0, value);
+	public void setChannel (MinecraftKey value) {
+		handle.getMinecraftKeys ().writeSafely (0, value);
 	}
 
 	/**
@@ -55,8 +54,8 @@ public class WrapperPlayClientCustomPayload extends AbstractPacket {
 	 * 
 	 * @return Payload contents as a Netty buffer
 	 */
-	public ByteBuf getContentsBuffer() {
-		return (ByteBuf) handle.getModifier().withType(ByteBuf.class).read(0);
+	public ByteBuf getContentsBuffer () {
+		return (ByteBuf)handle.getModifier ().withType (ByteBuf.class).read (0);
 	}
 
 	/**
@@ -64,10 +63,10 @@ public class WrapperPlayClientCustomPayload extends AbstractPacket {
 	 * 
 	 * @return Payload contents as a byte array
 	 */
-	public byte[] getContents() {
-		ByteBuf buffer = getContentsBuffer().copy();
-		byte[] array = new byte[buffer.readableBytes()];
-		buffer.readBytes(array);
+	public byte[] getContents () {
+		ByteBuf buffer = getContentsBuffer ().copy ();
+		byte[] array   = new byte[buffer.readableBytes ()];
+		buffer.readBytes (array);
 		return array;
 	}
 
@@ -76,12 +75,12 @@ public class WrapperPlayClientCustomPayload extends AbstractPacket {
 	 * 
 	 * @param contents - new payload contents
 	 */
-	public void setContentsBuffer(ByteBuf contents) {
-		if (MinecraftReflection.is(MinecraftReflection.getPacketDataSerializerClass(), contents)) {
-			handle.getModifier().withType(ByteBuf.class).write(0, contents);
+	public void setContentsBuffer (ByteBuf contents) {
+		if (MinecraftReflection.is (MinecraftReflection.getPacketDataSerializerClass (), contents)) {
+			handle.getModifier ().withType (ByteBuf.class).write (0, contents);
 		} else {
-			Object serializer = MinecraftReflection.getPacketDataSerializer(contents);
-			handle.getModifier().withType(ByteBuf.class).write(0, serializer);
+			Object serializer = MinecraftReflection.getPacketDataSerializer (contents);
+			handle.getModifier ().withType (ByteBuf.class).write (0, serializer);
 		}
 	}
 
@@ -90,7 +89,7 @@ public class WrapperPlayClientCustomPayload extends AbstractPacket {
 	 * 
 	 * @param content - new payload content
 	 */
-	public void setContents(byte[] content) {
-		setContentsBuffer(Unpooled.copiedBuffer(content));
+	public void setContents (byte[] content) {
+		setContentsBuffer (Unpooled.copiedBuffer (content));
 	}
 }

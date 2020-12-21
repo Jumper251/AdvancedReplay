@@ -24,13 +24,13 @@ import com.comphenix.protocol.events.PacketContainer;
 public class WrapperPlayClientEnchantItem extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Client.ENCHANT_ITEM;
 
-	public WrapperPlayClientEnchantItem() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayClientEnchantItem () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayClientEnchantItem(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayClientEnchantItem (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WrapperPlayClientEnchantItem extends AbstractPacket {
 	 * 
 	 * @return The current Window ID
 	 */
-	public int getWindowId() {
-		return handle.getIntegers().read(0);
+	public int getWindowId () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class WrapperPlayClientEnchantItem extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setWindowId(byte value) {
-		handle.getIntegers().write(0, (int) value);
+	public void setWindowId (byte value) {
+		handle.getIntegers ().write (0, (int)value);
 	}
 
 	/**
@@ -61,8 +61,8 @@ public class WrapperPlayClientEnchantItem extends AbstractPacket {
 	 * 
 	 * @return The current Enchantment
 	 */
-	public int getEnchantment() {
-		return handle.getIntegers().read(1);
+	public int getEnchantment () {
+		return handle.getIntegers ().read (1);
 	}
 
 	/**
@@ -70,8 +70,7 @@ public class WrapperPlayClientEnchantItem extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setEnchantment(int value) {
-		handle.getIntegers().write(1, value);
+	public void setEnchantment (int value) {
+		handle.getIntegers ().write (1, value);
 	}
-
 }

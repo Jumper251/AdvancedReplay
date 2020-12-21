@@ -23,16 +23,15 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedParticle;
 
 public class WrapperPlayServerWorldParticles extends AbstractPacket {
-	public static final PacketType TYPE =
-			PacketType.Play.Server.WORLD_PARTICLES;
+	public static final PacketType TYPE = PacketType.Play.Server.WORLD_PARTICLES;
 
-	public WrapperPlayServerWorldParticles() {
-		super(new PacketContainer(TYPE), TYPE);
-		handle.getModifier().writeDefaults();
+	public WrapperPlayServerWorldParticles () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
 	}
 
-	public WrapperPlayServerWorldParticles(PacketContainer packet) {
-		super(packet, TYPE);
+	public WrapperPlayServerWorldParticles (PacketContainer packet) {
+		super (packet, TYPE);
 	}
 
 	/**
@@ -40,8 +39,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current particle
 	 */
-	public WrappedParticle getParticle() {
-		return handle.getNewParticles().read(0);
+	public WrappedParticle getParticle () {
+		return handle.getNewParticles ().read (0);
 	}
 
 	/**
@@ -49,8 +48,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setParticleType(WrappedParticle value) {
-		handle.getNewParticles().write(0, value);
+	public void setParticleType (WrappedParticle value) {
+		handle.getNewParticles ().write (0, value);
 	}
 
 	/**
@@ -60,8 +59,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current X
 	 */
-	public double getX() {
-		return handle.getDoubles().read(0);
+	public double getX () {
+		return handle.getDoubles ().read (0);
 	}
 
 	/**
@@ -69,8 +68,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setX(double value) {
-		handle.getDoubles().write(0, value);
+	public void setX (double value) {
+		handle.getDoubles ().write (0, value);
 	}
 
 	/**
@@ -80,8 +79,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Y
 	 */
-	public double getY() {
-		return handle.getDoubles().read(1);
+	public double getY () {
+		return handle.getDoubles ().read (1);
 	}
 
 	/**
@@ -89,8 +88,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setY(double value) {
-		handle.getDoubles().write(1, value);
+	public void setY (double value) {
+		handle.getDoubles ().write (1, value);
 	}
 
 	/**
@@ -100,8 +99,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Z
 	 */
-	public double getZ() {
-		return handle.getDoubles().read(2);
+	public double getZ () {
+		return handle.getDoubles ().read (2);
 	}
 
 	/**
@@ -109,8 +108,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setZ(double value) {
-		handle.getDoubles().write(2, value);
+	public void setZ (double value) {
+		handle.getDoubles ().write (2, value);
 	}
 
 	/**
@@ -121,8 +120,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Offset X
 	 */
-	public float getOffsetX() {
-		return handle.getFloat().read(0);
+	public float getOffsetX () {
+		return handle.getFloat ().read (0);
 	}
 
 	/**
@@ -130,8 +129,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setOffsetX(float value) {
-		handle.getFloat().write(0, value);
+	public void setOffsetX (float value) {
+		handle.getFloat ().write (0, value);
 	}
 
 	/**
@@ -142,8 +141,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Offset Y
 	 */
-	public float getOffsetY() {
-		return handle.getFloat().read(1);
+	public float getOffsetY () {
+		return handle.getFloat ().read (1);
 	}
 
 	/**
@@ -151,8 +150,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setOffsetY(float value) {
-		handle.getFloat().write(1, value);
+	public void setOffsetY (float value) {
+		handle.getFloat ().write (1, value);
 	}
 
 	/**
@@ -163,8 +162,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Offset Z
 	 */
-	public float getOffsetZ() {
-		return handle.getFloat().read(2);
+	public float getOffsetZ () {
+		return handle.getFloat ().read (2);
 	}
 
 	/**
@@ -172,8 +171,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setOffsetZ(float value) {
-		handle.getFloat().write(2, value);
+	public void setOffsetZ (float value) {
+		handle.getFloat ().write (2, value);
 	}
 
 	/**
@@ -183,8 +182,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Particle data
 	 */
-	public float getParticleData() {
-		return handle.getFloat().read(3);
+	public float getParticleData () {
+		return handle.getFloat ().read (3);
 	}
 
 	/**
@@ -192,8 +191,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setParticleData(float value) {
-		handle.getFloat().write(3, value);
+	public void setParticleData (float value) {
+		handle.getFloat ().write (3, value);
 	}
 
 	/**
@@ -203,8 +202,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Number of particles
 	 */
-	public int getNumberOfParticles() {
-		return handle.getIntegers().read(0);
+	public int getNumberOfParticles () {
+		return handle.getIntegers ().read (0);
 	}
 
 	/**
@@ -212,8 +211,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setNumberOfParticles(int value) {
-		handle.getIntegers().write(0, value);
+	public void setNumberOfParticles (int value) {
+		handle.getIntegers ().write (0, value);
 	}
 
 	/**
@@ -223,8 +222,8 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @return The current Long Distance
 	 */
-	public boolean getLongDistance() {
-		return handle.getBooleans().read(0);
+	public boolean getLongDistance () {
+		return handle.getBooleans ().read (0);
 	}
 
 	/**
@@ -232,7 +231,7 @@ public class WrapperPlayServerWorldParticles extends AbstractPacket {
 	 * 
 	 * @param value - new value.
 	 */
-	public void setLongDistance(boolean value) {
-		handle.getBooleans().write(0, value);
+	public void setLongDistance (boolean value) {
+		handle.getBooleans ().write (0, value);
 	}
 }

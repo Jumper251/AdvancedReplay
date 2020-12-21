@@ -23,76 +23,76 @@ import com.comphenix.protocol.events.PacketContainer;
 
 public class WrapperPlayServerRecipes extends AbstractPacket {
 
-    public static final PacketType TYPE = PacketType.Play.Server.RECIPES;
-    
-    public WrapperPlayServerRecipes() {
-        super(new PacketContainer(TYPE), TYPE);
-        handle.getModifier().writeDefaults();
-    }
-    
-    public WrapperPlayServerRecipes(PacketContainer packet) {
-        super(packet, TYPE);
-    }
+	public static final PacketType TYPE = PacketType.Play.Server.RECIPES;
 
-    /**
+	public WrapperPlayServerRecipes () {
+		super (new PacketContainer (TYPE), TYPE);
+		handle.getModifier ().writeDefaults ();
+	}
+
+	public WrapperPlayServerRecipes (PacketContainer packet) {
+		super (packet, TYPE);
+	}
+
+	/**
      * Retrieve Action.
      * <p>
      * Notes: 0: init, 1: add, 2: remove
      * @return The current Action
      */
-    public Action getAction() {
-        return handle.getEnumModifier(Action.class, 0).readSafely(0);
-    }
+	public Action getAction () {
+		return handle.getEnumModifier (Action.class, 0).readSafely (0);
+	}
 
-    /**
+	/**
      * Set Action.
      * @param value - new value.
      */
-    public void setAction(Action value) {
-        handle.getEnumModifier(Action.class, 0).writeSafely(0, value);
-    }
-    
-    /**
+	public void setAction (Action value) {
+		handle.getEnumModifier (Action.class, 0).writeSafely (0, value);
+	}
+
+	/**
      * Retrieve Crafting Book Open.
      * <p>
      * Notes: if true, then the crafting book will be open when the player opens its inventory.
      * @return The current Crafting Book Open
      */
-    public boolean getCraftingBookOpen() {
-        return handle.getBooleans().read(0);
-    }
-    
-    /**
+	public boolean getCraftingBookOpen () {
+		return handle.getBooleans ().read (0);
+	}
+
+	/**
      * Set Crafting Book Open.
      * @param value - new value.
      */
-    public void setCraftingBookOpen(boolean value) {
-        handle.getBooleans().write(0, value);
-    }
-    
-    /**
+	public void setCraftingBookOpen (boolean value) {
+		handle.getBooleans ().write (0, value);
+	}
+
+	/**
      * Retrieve Filtering Craftable.
      * <p>
      * Notes: if true, then the filtering option is active when the players opens its inventory.
      * @return The current Filtering Craftable
      */
-    public boolean getFilteringCraftable() {
-        return handle.getBooleans().read(0);
-    }
-    
-    /**
+	public boolean getFilteringCraftable () {
+		return handle.getBooleans ().read (0);
+	}
+
+	/**
      * Set Filtering Craftable.
      * @param value - new value.
      */
-    public void setFilteringCraftable(boolean value) {
-        handle.getBooleans().write(0, value);
-    }
+	public void setFilteringCraftable (boolean value) {
+		handle.getBooleans ().write (0, value);
+	}
 
-    // recipe ids
+	// recipe ids
 
-    public enum Action {
-        INIT,
-        ADD,
-        REMOVE;
-    }
+	public enum Action {
+		INIT,
+		ADD,
+		REMOVE;
+	}
 }
