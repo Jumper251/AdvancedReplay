@@ -193,8 +193,7 @@ public class NPCManager {
 
 	public static boolean isNetheriteArmor(ItemStack stack) {
 		try {
-			Map<String, Object> yaml = stack.serialize();
-			String material = (String) yaml.get("type");
+			String material = (String) stack.serialize().get("type");
 			return material.equals("NETHERITE_HELMET") || material.equals("NETHERITE_CHESTPLATE") || material.equals("NETHERITE_LEGGINGS") || material.equals("NETHERITE_BOOTS");
 		} catch (Exception exception) {
 			// Unsure what could happen on older/newer versions
