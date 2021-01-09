@@ -191,11 +191,15 @@ public class NPCManager {
 	}
 
 	public static boolean isNetheriteArmor(ItemStack stack) {
-		try {
-			String material = (String) stack.serialize().get("type");
-			return material.equals("NETHERITE_HELMET") || material.equals("NETHERITE_CHESTPLATE") || material.equals("NETHERITE_LEGGINGS") || material.equals("NETHERITE_BOOTS");
-		} catch (Exception exception) {
-			// Unsure what could happen on older/newer versions
+		if(VersionUtil.isAbove(VersionEnum.V1_16)) {
+			try {
+				String material = (String) stack.serialize().get("type");
+				return material.equals("NETHERITE_HELMET") || material.equals("NETHERITE_CHESTPLATE") || material.equals("NETHERITE_LEGGINGS") || material.equals("NETHERITE_BOOTS");
+			} catch (Exception exception) {
+				// Unsure what could happen on older/newer versions
+				return false;
+			}
+		} else {
 			return false;
 		}
 	}
