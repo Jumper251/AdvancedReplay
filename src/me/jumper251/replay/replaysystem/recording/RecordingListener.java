@@ -1,11 +1,13 @@
 package me.jumper251.replay.replaysystem.recording;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Set;
 
 
 import me.jumper251.replay.replaysystem.data.types.*;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -32,6 +34,8 @@ import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.utils.ItemUtils;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MaterialBridge;
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class RecordingListener extends AbstractListener {
 
@@ -294,9 +298,10 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlockPlaced().getLocation());
-			
+
+
 			ItemData before = new ItemData(e.getBlockReplacedState().getType().getId(), e.getBlockReplacedState().getData().getData());
-			ItemData after = new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
+			ItemData after = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromItemStack(e.getItemInHand(), true)) : new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 
@@ -356,7 +361,7 @@ public class RecordingListener extends AbstractListener {
 			LocationData location = LocationData.fromLocation(block.getLocation());
 			
 			ItemData before = new ItemData(block.getType().getId(), block.getData());
-			ItemData after = new ItemData(e.getBucket() == Material.WATER_BUCKET ? 9 : 11, 0);
+			ItemData after = new ItemData(e.getBucket() == Material.LAVA_BUCKET ? 11 : 9, 0);
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 

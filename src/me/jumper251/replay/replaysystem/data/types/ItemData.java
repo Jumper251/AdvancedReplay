@@ -1,5 +1,7 @@
 package me.jumper251.replay.replaysystem.data.types;
 
+
+
 public class ItemData extends PacketData{
 
 	/**
@@ -10,9 +12,15 @@ public class ItemData extends PacketData{
 	
 	private int id, subId;
 	
+	private SerializableItemStack itemStack;
+	
 	public ItemData(int id, int subId) {
 		this.id = id;
 		this.subId = subId;
+	}
+	
+	public ItemData(SerializableItemStack itemStack) {
+		this.itemStack = itemStack;
 	}
 	
 	public int getId() {
@@ -21,6 +29,10 @@ public class ItemData extends PacketData{
 	
 	public int getSubId() {
 		return subId;
+	}
+	
+	public SerializableItemStack getItemStack() {
+		return itemStack;
 	}
 
 }

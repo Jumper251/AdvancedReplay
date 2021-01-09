@@ -1,6 +1,7 @@
 package me.jumper251.replay.replaysystem.utils;
 
 import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -10,12 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+
 import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 import com.comphenix.protocol.wrappers.Pair;
 
 import me.jumper251.replay.replaysystem.data.types.InvData;
 import me.jumper251.replay.replaysystem.data.types.ItemData;
+import me.jumper251.replay.replaysystem.data.types.SerializableItemStack;
 import me.jumper251.replay.utils.MaterialBridge;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
@@ -144,13 +147,15 @@ public class NPCManager {
 	
 	public static ItemStack fromID(ItemData data) {
 		if (data == null) return new ItemStack(Material.AIR);
+		if (data.getItemStack() != null)  return data.getItemStack().toItemStack(); 
+		
 		return new ItemStack(MaterialBridge.fromID(data.getId()), 1, (short)data.getSubId());
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static ItemData fromItemStack(ItemStack stack) {
 		if (stack == null) return null;
-		return new ItemData(stack.getType().getId(), stack.getData().getData());
+		
+		return new ItemData(SerializableItemStack.fromItemStack(stack));
 	}
 	
 	@SuppressWarnings("deprecation")

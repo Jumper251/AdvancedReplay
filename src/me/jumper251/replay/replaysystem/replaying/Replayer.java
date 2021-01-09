@@ -1,7 +1,7 @@
 package me.jumper251.replay.replaysystem.replaying;
 
 import java.util.ArrayList;
-
+import java.util.Collection;
 import java.util.HashMap;
 
 
@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -66,13 +67,21 @@ public class Replayer {
 	public void start() {
 		ReplayData data = this.replay.getData();
 		int duration = data.getDuration();
-		for (ActionData startData : data.getActions().get(0)) {
-			if (startData.getPacketData() instanceof SpawnData) {
-				SpawnData spawnData = (SpawnData) startData.getPacketData();
-				watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
-				break;
+		
+		if (data.getActions().containsKey(0)) {
+			for (ActionData startData : data.getActions().get(0)) {
+				if (startData.getPacketData() instanceof SpawnData) {
+					SpawnData spawnData = (SpawnData) startData.getPacketData();
+					watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
+					break;
+				}
 			}
+		} else {
+			Optional<SpawnData> spawnData = findFirstSpawn(data);
+			if (spawnData.isPresent()) watcher.teleport(LocationData.toLocation(spawnData.get().getLocation()));
 		}
+		
+		
 		this.session.startSession();
 		
 		this.speed = 1;
@@ -146,6 +155,14 @@ public class Replayer {
 
 		this.watcher.setLevel(level);
 		this.watcher.setExp(percentage);
+	}
+	
+	private Optional<SpawnData> findFirstSpawn(ReplayData data) {
+		return data.getActions().values().stream()
+				.flatMap(Collection::stream)
+				.filter(action -> action.getPacketData() instanceof SpawnData)
+				.map(action -> (SpawnData) action.getPacketData())
+				.findFirst();
 	}
 	
 	public void stop() {

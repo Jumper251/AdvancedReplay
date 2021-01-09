@@ -50,13 +50,13 @@ import me.jumper251.replay.replaysystem.data.types.EntityData;
 import me.jumper251.replay.replaysystem.data.types.EntityItemData;
 import me.jumper251.replay.replaysystem.data.types.EntityMovingData;
 import me.jumper251.replay.replaysystem.data.types.FishingData;
-import me.jumper251.replay.replaysystem.data.types.ItemData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
 import me.jumper251.replay.replaysystem.data.types.VelocityData;
 import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
+import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
@@ -160,7 +160,6 @@ public class PacketRecorder extends AbstractListener{
             	}
             }
             
-            @SuppressWarnings("deprecation")
 			@Override
             public void onPacketSending(PacketEvent event) {
             		Player p = event.getPlayer();
@@ -186,7 +185,7 @@ public class PacketRecorder extends AbstractListener{
             					Item item = (Item) en;
             					LocationData velocity = LocationData.fromLocation(item.getVelocity().toLocation(p.getWorld()));
 
-            					addData(p.getName(), new EntityItemData(0, packet.getEntityID(), new ItemData(item.getItemStack().getType().getId(), item.getItemStack().getData().getData()), location, velocity));
+            					addData(p.getName(), new EntityItemData(0, packet.getEntityID(), NPCManager.fromItemStack(item.getItemStack()), location, velocity));
             					
             					spawnedItems.add(packet.getEntityID());
             				}

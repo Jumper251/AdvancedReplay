@@ -3,6 +3,8 @@ package me.jumper251.replay.replaysystem.replaying;
 
 
 import java.util.ArrayDeque;
+
+
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
@@ -20,7 +22,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Projectile;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.comphenix.packetwrapper.AbstractPacket;
@@ -477,25 +478,25 @@ public class ReplayingUtils {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
-				if (blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9) {
+				if (blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9 && blockChange.getBefore().getId() != 10 && blockChange.getBefore().getId() != 8) {
 					loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().getId(), 15);
 					
 				}
 				int id = blockChange.getAfter().getId();
 				int subId = blockChange.getAfter().getSubId();
-				
+
 				if (id == 9) id = 8;
 				if (id == 11) id = 10;
 				
 				if (ConfigManager.REAL_CHANGES) {
 					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16)) {
-						loc.getBlock().setType(MaterialBridge.fromID(id), true);
+						loc.getBlock().setType(getBlockMaterial(blockChange.getAfter()), true);
 					} else {
 						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
 					}
 				} else {
 					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16)) {
-						replayer.getWatchingPlayer().sendBlockChange(loc, MaterialBridge.fromID(id), (byte) subId);
+						replayer.getWatchingPlayer().sendBlockChange(loc, getBlockMaterial(blockChange.getAfter()), (byte) subId);
 					} else {
 						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
 					}
@@ -506,6 +507,12 @@ public class ReplayingUtils {
 		}.runTask(ReplaySystem.getInstance());
 	}
 	
+	private Material getBlockMaterial(ItemData data) {
+		if (data.getItemStack() != null) return MaterialBridge.getWithoutLegacy(String.valueOf(data.getItemStack().getItemStack().get("type")));
+
+		return MaterialBridge.fromID(data.getId());
+	}
+	
 	private void spawnItemStack(EntityItemData entityData) {
 		final Location loc = LocationData.toLocation(entityData.getLocation());
 		
@@ -513,7 +520,7 @@ public class ReplayingUtils {
 			
 			@Override
 			public void run() {
-				Item item = loc.getWorld().dropItemNaturally(loc, new ItemStack(MaterialBridge.fromID(entityData.getItemData().getId()), 1, (short) entityData.getItemData().getSubId()));
+				Item item = loc.getWorld().dropItemNaturally(loc, NPCManager.fromID(entityData.getItemData()));
 				item.setVelocity(LocationData.toLocation(entityData.getVelocity()).toVector());
 				
 				itemEntities.put(entityData.getId(), item);
