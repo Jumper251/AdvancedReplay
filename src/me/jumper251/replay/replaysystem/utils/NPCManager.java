@@ -188,10 +188,10 @@ public class NPCManager {
 	
 	public static boolean isArmor(ItemStack stack) {
 		if (stack == null) return false;
-		return ARMOR.contains(stack.getType()) || checkNetherite(stack);
+		return ARMOR.contains(stack.getType()) || isNetheriteArmor(stack);
 	}
 
-	public static boolean checkNetherite(ItemStack stack) {
+	public static boolean isNetheriteArmor(ItemStack stack) {
 		try {
 			Map<String, Object> yaml = stack.serialize();
 			String material = (String) yaml.get("type");
