@@ -200,13 +200,17 @@ public class NPCManager {
 		}
 	}
 	
+	public static String getMaterialName(ItemStack stack) {
+		return (String) stack.serialize().get("type");
+	}
+
 	public static String getArmorType(ItemStack stack) {
 		if (stack == null) return null;
 		
-		if (stack.getType().toString().contains("HELMET")) return "head";
-		if (stack.getType().toString().contains("CHESTPLATE")) return "chest";
-		if (stack.getType().toString().contains("LEGGINGS")) return "leg";
-		if (stack.getType().toString().contains("BOOTS")) return "boots";
+		if (getMaterialName(stack).contains("HELMET")) return "head";
+		if (getMaterialName(stack).contains("CHESTPLATE")) return "chest";
+		if (getMaterialName(stack).contains("LEGGINGS")) return "leg";
+		if (getMaterialName(stack).contains("BOOTS")) return "boots";
 		
 		return null;
 
