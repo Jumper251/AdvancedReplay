@@ -1,7 +1,7 @@
 package me.jumper251.replay.replaysystem.utils;
 
 import java.util.ArrayList;
-
+import java.util.Map;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -188,7 +188,18 @@ public class NPCManager {
 	
 	public static boolean isArmor(ItemStack stack) {
 		if (stack == null) return false;
-		return ARMOR.contains(stack.getType());
+		return ARMOR.contains(stack.getType()) || checkNetherite(stack);
+	}
+
+	public static boolean checkNetherite(ItemStack stack) {
+		try {
+			Map<String, Object> yaml = stack.serialize();
+			String material = (String) yaml.get("type");
+			return material.equals("NETHERITE_HELMET") || material.equals("NETHERITE_CHESTPLATE") || material.equals("NETHERITE_LEGGINGS") || material.equals("NETHERITE_BOOTS");
+		} catch (Exception exception) {
+			// Unsure what could happen on older/newer versions
+			return false;
+		}
 	}
 	
 	public static String getArmorType(ItemStack stack) {
