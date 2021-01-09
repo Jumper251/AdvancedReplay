@@ -1,7 +1,6 @@
 package me.jumper251.replay.replaysystem.utils;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
