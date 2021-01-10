@@ -32,8 +32,6 @@ public class ConfigManager {
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
-	public static String DEATH_MESSAGE, LEAVE_MESSAGE, CHAT_FORMAT, JOIN_MESSAGE;
-	
 	public static void loadConfigs() {
 		if(!sqlFile.exists()){
 			sqlCfg.set("host", "localhost");
@@ -59,17 +57,12 @@ public class ConfigManager {
 			cfg.set("general.hide_players", false);
 			cfg.set("general.add_new_players", false);	
 			cfg.set("general.update_notifications", true);
-			
-			cfg.set("general.death_message", "&6{name} &7died.");
-			cfg.set("general.quit_message", "&6{name} &7left the game.");
-			cfg.set("general.join_message", "&6{name} &7joined the game.");
 
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
 			cfg.set("recording.entities.enabled", false);
 			cfg.set("recording.entities.items.enabled", true);
 			cfg.set("recording.chat.enabled", false);
-			cfg.set("recording.chat.format", "&r<{name}> {message}");
 
 
 			try {
@@ -95,11 +88,6 @@ public class ConfigManager {
 		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
-
-		DEATH_MESSAGE = cfg.getString("general.death_message");
-		LEAVE_MESSAGE = cfg.getString("general.quit_message");
-		JOIN_MESSAGE = cfg.getString("general.join_message");
-		CHAT_FORMAT = cfg.getString("recording.chat.format");
 
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");

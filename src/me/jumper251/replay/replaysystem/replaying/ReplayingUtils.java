@@ -138,11 +138,7 @@ public class ReplayingUtils {
 
 			if (action.getPacketData() instanceof ChatData) {
 				ChatData chatData = (ChatData) action.getPacketData();
-
-				replayer.sendMessage(new MessageBuilder(ConfigManager.CHAT_FORMAT)
-						.set("name", action.getName())
-						.set("message", chatData.getMessage())
-						.build());
+				replayer.sendMessage(chatData.getMessage());
 			}
 
 			if (action.getPacketData() instanceof InvData) {
@@ -330,16 +326,6 @@ public class ReplayingUtils {
 				
 				SpawnData oldSpawnData = new SpawnData(npc.getUuid(), LocationData.fromLocation(npc.getLocation()), signatures.get(action.getName()));
 				this.lastSpawnActions.addLast(new ActionData(0, ActionType.SPAWN, action.getName(), oldSpawnData));
-				
-				if (action.getType() == ActionType.DESPAWN) {
-					replayer.sendMessage(new MessageBuilder(ConfigManager.LEAVE_MESSAGE)
-							.set("name", action.getName())
-							.build());
-				} else {
-					replayer.sendMessage(new MessageBuilder(ConfigManager.DEATH_MESSAGE)
-							.set("name", action.getName())
-							.build());
-				}
 				
 			} else {
 
