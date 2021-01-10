@@ -8,6 +8,7 @@ import java.util.Set;
 
 import me.jumper251.replay.replaysystem.data.types.*;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -101,7 +102,9 @@ public class RecordingListener extends AbstractListener {
 						if (armorType.equals("leg")) data.setLeg(NPCManager.fromItemStack(e.getItem()));
 						if (armorType.equals("boots")) data.setBoots(NPCManager.fromItemStack(e.getItem()));
 					}
-					data.setMainHand(null);
+					if(e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+						data.setMainHand(null);
+					}
 					
 					this.packetRecorder.addData(p.getName(), data);
 
