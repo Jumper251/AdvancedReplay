@@ -90,7 +90,6 @@ public class Recorder {
 						if (packetData instanceof BlockChangeData && !ConfigManager.RECORD_BLOCKS) continue;
 						if (packetData instanceof EntityItemData && !ConfigManager.RECORD_ITEMS) continue;
 						if ((packetData instanceof EntityData || packetData instanceof EntityMovingData || packetData instanceof EntityAnimationData) && !ConfigManager.RECORD_ENTITIES) continue;
-						if (packetData instanceof ChatData && !ConfigManager.RECORD_CHAT) continue;
 
 
 						ActionData actionData = new ActionData(currentTick, ActionType.PACKET, name, packetData);

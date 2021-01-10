@@ -13,12 +13,15 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Arrays;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.chat.ComponentSerializer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import com.comphenix.packetwrapper.WrapperPlayClientBlockDig;
 import com.comphenix.packetwrapper.WrapperPlayClientEntityAction;
@@ -32,6 +35,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMove;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
+import com.comphenix.packetwrapper.WrapperPlayServerChat;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -59,6 +63,7 @@ import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+import me.jumper251.replay.replaysystem.data.types.ChatData;
 
 
 
@@ -102,7 +107,7 @@ public class PacketRecorder extends AbstractListener{
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
 				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
 				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Server.ENTITY_VELOCITY, PacketType.Play.Server.SPAWN_ENTITY_LIVING,
-				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT) {
+				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT, PacketType.Play.Server.CHAT) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
             		
@@ -301,6 +306,19 @@ public class PacketRecorder extends AbstractListener{
             				Location loc = packet.getEntity(p.getWorld()).getLocation();
 
             				addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), packet.getPitch(), packet.getYaw()));
+            			}
+            		}
+            		if(event.getPacketType() == PacketType.Play.Server.CHAT) {
+            			if(ConfigManager.RECORD_CHAT && ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+
+            				WrapperPlayServerChat packet = new WrapperPlayServerChat(event.getPacket());
+
+            				String message = Arrays.stream(ComponentSerializer.parse(packet.getMessage().getJson())).reduce(new TextComponent(), (a, b) -> {
+            					a.addExtra(b);
+            					return a;
+            				}).toLegacyText();
+            				addData(p.getName(), new ChatData(String.format("[%s received] %s", p.getName(), message)));
+
             			}
             		}
 

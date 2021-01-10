@@ -185,8 +185,10 @@ public class RecordingListener extends AbstractListener {
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
-		if (recorder.getPlayers().contains(p.getName())) {
-			this.packetRecorder.addData(p.getName(), new ChatData(String.format(e.getFormat(), e.getPlayer().getDisplayName(), e.getMessage())));
+		if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+			if (recorder.getPlayers().contains(p.getName())) {
+				this.packetRecorder.addData(p.getName(), new ChatData(String.format(e.getFormat(), e.getPlayer().getDisplayName(), e.getMessage())));
+			}
 		}
 
 	}
