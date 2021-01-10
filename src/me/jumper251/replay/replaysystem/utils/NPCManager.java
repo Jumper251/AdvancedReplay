@@ -1,7 +1,6 @@
 package me.jumper251.replay.replaysystem.utils;
 
 import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -188,16 +187,29 @@ public class NPCManager {
 	
 	public static boolean isArmor(ItemStack stack) {
 		if (stack == null) return false;
-		return ARMOR.contains(stack.getType());
+		return ARMOR.contains(stack.getType()) || isNetheriteArmor(stack);
+	}
+
+	public static boolean isNetheriteArmor(ItemStack stack) {
+		if(VersionUtil.isAbove(VersionEnum.V1_16)) {
+			String material = getMaterialName(stack);
+			return material.equals("NETHERITE_HELMET") || material.equals("NETHERITE_CHESTPLATE") || material.equals("NETHERITE_LEGGINGS") || material.equals("NETHERITE_BOOTS");
+		} else {
+			return false;
+		}
 	}
 	
+	public static String getMaterialName(ItemStack stack) {
+		return (String) stack.serialize().get("type");
+	}
+
 	public static String getArmorType(ItemStack stack) {
 		if (stack == null) return null;
 		
-		if (stack.getType().toString().contains("HELMET")) return "head";
-		if (stack.getType().toString().contains("CHESTPLATE")) return "chest";
-		if (stack.getType().toString().contains("LEGGINGS")) return "leg";
-		if (stack.getType().toString().contains("BOOTS")) return "boots";
+		if (getMaterialName(stack).contains("HELMET")) return "head";
+		if (getMaterialName(stack).contains("CHESTPLATE")) return "chest";
+		if (getMaterialName(stack).contains("LEGGINGS")) return "leg";
+		if (getMaterialName(stack).contains("BOOTS")) return "boots";
 		
 		return null;
 
