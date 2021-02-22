@@ -222,7 +222,9 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().remove(p.getName());
 			
 			if (!this.replayLeft.contains(p.getName())) this.replayLeft.add(p.getName());
-			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getQuitMessage())));
+			if(!ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getQuitMessage())));
+			}
 		}
 	}
 	
@@ -233,8 +235,9 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().add(p.getName());
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
 			this.recorder.createSpawnAction(p, p.getLocation(), false);
-			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getJoinMessage())));
-		
+			if(!ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getJoinMessage())));
+			}
 		}
 	}
 	
@@ -243,7 +246,9 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getEntity();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEATH, p.getName(), null));
-			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getDeathMessage())));
+			if(!ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getDeathMessage())));
+			}
 		}
 	}
 	
