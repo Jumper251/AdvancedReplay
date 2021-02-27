@@ -80,7 +80,7 @@ public class Recorder {
 			@Override
 			public void run() {
 				
-				HashMap<String, List<PacketData>> tmpMap = packetRecorder.getPacketData();
+				HashMap<String, List<PacketData>> tmpMap = new HashMap<>(packetRecorder.getPacketData());
 				
 				for (String name : tmpMap.keySet()) {
 					List<PacketData> list = new ArrayList<>(tmpMap.get(name));
@@ -102,7 +102,7 @@ public class Recorder {
 				}
 
 				packetRecorder.getPacketData().keySet().removeAll(tmpMap.keySet());
-		
+
 			
 
 				if (ReplayAPI.getInstance().getHookManager().isRegistered()) {

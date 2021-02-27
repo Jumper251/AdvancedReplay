@@ -1,6 +1,8 @@
 package me.jumper251.replay.replaysystem.replaying;
 
 import java.util.ArrayList;
+
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -9,8 +11,10 @@ import java.util.HashMap;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,10 +24,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.api.IReplayHook;
 import me.jumper251.replay.api.ReplayAPI;
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
+import me.jumper251.replay.replaysystem.data.types.ItemData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.SpawnData;
 import me.jumper251.replay.replaysystem.utils.entities.IEntity;
@@ -36,6 +42,8 @@ public class Replayer {
 	private HashMap<String, INPC> npcs;
 	
 	private HashMap<Integer, IEntity> entities;
+	
+	private Map<Location, ItemData> blockChanges;
 	
 	private Player watcher;
 	
@@ -56,6 +64,8 @@ public class Replayer {
 		this.watcher = watcher;
 		this.npcs = new HashMap<String, INPC>();
 		this.entities = new HashMap<Integer, IEntity>();
+		this.blockChanges = new HashMap<>();
+		
 		this.utils = new ReplayingUtils(this);
 		this.session = new ReplaySession(this);
 		this.paused = false;
@@ -125,7 +135,6 @@ public class Replayer {
 	
 	public void executeTick(int tick, boolean reversed) {
 		ReplayData data = this.replay.getData();
-		
 		if (!data.getActions().isEmpty() && data.getActions().containsKey(tick)) {
 			if (tick == 0 && started) return;
 			this.started = true;
@@ -180,10 +189,13 @@ public class Replayer {
 		}
 		
 		this.utils.despawn(new ArrayList<Entity>(this.utils.getEntities().values()), null);
-		
+				
 		this.npcs.clear();
 		
 		this.replay.setPlaying(false);
+		
+		if (ConfigManager.WORLD_RESET) this.utils.resetChanges(this.blockChanges);
+
 		this.session.stopSession();
 	}
 	
@@ -193,6 +205,10 @@ public class Replayer {
 	
 	public HashMap<Integer, IEntity> getEntityList() {
 		return entities;
+	}
+	
+	public Map<Location, ItemData> getBlockChanges() {
+		return blockChanges;
 	}
 	
 	public Player getWatchingPlayer() {

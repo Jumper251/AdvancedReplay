@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.jumper251.replay.ReplaySystem;
+import me.jumper251.replay.api.ReplaySessionFinishEvent;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.ItemConfig;
 import me.jumper251.replay.filesystem.ItemConfigOption;
@@ -47,8 +48,8 @@ public class ReplaySession {
 		
 		this.level = this.player.getLevel();
 		this.xp = this.player.getExp();
-		
-		this.player.setHealth(20);
+
+		this.player.setHealth(this.player.getMaxHealth());
 		this.player.setFoodLevel(20);
 		this.player.getInventory().clear();
 		
@@ -117,6 +118,10 @@ public class ReplaySession {
 				
 			}
 		}.runTask(ReplaySystem.getInstance());
+		
+		
+		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer.getReplay(), player);
+		Bukkit.getPluginManager().callEvent(finishEvent);
 	}
 	
 	public ReplayPacketListener getPacketListener() {

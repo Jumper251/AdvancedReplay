@@ -1,14 +1,15 @@
 package me.jumper251.replay.utils;
 
-import java.lang.reflect.Method;
+
 
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public enum MaterialBridge {
-
+	
 	WATCH("CLOCK"),
 	WOOD_DOOR("WOODEN_DOOR");
 
@@ -43,12 +44,22 @@ public enum MaterialBridge {
 	
 	public static Material getWithoutLegacy(String material) {
 		try {
-			Class<?> materialClass = Class.forName("org.bukkit.Material");
-			
-			Method matchMaterial = materialClass.getMethod("matchMaterial", String.class, boolean.class);
-			Object enumField = matchMaterial.invoke(null, material, false);
+			Object enumField = ReflectionHelper.getInstance().matchMaterial(material, false);
 
 			return (Material) enumField;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public static Material getBlockDataMaterial(Block block) {
+		try {
+			Object blockData = ReflectionHelper.getInstance().getBlockData(block);
+			Object materialField = ReflectionHelper.getInstance().getBlockDataMaterial(blockData);
+			
+			return (Material) materialField;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

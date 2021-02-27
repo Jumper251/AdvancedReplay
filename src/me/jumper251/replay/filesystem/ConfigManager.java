@@ -29,6 +29,7 @@ public class ConfigManager {
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
 	public static boolean RECORD_CHAT;
 	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
+	public static boolean WORLD_RESET;
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
@@ -64,6 +65,8 @@ public class ConfigManager {
 			cfg.set("general.quit_message", "&6{name} &7left the game.");
 			cfg.set("general.join_message", "&6{name} &7joined the game.");
 
+			cfg.set("replaying.world.reset_changes", false);
+			
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
 			cfg.set("recording.entities.enabled", false);
@@ -99,8 +102,10 @@ public class ConfigManager {
 		DEATH_MESSAGE = cfg.getString("general.death_message");
 		LEAVE_MESSAGE = cfg.getString("general.quit_message");
 		JOIN_MESSAGE = cfg.getString("general.join_message");
+		
+		WORLD_RESET = cfg.getBoolean("replaying.world.reset_changes", false);
+		
 		CHAT_FORMAT = cfg.getString("recording.chat.format");
-
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");

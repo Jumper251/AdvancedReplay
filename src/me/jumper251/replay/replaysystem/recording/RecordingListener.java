@@ -2,6 +2,9 @@ package me.jumper251.replay.replaysystem.recording;
 
 import java.util.ArrayList;
 
+
+
+
 import java.util.List;
 import java.util.Set;
 
@@ -87,7 +90,7 @@ public class RecordingListener extends AbstractListener {
 				if(e.getItem() != null && ItemUtils.isUsable(e.getItem().getType()) && (!isInteractable || p.isSneaking())) {
 					if (!this.recorder.getData().getWatcher(p.getName()).isBlocking()) {
 						this.recorder.getData().getWatcher(p.getName()).setBlocking(true);
-						this.packetRecorder.addData(p.getName(), new MetadataUpdate(this.recorder.getData().getWatcher(p.getName()).isBurning(), true));
+						this.packetRecorder.addData(p.getName(), new MetadataUpdate(this.recorder.getData().getWatcher(p.getName()).isBurning(), true, this.recorder.getData().getWatcher(p.getName()).isElytra()));
 					
 					}
 				}
@@ -131,7 +134,7 @@ public class RecordingListener extends AbstractListener {
 		if (recorder.getPlayers().contains(p.getName())) {
 			if (recorder.getData().getWatcher(p.getName()).isBlocking()) {
    				recorder.getData().getWatcher(p.getName()).setBlocking(false);
-   				this.packetRecorder.addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false));
+   				this.packetRecorder.addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false, recorder.getData().getWatcher(p.getName()).isElytra()));
    				
 				InvData data = NPCManager.copyFromPlayer(p, true, true);
 				if (p.getItemInHand() != null && p.getItemInHand().getAmount() <= 1) {
@@ -154,10 +157,10 @@ public class RecordingListener extends AbstractListener {
 				
 				if (p.getFireTicks() > 20 && !this.recorder.getData().getWatcher(p.getName()).isBurning()) {
 					this.recorder.getData().getWatcher(p.getName()).setBurning(true);
-					this.packetRecorder.addData(p.getName(), new MetadataUpdate(true, this.recorder.getData().getWatcher(p.getName()).isBlocking()));
+					this.packetRecorder.addData(p.getName(), new MetadataUpdate(true, this.recorder.getData().getWatcher(p.getName()).isBlocking(), this.recorder.getData().getWatcher(p.getName()).isElytra()));
 				} else if (p.getFireTicks() <= 20 && this.recorder.getData().getWatcher(p.getName()).isBurning()){
 					this.recorder.getData().getWatcher(p.getName()).setBurning(false);
-					this.packetRecorder.addData(p.getName(), new MetadataUpdate(false, this.recorder.getData().getWatcher(p.getName()).isBlocking()));
+					this.packetRecorder.addData(p.getName(), new MetadataUpdate(false, this.recorder.getData().getWatcher(p.getName()).isBlocking(), this.recorder.getData().getWatcher(p.getName()).isElytra()));
 				}
 			}
 		} else if (e.getEntity() instanceof LivingEntity) {
@@ -324,7 +327,7 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlock().getLocation());
 
-			ItemData before = new ItemData(e.getBlock().getType().getId(), e.getBlock().getData());
+			ItemData before = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromMaterial(MaterialBridge.getBlockDataMaterial(e.getBlock()))) : new ItemData(e.getBlock().getType().getId(), e.getBlock().getData());
 			ItemData after = new ItemData(0, 0);
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
@@ -394,7 +397,7 @@ public class RecordingListener extends AbstractListener {
 
 		if (recorder.getData().getWatcher(p.getName()).isBlocking()) {
 			recorder.getData().getWatcher(p.getName()).setBlocking(false);
-			this.packetRecorder.addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false));
+			this.packetRecorder.addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false, this.recorder.getData().getWatcher(p.getName()).isElytra()));
 		}
 	}
 }

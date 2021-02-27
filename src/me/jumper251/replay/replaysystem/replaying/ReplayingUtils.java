@@ -77,7 +77,6 @@ public class ReplayingUtils {
 	}
 	
 	public void handleAction(ActionData action, ReplayData data, boolean reversed) {
-
 		if (action.getType() == ActionType.SPAWN) {
 			if (!reversed) {
 				spawnNPC(action);
@@ -164,10 +163,11 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof MetadataUpdate) {
 				MetadataUpdate update = (MetadataUpdate) action.getPacketData();
-				
+
 				data.getWatcher(action.getName()).setBurning(!reversed ? update.isBurning() : false);
 				data.getWatcher(action.getName()).setBlocking(!reversed ? update.isBlocking() : false);
-		
+				data.getWatcher(action.getName()).setElytra(!reversed ? update.isGliding() : false);
+				
 				WrappedDataWatcher dataWatcher = data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData()));
 				npc.setData(dataWatcher);
 				
@@ -473,6 +473,11 @@ public class ReplayingUtils {
 	private void setBlockChange(BlockChangeData blockChange) {
 		final Location loc = LocationData.toLocation(blockChange.getLocation());
 		
+		if (ConfigManager.WORLD_RESET && ! this.replayer.getBlockChanges().containsKey(loc)) {
+			this.replayer.getBlockChanges().put(loc, blockChange.getBefore());
+		}
+		
+		
 		new BukkitRunnable() {
 			
 			@SuppressWarnings("deprecation")
@@ -549,6 +554,26 @@ public class ReplayingUtils {
 			
 			packet.sendPacket(replayer.getWatchingPlayer());
 		}
+	}
+	
+	public void resetChanges(Map<Location, ItemData> changes) {
+		if (!Bukkit.isPrimaryThread()) {
+			Bukkit.getScheduler().runTask(ReplaySystem.getInstance(), () -> setBlocks(changes));
+		} else {
+			setBlocks(changes);
+		}
+
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void setBlocks(Map<Location, ItemData> changes) {
+		changes.forEach((location, itemData) -> {
+			if (VersionUtil.isAbove(VersionEnum.V1_13)) {
+				location.getBlock().setType(getBlockMaterial(itemData));
+			} else {
+				location.getBlock().setTypeIdAndData(itemData.getId(), (byte) itemData.getSubId(), true);
+			}
+		});
 	}
 	
 	public HashMap<Integer, Entity> getEntities() {

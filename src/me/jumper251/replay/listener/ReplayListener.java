@@ -5,9 +5,6 @@ package me.jumper251.replay.listener;
 import java.util.Arrays;
 
 
-
-
-
 import org.bukkit.Chunk;
 
 import org.bukkit.entity.Player;
@@ -240,6 +237,7 @@ public class ReplayListener extends AbstractListener {
 		}
 		
 	}
+	
 
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent e) {
