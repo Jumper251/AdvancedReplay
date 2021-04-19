@@ -10,12 +10,18 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.Map;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
+import com.google.common.collect.Sets;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.api.IReplayHook;
@@ -26,6 +32,7 @@ import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.SpawnData;
+import me.jumper251.replay.replaysystem.data.types.ChatData;
 import me.jumper251.replay.replaysystem.utils.entities.IEntity;
 import me.jumper251.replay.replaysystem.utils.entities.INPC;
 
@@ -131,7 +138,17 @@ public class Replayer {
 			this.started = true;
 			
 			List<ActionData> list = data.getActions().get(tick);
+			Map<String, Set<String>> messageRecipients = new HashMap<>();
 			for (ActionData action : list) {
+				if(action.getType() == ActionType.PACKET && action.getPacketData() instanceof ChatData) {
+					ChatData chat = (ChatData) action.getPacketData();
+					if(messageRecipients.containsKey(chat.getMessage())) {
+						messageRecipients.get(chat.getMessage()).add(chat.getRecipient());
+					} else {
+						messageRecipients.put(chat.getMessage(), Sets.newHashSet(chat.getRecipient()));
+					}
+					continue;
+				}
 								
 				utils.handleAction(action, data, reversed);
 				
@@ -143,6 +160,20 @@ public class Replayer {
 					}
 				}
 			
+			}
+			
+			if(!reversed) {
+				messageRecipients.forEach((message, recipients) -> {
+					String hoverText = recipients.stream().allMatch(recipient -> recipient == null || recipient.isEmpty())
+							? ""
+							: "Received: " + String.join(", ", recipients);
+					TextComponent component = new TextComponent(ReplaySystem.PREFIX);
+					for (BaseComponent baseComponent : TextComponent.fromLegacyText(message)) {
+						component.addExtra(baseComponent);
+					}
+					component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[] { new TextComponent(hoverText) }));
+					this.watcher.spigot().sendMessage(component);
+				});
 			}
 			
 			if (tick == 0) data.getActions().remove(tick);

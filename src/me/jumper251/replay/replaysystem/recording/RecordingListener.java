@@ -27,7 +27,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import me.jumper251.replay.filesystem.ConfigManager;
-import me.jumper251.replay.filesystem.MessageBuilder;
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
@@ -185,9 +184,11 @@ public class RecordingListener extends AbstractListener {
 	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
-		if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+		if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_PLUGIN_MESSAGES) {
 			if (recorder.getPlayers().contains(p.getName())) {
-				this.packetRecorder.addData(p.getName(), new ChatData(String.format(e.getFormat(), e.getPlayer().getDisplayName(), e.getMessage())));
+				for (Player recipient : e.getRecipients()) {
+					this.packetRecorder.addData(p.getName(), new ChatData(recipient.getDisplayName(), String.format(e.getFormat(), e.getPlayer().getDisplayName(), e.getMessage())));
+				}
 			}
 		}
 
@@ -222,7 +223,7 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().remove(p.getName());
 			
 			if (!this.replayLeft.contains(p.getName())) this.replayLeft.add(p.getName());
-			if(!ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
 				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getQuitMessage())));
 			}
 		}
@@ -235,7 +236,7 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().add(p.getName());
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
 			this.recorder.createSpawnAction(p, p.getLocation(), false);
-			if(!ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
 				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getJoinMessage())));
 			}
 		}
@@ -246,7 +247,7 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getEntity();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEATH, p.getName(), null));
-			if(!ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
 				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getDeathMessage())));
 			}
 		}

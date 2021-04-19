@@ -309,15 +309,15 @@ public class PacketRecorder extends AbstractListener{
             			}
             		}
             		if(event.getPacketType() == PacketType.Play.Server.CHAT) {
-            			if(ConfigManager.RECORD_CHAT && ConfigManager.RECORD_EVERYTHING_IN_CHAT) {
+            			if(ConfigManager.RECORD_CHAT && ConfigManager.RECORD_PLUGIN_MESSAGES) {
 
             				WrapperPlayServerChat packet = new WrapperPlayServerChat(event.getPacket());
 
-            				String message = Arrays.stream(ComponentSerializer.parse(packet.getMessage().getJson())).reduce(new TextComponent(), (a, b) -> {
+            				String message = Arrays.stream(ComponentSerializer.parse(packet.getMessage().getJson())).reduce(new TextComponent(""), (a, b) -> {
             					a.addExtra(b);
             					return a;
             				}).toLegacyText();
-            				addData(p.getName(), new ChatData(String.format("[%s received] %s", p.getName(), message)));
+            				addData(p.getName(), new ChatData(p.getName(), message));
 
             			}
             		}

@@ -27,7 +27,7 @@ public class ConfigManager {
 	
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
-	public static boolean RECORD_CHAT, RECORD_EVERYTHING_IN_CHAT;
+	public static boolean RECORD_CHAT, RECORD_PLUGIN_MESSAGES;
 	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
@@ -63,7 +63,7 @@ public class ConfigManager {
 			cfg.set("recording.entities.enabled", false);
 			cfg.set("recording.entities.items.enabled", true);
 			cfg.set("recording.chat.enabled", false);
-			cfg.set("recording.chat.everything", false);
+			cfg.set("recording.chat.plugin_messages", false);
 
 
 			try {
@@ -95,7 +95,7 @@ public class ConfigManager {
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");
 		RECORD_ENTITIES = cfg.getBoolean("recording.entities.enabled");
 		RECORD_CHAT = cfg.getBoolean("recording.chat.enabled");
-		RECORD_EVERYTHING_IN_CHAT = cfg.getBoolean("recording.chat.everything");
+		RECORD_PLUGIN_MESSAGES = cfg.getBoolean("recording.chat.plugin_messages");
 
 		if (USE_DATABASE) {
 			
