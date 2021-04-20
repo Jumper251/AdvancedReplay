@@ -29,6 +29,7 @@ public class ConfigManager {
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
 	public static boolean RECORD_CHAT, RECORD_PLUGIN_MESSAGES;
 	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
+	public static boolean WORLD_RESET;
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
@@ -58,6 +59,8 @@ public class ConfigManager {
 			cfg.set("general.add_new_players", false);	
 			cfg.set("general.update_notifications", true);
 
+			cfg.set("replaying.world.reset_changes", false);
+			
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
 			cfg.set("recording.entities.enabled", false);
@@ -89,7 +92,6 @@ public class ConfigManager {
 		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
-
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");

@@ -121,7 +121,7 @@ public class PacketRecorder extends AbstractListener{
             			            				
             				if (recorder.getData().getWatcher(p.getName()).isBurning() && p.getFireTicks() <= 20) {
             					recorder.getData().getWatcher(p.getName()).setBurning(false);
-            					addData(p.getName(), new MetadataUpdate(false, recorder.getData().getWatcher(p.getName()).isBlocking()));
+            					addData(p.getName(), new MetadataUpdate(false, recorder.getData().getWatcher(p.getName()).isBlocking(), recorder.getData().getWatcher(p.getName()).isElytra()));
             				}
             		
             			} 
@@ -156,7 +156,7 @@ public class PacketRecorder extends AbstractListener{
                			if(packet.getStatus() == PlayerDigType.RELEASE_USE_ITEM) {
                				if (recorder.getData().getWatcher(p.getName()).isBlocking()) {
                					recorder.getData().getWatcher(p.getName()).setBlocking(false);
-               					addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false));
+               					addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false, recorder.getData().getWatcher(p.getName()).isElytra()));
                				}
                			}
                		}
@@ -272,7 +272,7 @@ public class PacketRecorder extends AbstractListener{
             			WrapperPlayServerEntityVelocity packet = new WrapperPlayServerEntityVelocity(event.getPacket());
             			
             			if (spawnedHooks.contains(packet.getEntityID()) || (entityLookup.containsKey(packet.getEntityID()) && entityLookup.get(packet.getEntityID()).equalsIgnoreCase(p.getName()))) {
-
+            				
             				addData(p.getName(), new VelocityData(packet.getEntityID(), packet.getVelocityX(), packet.getVelocityY(), packet.getVelocityZ()));
             			}
             			
@@ -281,9 +281,11 @@ public class PacketRecorder extends AbstractListener{
             			WrapperPlayServerRelEntityMove packet = new WrapperPlayServerRelEntityMove(event.getPacket());
             			
             			if (entityLookup.containsKey(packet.getEntityID()) && entityLookup.get(packet.getEntityID()).equalsIgnoreCase(p.getName())) {
-            				Location loc = packet.getEntity(p.getWorld()).getLocation();
+            				Location loc = checkEntityLocation(packet.getEntity(p.getWorld()));
             			
-            				addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw()));
+            				if (loc != null) {
+            					addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw()));
+            				}
             				
             				
             			}
@@ -292,11 +294,12 @@ public class PacketRecorder extends AbstractListener{
             			WrapperPlayServerRelEntityMoveLook packet = new WrapperPlayServerRelEntityMoveLook(event.getPacket());
             			
             			if (entityLookup.containsKey(packet.getEntityID()) && entityLookup.get(packet.getEntityID()).equalsIgnoreCase(p.getName())) {
-            				Location loc = packet.getEntity(p.getWorld()).getLocation();
+            				Location loc = checkEntityLocation(packet.getEntity(p.getWorld()));
             			
-            				addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), packet.getPitch(), packet.getYaw()));
-            				
-            				
+            				if (loc != null) {
+            					addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), packet.getPitch(), packet.getYaw()));
+            				}
+            					
             			}
             		}
             		if (event.getPacketType() == PacketType.Play.Server.ENTITY_TELEPORT) {
@@ -353,6 +356,12 @@ public class PacketRecorder extends AbstractListener{
 		
 		this.listener = new RecordingListener(this);
 		this.listener.register();
+	}
+	
+	private Location checkEntityLocation(Entity en) {
+		if (en == null) return null;
+		
+		return en.getLocation();
 	}
 
 	

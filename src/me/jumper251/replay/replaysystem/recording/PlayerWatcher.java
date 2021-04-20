@@ -33,12 +33,13 @@ public class PlayerWatcher implements Serializable{
 			byte sneakByte = (byte) (this.sneaking ? 0x02 : 0);
 			byte burnByte = (byte) (this.burning ? 0x01 : 0);
 			byte oldBlock = (byte) (this.blocking ? 0x10 : 0);
-			
+			byte elytraByte = (byte) (this.elytra ? 0x80 : 0);
+
 			if (VersionUtil.isAbove(VersionEnum.V1_13)) {
 				oldBlock = 0;
 			}
 			
-			byte value = (byte) (burnByte | sneakByte | oldBlock);
+			byte value = (byte) (burnByte | sneakByte | oldBlock | elytraByte);
 			
 			builder.setValue(0, value);
 			

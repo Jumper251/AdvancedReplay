@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -92,6 +93,10 @@ public class SerializableItemStack implements Serializable {
 	
 	public static SerializableItemStack fromItemStack(ItemStack stack) {
 		return fromItemStack(stack, false);
+	}
+	
+	public static SerializableItemStack fromMaterial(Material mat) {
+		return fromItemStack(new ItemStack(mat), false);
 	}
 	
 	public static SerializableItemStack fromItemStack(ItemStack stack, boolean block) {

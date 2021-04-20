@@ -1,6 +1,8 @@
 package me.jumper251.replay;
 
 
+import java.util.HashMap;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -30,7 +32,7 @@ public class ReplaySystem extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		for (Replay replay : ReplayManager.activeReplays.values()) {
+		for (Replay replay : new HashMap<>(ReplayManager.activeReplays).values()) {
 		    if (replay.isRecording()) {
 				replay.getRecorder().stop(ConfigManager.SAVE_STOP);
 			}
