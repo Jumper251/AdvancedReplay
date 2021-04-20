@@ -8,6 +8,7 @@ import java.util.Set;
 
 import me.jumper251.replay.replaysystem.data.types.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -224,7 +225,9 @@ public class RecordingListener extends AbstractListener {
 			
 			if (!this.replayLeft.contains(p.getName())) this.replayLeft.add(p.getName());
 			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
-				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getQuitMessage())));
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(player.getName(), e.getQuitMessage())));
+				}
 			}
 		}
 	}
@@ -237,7 +240,9 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
 			this.recorder.createSpawnAction(p, p.getLocation(), false);
 			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
-				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getJoinMessage())));
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(player.getName(), e.getJoinMessage())));
+				}
 			}
 		}
 	}
@@ -248,8 +253,9 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEATH, p.getName(), null));
 			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
-				this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(e.getDeathMessage())));
-			}
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(player.getName(), e.getDeathMessage())));
+				}			}
 		}
 	}
 	
