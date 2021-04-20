@@ -87,11 +87,6 @@ public class ReplayingUtils {
 				replayer.getNPCList().remove(action.getName());
 
 			}
-		}	
-		
-		if (action.getType() == ActionType.MESSAGE && !reversed) {
-			ChatData message = (ChatData) action.getPacketData();
-			replayer.sendMessage(message.getMessage());
 		}
 		
 		if (action.getType() == ActionType.PACKET && this.replayer.getNPCList().containsKey(action.getName())) {
