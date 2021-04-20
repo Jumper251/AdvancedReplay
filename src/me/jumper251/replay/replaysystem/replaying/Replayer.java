@@ -167,7 +167,7 @@ public class Replayer {
 					String hoverText = recipients.stream().allMatch(recipient -> recipient == null || recipient.isEmpty())
 							? ""
 							: "Received: " + String.join(", ", recipients);
-					TextComponent component = new TextComponent(ReplaySystem.PREFIX);
+					TextComponent component = new TextComponent(ReplaySystem.PREFIX + "§r");
 					for (BaseComponent baseComponent : TextComponent.fromLegacyText(message)) {
 						component.addExtra(baseComponent);
 					}
