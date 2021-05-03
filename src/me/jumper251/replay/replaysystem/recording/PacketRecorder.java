@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Arrays;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -63,7 +62,6 @@ import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
-import me.jumper251.replay.replaysystem.data.types.ChatData;
 
 
 
@@ -316,11 +314,8 @@ public class PacketRecorder extends AbstractListener{
 
             				WrapperPlayServerChat packet = new WrapperPlayServerChat(event.getPacket());
 
-            				String message = Arrays.stream(ComponentSerializer.parse(packet.getMessage().getJson())).reduce(new TextComponent(""), (a, b) -> {
-            					a.addExtra(b);
-            					return a;
-            				}).toLegacyText();
-            				addData(p.getName(), new ChatData(p.getName(), message));
+            				String message = new TextComponent(ComponentSerializer.parse(packet.getMessage().getJson())).toLegacyText();
+            				recorder.recordChat(p.getName(), message);
 
             			}
             		}

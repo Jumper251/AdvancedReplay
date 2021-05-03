@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
+import com.google.common.collect.Sets;
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -200,6 +202,18 @@ public class Recorder {
 		
 			ActionData invData = new ActionData(currentTick, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));
 			addData(currentTick, invData);
+		}
+	}
+	
+	public void recordChat(String player, String message) {
+		if(!data.getMessages().containsKey(currentTick)) {
+			data.getMessages().put(currentTick, new ArrayList<>());
+		}
+		Optional<ChatData> chatData = data.getMessages().get(currentTick).stream().filter(c -> c.getMessage().equals(message)).findAny();
+		if(chatData.isPresent()) {
+			chatData.get().getRecipients().add(player);
+		} else {
+			data.getMessages().get(currentTick).add(new ChatData(Sets.newHashSet(player), message));
 		}
 	}
 	

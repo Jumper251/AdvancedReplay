@@ -13,8 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.Map;
+import java.util.Collections;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -22,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
-import com.google.common.collect.Sets;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -147,20 +145,17 @@ public class Replayer {
 			this.started = true;
 			
 			List<ActionData> list = data.getActions().get(tick);
-			Map<String, Set<String>> messageRecipients = new HashMap<>();
 			for (ActionData action : list) {
-				if(action.getType() == ActionType.PACKET && action.getPacketData() instanceof ChatData) {
-					ChatData chat = (ChatData) action.getPacketData();
-					if(messageRecipients.containsKey(chat.getMessage())) {
-						messageRecipients.get(chat.getMessage()).add(chat.getRecipient());
-					} else {
-						messageRecipients.put(chat.getMessage(), Sets.newHashSet(chat.getRecipient()));
+				if ((action.getType() == ActionType.PACKET || action.getType() == ActionType.MESSAGE) && action.getPacketData() instanceof ChatData) {
+					if (!reversed) {
+						ChatData chatData = (ChatData) action.getPacketData();
+						sendMessage(chatData);
 					}
 					continue;
 				}
-								
+
 				utils.handleAction(action, data, reversed);
-				
+
 				if (action.getType() == ActionType.CUSTOM) {
 					if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
 						for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
@@ -171,21 +166,16 @@ public class Replayer {
 			
 			}
 			
-			if(!reversed) {
-				messageRecipients.forEach((message, recipients) -> {
-					String hoverText = recipients.stream().allMatch(recipient -> recipient == null || recipient.isEmpty())
-							? ""
-							: "Received: " + String.join(", ", recipients);
-					TextComponent component = new TextComponent(ReplaySystem.PREFIX + "§r");
-					for (BaseComponent baseComponent : TextComponent.fromLegacyText(message)) {
-						component.addExtra(baseComponent);
-					}
-					component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[] { new TextComponent(hoverText) }));
-					this.watcher.spigot().sendMessage(component);
-				});
-			}
-			
 			if (tick == 0) data.getActions().remove(tick);
+		}
+		
+		// Don't display messages about the start of recording
+		if(tick != 0) {
+			for (ChatData chatData : data.getMessages().getOrDefault(tick, Collections.emptyList())) {
+				if (!reversed) {
+					sendMessage(chatData);
+				}
+			}
 		}
 	}
 	
@@ -290,5 +280,18 @@ public class Replayer {
 		if (message != null) {
 			this.watcher.sendMessage(ReplaySystem.PREFIX + message);
 		}
+	}
+	
+	public void sendMessage(ChatData chatData) {
+		String hoverText = (chatData.getRecipients() == null
+				|| chatData.getRecipients().stream().allMatch(recipient -> recipient == null || recipient.isEmpty()))
+  				? ""
+				: "Received: " + String.join(", ", chatData.getRecipients());
+		TextComponent component = new TextComponent(ReplaySystem.PREFIX + "§r");
+		for (BaseComponent baseComponent : TextComponent.fromLegacyText(chatData.getMessage())) {
+			component.addExtra(baseComponent);
+		}
+		component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[] { new TextComponent(hoverText) }));
+		this.watcher.spigot().sendMessage(component);
 	}
 }

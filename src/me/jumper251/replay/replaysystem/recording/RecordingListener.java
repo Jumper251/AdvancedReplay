@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 import me.jumper251.replay.replaysystem.data.types.*;
@@ -193,9 +194,18 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_PLUGIN_MESSAGES) {
 			if (recorder.getPlayers().contains(p.getName())) {
-				for (Player recipient : e.getRecipients()) {
-					this.packetRecorder.addData(p.getName(), new ChatData(recipient.getDisplayName(), String.format(e.getFormat(), e.getPlayer().getDisplayName(), e.getMessage())));
-				}
+				this.recorder.addData(
+						this.recorder.getCurrentTick(),
+						new ActionData(
+								this.recorder.getCurrentTick(),
+								ActionType.MESSAGE,
+								p.getName(),
+								new ChatData(
+										e.getRecipients()
+												.stream()
+												.map(Player::getName)
+												.collect(Collectors.toSet()),
+										String.format(e.getFormat(), e.getPlayer().getDisplayName(), e.getMessage()))));
 			}
 		}
 
@@ -230,10 +240,18 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().remove(p.getName());
 			
 			if (!this.replayLeft.contains(p.getName())) this.replayLeft.add(p.getName());
-			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(player.getName(), e.getQuitMessage())));
-				}
+			if(ConfigManager.RECORD_CHAT && (!ConfigManager.RECORD_PLUGIN_MESSAGES || Bukkit.getOnlinePlayers().size() == 1)) {
+				this.recorder.addData(
+						this.recorder.getCurrentTick(),
+						new ActionData(
+								this.recorder.getCurrentTick(),
+								ActionType.MESSAGE,
+								p.getName(),
+								new ChatData(
+										Bukkit.getOnlinePlayers()
+												.stream()
+												.map(Player::getName)
+												.collect(Collectors.toSet()), e.getQuitMessage())));
 			}
 		}
 	}
@@ -245,10 +263,18 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().add(p.getName());
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
 			this.recorder.createSpawnAction(p, p.getLocation(), false);
-			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(player.getName(), e.getJoinMessage())));
-				}
+			if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_PLUGIN_MESSAGES) {
+				this.recorder.addData(
+						this.recorder.getCurrentTick(),
+						new ActionData(
+								this.recorder.getCurrentTick(),
+								ActionType.MESSAGE,
+								p.getName(),
+								new ChatData(
+										Bukkit.getOnlinePlayers()
+												.stream()
+												.map(Player::getName)
+												.collect(Collectors.toSet()), e.getJoinMessage())));
 			}
 		}
 	}
@@ -258,10 +284,19 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getEntity();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEATH, p.getName(), null));
-			if(!ConfigManager.RECORD_CHAT || !ConfigManager.RECORD_PLUGIN_MESSAGES) {
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(player.getName(), e.getDeathMessage())));
-				}			}
+			if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_PLUGIN_MESSAGES) {
+				this.recorder.addData(
+						this.recorder.getCurrentTick(),
+						new ActionData(
+								this.recorder.getCurrentTick(),
+								ActionType.MESSAGE,
+								p.getName(),
+								new ChatData(
+										Bukkit.getOnlinePlayers()
+												.stream()
+												.map(Player::getName)
+												.collect(Collectors.toSet()), e.getDeathMessage())));
+			}
 		}
 	}
 	

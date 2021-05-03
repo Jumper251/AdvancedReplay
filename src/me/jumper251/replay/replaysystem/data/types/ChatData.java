@@ -1,5 +1,8 @@
 package me.jumper251.replay.replaysystem.data.types;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ChatData extends PacketData {
 
 
@@ -8,7 +11,7 @@ public class ChatData extends PacketData {
      */
     private static final long serialVersionUID = 6849586468365004854L;
 
-    private String recipient;
+    private Set<String> recipients;
     private String message;
 
     /**
@@ -17,23 +20,23 @@ public class ChatData extends PacketData {
      * @param message the message
      */
     public ChatData(String message) {
-        this.recipient = "";
+        this.recipients = new HashSet<>();
         this.message = message;
     }
 
     /**
      * Constructs a ChatData with provided message and recipient.
      *
-     * @param recipient the recipient
+     * @param recipients the recipient
      * @param message the message
      */
-    public ChatData(String recipient, String message) {
-        this.recipient = recipient;
+    public ChatData(Set<String> recipients, String message) {
+        this.recipients = recipients;
         this.message = message;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public Set<String> getRecipients() {
+        return recipients;
     }
 
     public String getMessage() {
