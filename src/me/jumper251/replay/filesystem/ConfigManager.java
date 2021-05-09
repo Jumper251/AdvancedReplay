@@ -92,6 +92,7 @@ public class ConfigManager {
 		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
+		WORLD_RESET = cfg.getBoolean("replaying.world.reset_changes", false);
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");
