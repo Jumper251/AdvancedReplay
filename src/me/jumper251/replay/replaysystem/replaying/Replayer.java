@@ -146,7 +146,8 @@ public class Replayer {
 			
 			List<ActionData> list = data.getActions().get(tick);
 			for (ActionData action : list) {
-				if ((action.getType() == ActionType.PACKET || action.getType() == ActionType.MESSAGE) && action.getPacketData() instanceof ChatData) {
+				// Support older replays
+				if (action.getType() == ActionType.MESSAGE && action.getPacketData() instanceof ChatData) {
 					if (!reversed) {
 						ChatData chatData = (ChatData) action.getPacketData();
 						sendMessage(chatData);
