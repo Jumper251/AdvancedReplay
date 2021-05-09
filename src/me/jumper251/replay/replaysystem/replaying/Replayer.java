@@ -171,7 +171,7 @@ public class Replayer {
 		}
 		
 		// Don't display messages about the start of recording
-		if(tick != 0) {
+		if(tick != 0 && data.getMessages() != null) {
 			for (ChatData chatData : data.getMessages().getOrDefault(tick, Collections.emptyList())) {
 				if (!reversed) {
 					sendMessage(chatData);
