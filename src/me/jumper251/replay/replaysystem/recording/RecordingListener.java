@@ -7,10 +7,12 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 import me.jumper251.replay.replaysystem.data.types.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,7 +33,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 import me.jumper251.replay.filesystem.ConfigManager;
-import me.jumper251.replay.filesystem.MessageBuilder;
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
@@ -188,12 +189,15 @@ public class RecordingListener extends AbstractListener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler (ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
-		if (recorder.getPlayers().contains(p.getName())) {
-
-			this.packetRecorder.addData(p.getName(), new ChatData(e.getMessage()));
+		if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_PLUGIN_MESSAGES) {
+			if (recorder.getPlayers().contains(p.getName())) {
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					this.recorder.recordChat(player.getName(), String.format(e.getFormat(), e.getPlayer().getDisplayName(), e.getMessage()));
+				}
+			}
 		}
 
 	}
@@ -227,18 +231,26 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().remove(p.getName());
 			
 			if (!this.replayLeft.contains(p.getName())) this.replayLeft.add(p.getName());
+			if(ConfigManager.RECORD_CHAT && (!ConfigManager.RECORD_PLUGIN_MESSAGES || Bukkit.getOnlinePlayers().size() == 1)) {
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					this.recorder.recordChat(player.getName(), e.getQuitMessage());
+				}
+			}
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (priority = EventPriority.MONITOR)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		if (!this.recorder.getPlayers().contains(p.getName()) && (this.replayLeft.contains(p.getName())) || ConfigManager.ADD_PLAYERS) {
 			this.recorder.getPlayers().add(p.getName());
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
 			this.recorder.createSpawnAction(p, p.getLocation(), false);
-			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(new MessageBuilder(ConfigManager.JOIN_MESSAGE).set("name", p.getName()).build())));
-		
+			if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_PLUGIN_MESSAGES) {
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					this.recorder.recordChat(player.getName(), e.getJoinMessage());
+				}
+			}
 		}
 	}
 	
@@ -247,6 +259,11 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getEntity();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(0, ActionType.DEATH, p.getName(), null));
+			if(ConfigManager.RECORD_CHAT && !ConfigManager.RECORD_PLUGIN_MESSAGES) {
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					this.recorder.recordChat(player.getName(), e.getDeathMessage());
+				}
+			}
 		}
 	}
 	

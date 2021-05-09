@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import me.jumper251.replay.filesystem.ConfigManager;
+import me.jumper251.replay.replaysystem.data.types.ChatData;
 import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import me.jumper251.replay.replaysystem.recording.optimization.ReplayQuality;
 
@@ -18,6 +19,8 @@ public class ReplayData implements Serializable{
 
 	
 	private HashMap<Integer, List<ActionData>> actions;
+
+	private HashMap<Integer, List<ChatData>> messages;
 	
 	private HashMap<String, PlayerWatcher> watchers;
 	
@@ -29,6 +32,7 @@ public class ReplayData implements Serializable{
 	
 	public ReplayData() {
 		this.actions = new HashMap<Integer, List<ActionData>>();
+		this.messages = new HashMap<Integer, List<ChatData>>();
 		this.watchers = new HashMap<String, PlayerWatcher>();
 		
 		this.quality = ConfigManager.QUALITY;
@@ -57,7 +61,11 @@ public class ReplayData implements Serializable{
 	public HashMap<Integer, List<ActionData>> getActions() {
 		return actions;
 	}
-	
+
+	public HashMap<Integer, List<ChatData>> getMessages() {
+		return messages;
+	}
+
 	public HashMap<String, PlayerWatcher> getWatchers() {
 		return watchers;
 	}

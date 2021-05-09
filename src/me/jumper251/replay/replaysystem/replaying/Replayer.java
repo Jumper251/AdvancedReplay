@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Collections;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -20,6 +21,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.api.IReplayHook;
@@ -32,6 +36,7 @@ import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.types.ItemData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.SpawnData;
+import me.jumper251.replay.replaysystem.data.types.ChatData;
 import me.jumper251.replay.replaysystem.utils.entities.IEntity;
 import me.jumper251.replay.replaysystem.utils.entities.INPC;
 
@@ -141,9 +146,17 @@ public class Replayer {
 			
 			List<ActionData> list = data.getActions().get(tick);
 			for (ActionData action : list) {
-								
+				// Support older replays
+				if (action.getType() == ActionType.MESSAGE && action.getPacketData() instanceof ChatData) {
+					if (!reversed) {
+						ChatData chatData = (ChatData) action.getPacketData();
+						sendMessage(chatData);
+					}
+					continue;
+				}
+
 				utils.handleAction(action, data, reversed);
-				
+
 				if (action.getType() == ActionType.CUSTOM) {
 					if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
 						for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
@@ -155,6 +168,15 @@ public class Replayer {
 			}
 			
 			if (tick == 0) data.getActions().remove(tick);
+		}
+		
+		// Don't display messages about the start of recording
+		if(tick != 0 && data.getMessages() != null) {
+			for (ChatData chatData : data.getMessages().getOrDefault(tick, Collections.emptyList())) {
+				if (!reversed) {
+					sendMessage(chatData);
+				}
+			}
 		}
 	}
 	
@@ -259,5 +281,18 @@ public class Replayer {
 		if (message != null) {
 			this.watcher.sendMessage(ReplaySystem.PREFIX + message);
 		}
+	}
+	
+	public void sendMessage(ChatData chatData) {
+		String hoverText = (chatData.getRecipients() == null
+				|| chatData.getRecipients().stream().allMatch(recipient -> recipient == null || recipient.isEmpty()))
+  				? ""
+				: "Received: " + String.join(", ", chatData.getRecipients());
+		TextComponent component = new TextComponent(ReplaySystem.PREFIX + "§r");
+		for (BaseComponent baseComponent : TextComponent.fromLegacyText(chatData.getMessage())) {
+			component.addExtra(baseComponent);
+		}
+		component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[] { new TextComponent(hoverText) }));
+		this.watcher.spigot().sendMessage(component);
 	}
 }

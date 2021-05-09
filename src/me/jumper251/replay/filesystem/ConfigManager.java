@@ -27,13 +27,11 @@ public class ConfigManager {
 	
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
-	public static boolean RECORD_CHAT;
+	public static boolean RECORD_CHAT, RECORD_PLUGIN_MESSAGES;
 	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	public static boolean WORLD_RESET;
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
-	
-	public static String DEATH_MESSAGE, LEAVE_MESSAGE, CHAT_FORMAT, JOIN_MESSAGE;
 	
 	public static void loadConfigs() {
 		if(!sqlFile.exists()){
@@ -60,10 +58,6 @@ public class ConfigManager {
 			cfg.set("general.hide_players", false);
 			cfg.set("general.add_new_players", false);	
 			cfg.set("general.update_notifications", true);
-			
-			cfg.set("general.death_message", "&6{name} &7died.");
-			cfg.set("general.quit_message", "&6{name} &7left the game.");
-			cfg.set("general.join_message", "&6{name} &7joined the game.");
 
 			cfg.set("replaying.world.reset_changes", false);
 			
@@ -72,7 +66,7 @@ public class ConfigManager {
 			cfg.set("recording.entities.enabled", false);
 			cfg.set("recording.entities.items.enabled", true);
 			cfg.set("recording.chat.enabled", false);
-			cfg.set("recording.chat.format", "&r<{name}> {message}");
+			cfg.set("recording.chat.plugin_messages", false);
 
 
 			try {
@@ -98,19 +92,13 @@ public class ConfigManager {
 		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
-
-		DEATH_MESSAGE = cfg.getString("general.death_message");
-		LEAVE_MESSAGE = cfg.getString("general.quit_message");
-		JOIN_MESSAGE = cfg.getString("general.join_message");
-		
 		WORLD_RESET = cfg.getBoolean("replaying.world.reset_changes", false);
-		
-		CHAT_FORMAT = cfg.getString("recording.chat.format");
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
 		REAL_CHANGES = cfg.getBoolean("recording.blocks.real_changes");
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");
 		RECORD_ENTITIES = cfg.getBoolean("recording.entities.enabled");
 		RECORD_CHAT = cfg.getBoolean("recording.chat.enabled");
+		RECORD_PLUGIN_MESSAGES = cfg.getBoolean("recording.chat.plugin_messages");
 
 		if (USE_DATABASE) {
 			
