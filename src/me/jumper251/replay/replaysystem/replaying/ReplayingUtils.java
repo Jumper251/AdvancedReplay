@@ -148,6 +148,7 @@ public class ReplayingUtils {
 				InvData invData = (InvData) action.getPacketData();
 				
 				if (!VersionUtil.isCompatible(VersionEnum.V1_8)) {
+			
 					List<WrapperPlayServerEntityEquipment> equipment = VersionUtil.isBelow(VersionEnum.V1_15) ? NPCManager.updateEquipment(npc.getId(), invData) : NPCManager.updateEquipmentv16(npc.getId(), invData);
 					npc.setLastEquipment(equipment);
 					
@@ -155,7 +156,11 @@ public class ReplayingUtils {
 						packet.sendPacket(replayer.getWatchingPlayer());
 					}
 				} else {
-					for (com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet : NPCManager.updateEquipmentOld(npc.getId(), invData)) {
+					List<com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment> equipment = NPCManager.updateEquipmentOld(npc.getId(), invData);
+					PacketNPCOld oldNPC = (PacketNPCOld) npc;
+					oldNPC.setLastEquipmentOld(equipment);
+					
+					for (com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet : equipment) {
 						packet.sendPacket(replayer.getWatchingPlayer());
 					}
 				}
@@ -450,6 +455,9 @@ public class ReplayingUtils {
 	
 	private void spawnProjectile(ProjectileData projData, FishingData fishing, World world, int id) {
 		if (projData != null && projData.getType() != EntityType.FISHING_HOOK) {
+			
+			if (projData.getType() == EntityType.ENDER_PEARL && VersionUtil.isCompatible(VersionEnum.V1_8)) return;
+			
 			new BukkitRunnable() {
 			
 				@Override

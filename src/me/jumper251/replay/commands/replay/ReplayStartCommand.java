@@ -14,24 +14,25 @@ import me.jumper251.replay.commands.AbstractCommand;
 import me.jumper251.replay.commands.SubCommand;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.utils.ReplayManager;
+import me.jumper251.replay.utils.StringUtils;
 
 public class ReplayStartCommand extends SubCommand {
 
 	public ReplayStartCommand(AbstractCommand parent) {
-		super(parent, "start", "Records a new replay", "start <Name> [<Players ...>]", false);
+		super(parent, "start", "Records a new replay", "start [Name] [<Players ...>]", false);
 	}
 
 	@Override
 	public boolean execute(CommandSender cs, Command cmd, String label, String[] args) {
-		if (args.length < 2) return false;
+		if (args.length < 1) return false;
 		
-		String name = args[1];
+		String name = args.length >= 2 ? args[1] : StringUtils.getRandomString(6);
 		if (name.length() > 40) {
 			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay name is too long.");
 			return true;
 		}
 		
-		if (args.length == 2) {
+		if (args.length <= 2) {
 			if (!ReplaySaver.exists(name) && !ReplayManager.activeReplays.containsKey(name)) {
 				 ReplayAPI.getInstance().recordReplay(name, cs);
 				 

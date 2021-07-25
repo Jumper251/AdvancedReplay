@@ -20,11 +20,11 @@ public class MySQLDatabase extends Database {
 
 	private Connection connection;
 	private MySQLService service;
-
-	public MySQLDatabase(String host, String database, String user, String password) {
+	
+	public MySQLDatabase(String host, String database, String user, String password, String prefix) {
 		super(host, database, user, password);
 
-		this.service = new MySQLService(this);
+		this.service = new MySQLService(this, prefix);
 		new AutoReconnector(ReplaySystem.instance);
 
 	}

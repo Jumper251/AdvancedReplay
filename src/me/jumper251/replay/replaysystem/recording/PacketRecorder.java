@@ -301,9 +301,11 @@ public class PacketRecorder extends AbstractListener{
             			WrapperPlayServerEntityTeleport packet = new WrapperPlayServerEntityTeleport(event.getPacket());
 
             			if (entityLookup.containsKey(packet.getEntityID()) && entityLookup.get(packet.getEntityID()).equalsIgnoreCase(p.getName())) {
-            				Location loc = packet.getEntity(p.getWorld()).getLocation();
+            				Location loc = checkEntityLocation(packet.getEntity(p.getWorld()));
 
-            				addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), packet.getPitch(), packet.getYaw()));
+            				if (loc != null) {
+            					addData(p.getName(), new EntityMovingData(packet.getEntityID(), loc.getX(), loc.getY(), loc.getZ(), packet.getPitch(), packet.getYaw()));
+            				}
             			}
             		}
 

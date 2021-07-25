@@ -28,7 +28,7 @@ public class ConfigManager {
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
 	public static boolean RECORD_CHAT;
-	public static boolean SAVE_STOP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
+	public static boolean SAVE_STOP, RECORD_STARTUP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	public static boolean WORLD_RESET;
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
@@ -41,6 +41,8 @@ public class ConfigManager {
 			sqlCfg.set("username", "username");
 			sqlCfg.set("database", "database");
 			sqlCfg.set("password", "password");
+			sqlCfg.set("prefix", "");
+
 			try {
 				sqlCfg.save(sqlFile);
 			} catch (IOException e) {
@@ -52,6 +54,7 @@ public class ConfigManager {
 			LogUtils.log("Creating Config files...");
 			
 			cfg.set("general.max_length", 3600);
+			cfg.set("general.record_on_startup", false);
 			cfg.set("general.save_on_stop", false);
 			cfg.set("general.use_mysql", false);
 			cfg.set("general.use_offline_skins", true);
@@ -91,6 +94,7 @@ public class ConfigManager {
 	public static void loadData(boolean initial) {
 		MAX_LENGTH = cfg.getInt("general.max_length");
 		SAVE_STOP = cfg.getBoolean("general.save_on_stop");
+		RECORD_STARTUP = cfg.getBoolean("general.record_on_startup", false);
 		USE_OFFLINE_SKINS = cfg.getBoolean("general.use_offline_skins");
 		QUALITY = ReplayQuality.valueOf(cfg.getString("general.quality", "high").toUpperCase());
 		HIDE_PLAYERS = cfg.getBoolean("general.hide_players");
@@ -118,8 +122,9 @@ public class ConfigManager {
 			String username = sqlCfg.getString("username");
 			String database = sqlCfg.getString("database");
 			String password = sqlCfg.getString("password");
-			
-			MySQLDatabase mysql = new MySQLDatabase(host, database, username, password);
+			String prefix = sqlCfg.getString("prefix", "");
+
+			MySQLDatabase mysql = new MySQLDatabase(host, database, username, password, prefix);
 			DatabaseRegistry.registerDatabase(mysql);
 			DatabaseRegistry.getDatabase().getService().createReplayTable();
 			

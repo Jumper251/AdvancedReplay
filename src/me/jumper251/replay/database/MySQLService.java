@@ -15,21 +15,25 @@ public class MySQLService extends DatabaseService {
 
 	private MySQLDatabase database;
 	
-	private final String NAME = "replays";
+	private String table = "replays";
 	
-	public MySQLService(MySQLDatabase database) {
+	public MySQLService(MySQLDatabase database, String prefix) {
+		if (prefix != null && prefix.length() > 0) {
+			this.table = prefix + this.table;
+		}
+		
 		this.database = database;
 	}
 	
 	@Override
 	public void createReplayTable() {
-		database.update("CREATE TABLE IF NOT EXISTS " + NAME + " (id VARCHAR(40) PRIMARY KEY UNIQUE, creator VARCHAR(30), duration INT(255), time BIGINT(255), data LONGBLOB)");		
+		database.update("CREATE TABLE IF NOT EXISTS " + this.table + " (id VARCHAR(40) PRIMARY KEY UNIQUE, creator VARCHAR(30), duration INT(255), time BIGINT(255), data LONGBLOB)");		
 		
 	}
 
 	@Override
 	public void addReplay(String id, String creator, int duration, Long time, byte[] data) throws SQLException {
-		PreparedStatement pst = database.getConnection().prepareStatement("INSERT INTO " + NAME + " (id, creator, duration, time, data) VALUES (?,?,?,?,?)");
+		PreparedStatement pst = database.getConnection().prepareStatement("INSERT INTO " + this.table + " (id, creator, duration, time, data) VALUES (?,?,?,?,?)");
 		pst.setString(1, id);
 		pst.setString(2, creator);
 		pst.setInt(3, duration);
@@ -51,7 +55,7 @@ public class MySQLService extends DatabaseService {
 	public byte[] getReplayData(String id) {
 		try {
 			
-			PreparedStatement pst = database.getConnection().prepareStatement("SELECT data FROM " + NAME + " WHERE id = ?");
+			PreparedStatement pst = database.getConnection().prepareStatement("SELECT data FROM " + this.table + " WHERE id = ?");
 			pst.setString(1, id);
 			
 			ResultSet rs = database.query(pst);
@@ -72,7 +76,7 @@ public class MySQLService extends DatabaseService {
 	public void deleteReplay(String id) {
 		try {
 			
-			PreparedStatement pst = database.getConnection().prepareStatement("DELETE FROM " + NAME + " WHERE id = ?");
+			PreparedStatement pst = database.getConnection().prepareStatement("DELETE FROM " + this.table + " WHERE id = ?");
 			pst.setString(1, id);
 			
 			pool.execute(new Runnable() {
@@ -94,7 +98,7 @@ public class MySQLService extends DatabaseService {
 	public boolean exists(String id) {
 		try {
 			
-			PreparedStatement pst = database.getConnection().prepareStatement("SELECT COUNT(1) FROM " + NAME + " WHERE id = ?");
+			PreparedStatement pst = database.getConnection().prepareStatement("SELECT COUNT(1) FROM " + this.table + " WHERE id = ?");
 			pst.setString(1, id);
 			
 			ResultSet rs = database.query(pst);
@@ -114,7 +118,7 @@ public class MySQLService extends DatabaseService {
 		List<ReplayInfo> replays = new ArrayList<>();
 		try {
 			
-			PreparedStatement pst = database.getConnection().prepareStatement("SELECT id,creator,duration,time FROM " + NAME);
+			PreparedStatement pst = database.getConnection().prepareStatement("SELECT id,creator,duration,time FROM " + this.table);
 			ResultSet rs = database.query(pst);
 			
 			while (rs.next()) {

@@ -2,9 +2,13 @@ package me.jumper251.replay.utils;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import me.jumper251.replay.ReplaySystem;
+import me.jumper251.replay.api.ReplayAPI;
 import me.jumper251.replay.commands.replay.ReplayCommand;
+import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.listener.ReplayListener;
 import me.jumper251.replay.replaysystem.Replay;
 
@@ -15,6 +19,10 @@ public class ReplayManager {
 	public static void register() {
 		registerEvents();
 		registerCommands();
+		
+		if (ConfigManager.RECORD_STARTUP) {
+			ReplayAPI.getInstance().recordReplay(null, Bukkit.getConsoleSender(), new Player[] {});
+		}
 	}
 	
 	private static void registerEvents() {

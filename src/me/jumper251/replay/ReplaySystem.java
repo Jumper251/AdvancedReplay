@@ -48,8 +48,8 @@ public class ReplaySystem extends JavaPlugin {
 
 		LogUtils.log("Loading Replay v" + getDescription().getVersion() + " by " + getDescription().getAuthors().get(0));
 		
-		ReplayManager.register();
 		ConfigManager.loadConfigs();
+		ReplayManager.register();
 		
 		ReplaySaver.register(ConfigManager.USE_DATABASE ? new DatabaseReplaySaver() : new DefaultReplaySaver());
 		

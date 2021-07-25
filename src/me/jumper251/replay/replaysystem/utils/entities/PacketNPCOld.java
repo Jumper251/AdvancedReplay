@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 
 
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
+import com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment;
 import com.comphenix.packetwrapper.old.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
@@ -123,7 +124,14 @@ public class PacketNPCOld implements INPC{
 		
 		for (Player player : Arrays.asList(this.visible)) {
 			this.spawnPacket.sendPacket(player);
+			
+			
+			for (WrapperPlayServerEntityEquipment equipment : this.lastEquipment) {
+				equipment.sendPacket(player);
+			}
 		}
+		
+		
 	}
 	
 	public void despawn() {
@@ -374,7 +382,10 @@ public class PacketNPCOld implements INPC{
 		return this.visible;
 	}
 	
-	public void setLastEquipment(List<WrapperPlayServerEntityEquipment> list) {
+	public void setLastEquipment(List<com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment> list) {
+	}
+	
+	public void setLastEquipmentOld(List<WrapperPlayServerEntityEquipment> list) {
 		this.lastEquipment = list;
 		
 	}
