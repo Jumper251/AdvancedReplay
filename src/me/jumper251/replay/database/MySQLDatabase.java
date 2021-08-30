@@ -32,7 +32,7 @@ public class MySQLDatabase extends Database {
 	@Override
 	public void connect() {
 		try {
-			this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":3306/" + this.database + "?useSSL=false", this.user, this.password);
+			this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":3306/" + this.database + "?useSSL=false&characterEncoding=latin1", this.user, this.password);
 			LogUtils.log("Successfully conntected to database");
 		} catch (SQLException e) {
 			LogUtils.log("Unable to connect to database: " + e.getMessage());

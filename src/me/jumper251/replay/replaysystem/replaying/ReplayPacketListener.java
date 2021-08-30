@@ -1,6 +1,9 @@
 package me.jumper251.replay.replaysystem.replaying;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -36,8 +39,7 @@ public class ReplayPacketListener extends AbstractListener {
 		this.spectating = new HashMap<Player, Integer>();
 		this.previous = -1;
 		
-		// Disable spectator function for 1.16
-		if (!isRegistered() && !VersionUtil.isAbove(VersionEnum.V1_16)) register();
+		if (!isRegistered()) register();
 	}
 
 	@Override
@@ -63,8 +65,16 @@ public class ReplayPacketListener extends AbstractListener {
 				Player p = event.getPlayer();
 				
 				if (ReplayHelper.replaySessions.containsKey(p.getName()) && isSpectating(p)) {
-					for (int id : packet.getEntityIDs()) {
-						
+					
+					List<Integer> entityIds;
+        			if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+        				entityIds = packet.getHandle().getIntLists().read(0);
+        				
+        			} else {
+        				entityIds = IntStream.of(packet.getEntityIDs()).boxed().collect(Collectors.toList());
+        			}
+					
+					for (int id : entityIds) {
 						if (id == spectating.get(p)) {
 							setCamera(p, p.getEntityId(), previous);
 						}
@@ -79,10 +89,7 @@ public class ReplayPacketListener extends AbstractListener {
 	
 	@Override
 	public void unregister() {
-		if (!VersionUtil.isAbove(VersionEnum.V1_16)) {
-			ProtocolLibrary.getProtocolManager().removePacketListener(this.packetAdapter);
-		}
-		
+		ProtocolLibrary.getProtocolManager().removePacketListener(this.packetAdapter);
 	}
 	
 	public boolean isRegistered() {
@@ -102,7 +109,13 @@ public class ReplayPacketListener extends AbstractListener {
 		camera.setCameraId(entityID);
 		
 		WrapperPlayServerGameStateChange state = new WrapperPlayServerGameStateChange();
-		state.setReason(3);
+		
+		if (VersionUtil.isAbove(VersionEnum.V1_16)) {
+			state.getHandle().getGameStateIDs().write(0, 3);
+		} else {
+			state.setReason(3);
+		}
+		
 		state.setValue(gamemode < 0 ? 0 : gamemode);
 		
 		state.sendPacket(p);

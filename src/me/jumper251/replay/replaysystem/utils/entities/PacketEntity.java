@@ -18,6 +18,8 @@ import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 import me.jumper251.replay.utils.MathUtils;
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class PacketEntity implements IEntity{
 
@@ -81,7 +83,11 @@ public class PacketEntity implements IEntity{
 	public void despawn() {
 		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
 		
-		destroyPacket.setEntityIds(new int[] { this.id });
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			destroyPacket.getHandle().getIntLists().write(0, Arrays.asList(this.id));
+		} else {
+			destroyPacket.setEntityIds(new int[] { this.id });
+		}	
 		
 		for (Player player : Arrays.asList(this.visible)) {
 			if(player != null){				
@@ -96,8 +102,12 @@ public class PacketEntity implements IEntity{
 	public void remove() {
 		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
 		
-		destroyPacket.setEntityIds(new int[] { this.id });
-
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			destroyPacket.getHandle().getIntLists().write(0, Arrays.asList(this.id));
+		} else {
+			destroyPacket.setEntityIds(new int[] { this.id });
+		}	
+		
 		if(this.oldVisible != null){				
 			destroyPacket.sendPacket(this.oldVisible);
 		}		

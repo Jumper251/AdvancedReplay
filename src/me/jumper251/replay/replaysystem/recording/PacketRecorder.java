@@ -2,17 +2,10 @@ package me.jumper251.replay.replaysystem.recording;
 
 import java.util.ArrayList;
 
-
-
-
-
-
-
-
-
-
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -237,28 +230,37 @@ public class PacketRecorder extends AbstractListener{
             		
             		if (event.getPacketType() == PacketType.Play.Server.ENTITY_DESTROY) {
             			WrapperPlayServerEntityDestroy packet = new WrapperPlayServerEntityDestroy(event.getPacket());
-            		
-            			for (int id : packet.getEntityIDs()) {
+            			
+            			List<Integer> entityIds;
+            			if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+            				entityIds = packet.getHandle().getIntLists().read(0);
+            				
+            			} else {
+            				entityIds = IntStream.of(packet.getEntityIDs()).boxed().collect(Collectors.toList());
+            			}
+            			
+
+            			for (Integer id : entityIds) {
 
             				if (spawnedItems.contains(id)) {
             					addData(p.getName(), new EntityItemData(1, id, null, null, null));
             					
-            					spawnedItems.remove(new Integer(id));
+            					spawnedItems.remove(id);
             				}
             				
             				if (spawnedEntities.containsKey(id) && (idLookup.get(id) == null || (idLookup.get(id) != null && idLookup.get(id).isDead()))) {
             		
             					addData(p.getName(), new EntityData(1, id, spawnedEntities.get(id).getLocation(), spawnedEntities.get(id).getType()));
             					
-            					spawnedEntities.remove(new Integer(id));
-            					entityLookup.remove(new Integer(id));
-            					idLookup.remove(new Integer(id));
+            					spawnedEntities.remove(id);
+            					entityLookup.remove(id);
+            					idLookup.remove(id);
             				}
             				
             				if (spawnedHooks.contains(id)) {
             					addData(p.getName(), new EntityItemData(2, id, null, null, null));
             					
-            					spawnedHooks.remove(new Integer(id));
+            					spawnedHooks.remove(id);
             				}
             			}
             		}

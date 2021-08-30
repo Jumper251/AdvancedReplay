@@ -59,8 +59,10 @@ public class PlayerWatcher implements Serializable{
 
 			if (VersionUtil.isBetween(VersionEnum.V1_10, VersionEnum.V1_13)) {
 				builder.setValue(6, blockByte);
-			} else if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+			} else if (VersionUtil.isBetween(VersionEnum.V1_14, VersionEnum.V1_16)) {
 				builder.setValue(7, blockByte);
+			} else if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+				builder.setValue(8, blockByte);
 			} else {
 				builder.setValue(5, blockByte);
 			}

@@ -10,6 +10,9 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
@@ -420,11 +423,18 @@ public class ReplayingUtils {
 	
 	private void spawnNPC(ActionData action) {
 		SpawnData spawnData = (SpawnData)action.getPacketData();
+		
+		int tabMode = Bukkit.getPlayer(action.getName()) != null ? 0 : 2;
+		
+		if (VersionUtil.isAbove(VersionEnum.V1_17) && Bukkit.getPlayer(action.getName()) != null) {
+			tabMode = 2;
+			spawnData.setUuid(UUID.randomUUID());
+		}
+
 		INPC npc = !VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketNPC(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName()) : new PacketNPCOld(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName());
 		this.replayer.getNPCList().put(action.getName(), npc);
 		this.replayer.getReplay().getData().getWatchers().put(action.getName(), new PlayerWatcher(action.getName()));
 
-		int tabMode = Bukkit.getPlayer(action.getName()) != null ? 0 : 2;
 		Location spawn = LocationData.toLocation(spawnData.getLocation());
 		
 		if(VersionUtil.isCompatible(VersionEnum.V1_8)) {
@@ -438,7 +448,7 @@ public class ReplayingUtils {
 			tabMode = 2;
 		}
 		
-		if ((spawnData.getSignature() != null && Bukkit.getPlayer(action.getName()) == null) || (spawnData.getSignature() != null && ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName()))) {
+		if ((spawnData.getSignature() != null && (Bukkit.getPlayer(action.getName()) == null || VersionUtil.isAbove(VersionEnum.V1_17))) || (spawnData.getSignature() != null && ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName()))) {
 			WrappedGameProfile profile = new WrappedGameProfile(spawnData.getUuid(), action.getName());
 			WrappedSignedProperty signed = new WrappedSignedProperty(spawnData.getSignature().getName(), spawnData.getSignature().getValue(), spawnData.getSignature().getSignature());
 			profile.getProperties().put(spawnData.getSignature().getName(), signed);
@@ -502,13 +512,13 @@ public class ReplayingUtils {
 				if (id == 11) id = 10;
 				
 				if (ConfigManager.REAL_CHANGES) {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17)) {
 						loc.getBlock().setType(getBlockMaterial(blockChange.getAfter()), true);
 					} else {
 						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
 					}
 				} else {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16)) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17)) {
 						replayer.getWatchingPlayer().sendBlockChange(loc, getBlockMaterial(blockChange.getAfter()), (byte) subId);
 					} else {
 						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
@@ -558,7 +568,12 @@ public class ReplayingUtils {
 		
 		if (ids != null && ids.length > 0) {
 			WrapperPlayServerEntityDestroy packet = new WrapperPlayServerEntityDestroy();
-			packet.setEntityIds(ids);
+			if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+				packet.getHandle().getIntLists().write(0, IntStream.of(ids).boxed().collect(Collectors.toList()));
+			} else {
+				packet.setEntityIds(ids);
+			}
+			
 			
 			packet.sendPacket(replayer.getWatchingPlayer());
 		}

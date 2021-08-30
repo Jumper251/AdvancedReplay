@@ -18,6 +18,9 @@ import com.comphenix.protocol.wrappers.EnumWrappers.TitleAction;
 import me.jumper251.replay.filesystem.ItemConfig;
 import me.jumper251.replay.filesystem.ItemConfigOption;
 import me.jumper251.replay.filesystem.ItemConfigType;
+import me.jumper251.replay.utils.ReflectionHelper;
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 
@@ -82,6 +85,11 @@ public class ReplayHelper {
 	
 	
 	public static void sendTitle(Player player, String title, String subTitle, int stay) {
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			ReflectionHelper.getInstance().sendTitle(player, title, subTitle, 0, stay, 20);
+			return;
+		}
+		
 		WrapperPlayServerTitle packet = new WrapperPlayServerTitle();
 		packet.setAction(TitleAction.TIMES);
 		packet.setStay(stay);

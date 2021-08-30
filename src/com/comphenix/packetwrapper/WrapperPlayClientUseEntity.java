@@ -22,6 +22,10 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.EntityUseAction;
+
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
@@ -77,6 +81,9 @@ public class WrapperPlayClientUseEntity extends AbstractPacket {
 	 * @return The current Type
 	 */
 	public EntityUseAction getType() {
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) 
+			return handle.getEnumEntityUseActions().read(0).getAction();
+		
 		return handle.getEntityUseActions().read(0);
 	}
 

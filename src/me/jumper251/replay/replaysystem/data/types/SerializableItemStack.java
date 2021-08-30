@@ -101,6 +101,10 @@ public class SerializableItemStack implements Serializable {
 	
 	public static SerializableItemStack fromItemStack(ItemStack stack, boolean block) {
 		Map<String, Object> serialized = stack.serialize();
+		if (block && stack.getType() == Material.FLINT_AND_STEEL) {
+			serialized.put("type", "FIRE");
+		}
+		
 		serialized.entrySet().removeIf(e -> !e.getKey().equalsIgnoreCase("v") && !e.getKey().equalsIgnoreCase("type") && !e.getKey().equalsIgnoreCase("damage"));
 		
 		SerializableItemStack serializableItemStack = new SerializableItemStack(serialized);

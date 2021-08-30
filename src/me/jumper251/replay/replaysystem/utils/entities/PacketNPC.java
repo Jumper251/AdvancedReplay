@@ -36,6 +36,8 @@ import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.StringUtils;
+import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 
 
@@ -124,7 +126,11 @@ public class PacketNPC implements INPC{
 	public void despawn() {
 		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
 		
-		destroyPacket.setEntityIds(new int[] { this.id });
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			destroyPacket.getHandle().getIntLists().write(0, Arrays.asList(this.id));
+		} else {
+			destroyPacket.setEntityIds(new int[] { this.id });
+		}		
 		
 		for (Player player : Arrays.asList(this.visible)) {
 			if(player != null){				
@@ -143,8 +149,12 @@ public class PacketNPC implements INPC{
 		
 		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
 		
-		destroyPacket.setEntityIds(new int[] { this.id });
-
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			destroyPacket.getHandle().getIntLists().write(0, Arrays.asList(this.id));
+		} else {
+			destroyPacket.setEntityIds(new int[] { this.id });
+		}	
+		
 		if(this.oldVisible != null){				
 			if(this.tabMode == 2){
 				getInfoRemovePacket().sendPacket(this.oldVisible);

@@ -57,24 +57,24 @@ public class ReplayListener extends AbstractListener {
 				
 				if (itemType == ItemConfigType.PAUSE) {
 					replayer.setPaused(!replayer.isPaused());
-					ReplayHelper.sendTitle(p, null, "§c❙❙", 20);
+					ReplayHelper.sendTitle(p, " ", "§c❙❙", 20);
 				}
 					
 				if (itemType == ItemConfigType.FORWARD) {
 					replayer.getUtils().forward();
-					ReplayHelper.sendTitle(p, null, "§a»»", 20);
+					ReplayHelper.sendTitle(p, " ", "§a»»", 20);
 
 				}
 				if (itemType == ItemConfigType.BACKWARD) {
 					replayer.getUtils().backward();
-					ReplayHelper.sendTitle(p, null, "§c««", 20);
+					ReplayHelper.sendTitle(p, " ", "§c««", 20);
 
 				}
 				
 				
 				if (itemType == ItemConfigType.RESUME) {
 					replayer.setPaused(!replayer.isPaused());
-					ReplayHelper.sendTitle(p, null, "§a➤", 20);
+					ReplayHelper.sendTitle(p, " ", "§a➤", 20);
 
 				}
 				

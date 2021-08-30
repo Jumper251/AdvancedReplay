@@ -30,7 +30,7 @@ public enum MaterialBridge {
 	
 	@SuppressWarnings("deprecation")
 	public static Material fromID(int id) {
-		if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16)) {
+		if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17)) {
 			for (Material mat : Material.values()) {
 				if (mat.getId() == id) return mat;
 			}

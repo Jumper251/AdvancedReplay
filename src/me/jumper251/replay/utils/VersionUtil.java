@@ -63,7 +63,8 @@ public class VersionUtil {
 		V1_13(6),
 		V1_14(7),
 		V1_15(8),
-		V1_16(9);
+		V1_16(9),
+		V1_17(10);
 		
 		private int order;
 		

@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 import org.bukkit.entity.Entity;
 
-
+import com.comphenix.protocol.wrappers.EnumWrappers.EntityPose;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 import me.jumper251.replay.utils.VersionUtil;
@@ -52,8 +52,10 @@ public class MetadataBuilder {
 		
 		if (VersionUtil.isBetween(VersionEnum.V1_10, VersionEnum.V1_13)) {
 			return setValue(10, amount);
-		} else if (VersionUtil.isAbove(VersionEnum.V1_14)) {
+		} else if (VersionUtil.isBetween(VersionEnum.V1_14, VersionEnum.V1_16)) {
 			return setValue(11, amount);
+		} else if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			return setValue(12, amount);
 		} else {
 			return setValue(9, amount);
 		}
@@ -85,6 +87,10 @@ public class MetadataBuilder {
 	}
 	
 	public MetadataBuilder setPoseField(String type) {
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			return setValue(6, EntityPose.valueOf(type).toNms());
+		}
+		
 		Object enumField = null;
 		
 		try {

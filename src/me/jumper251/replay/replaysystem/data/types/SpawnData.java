@@ -36,5 +36,9 @@ public class SpawnData extends PacketData {
 	public SignatureData getSignature() {
 		return signature;
 	}
+	
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
 
 }

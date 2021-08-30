@@ -3,6 +3,7 @@ package me.jumper251.replay;
 
 import java.util.HashMap;
 
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -13,7 +14,6 @@ import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
 import me.jumper251.replay.filesystem.saving.ReplaySaver;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.utils.ReplayCleanup;
-import me.jumper251.replay.utils.LogUtils;
 import me.jumper251.replay.utils.Metrics;
 import me.jumper251.replay.utils.ReplayManager;
 import me.jumper251.replay.utils.Updater;
@@ -46,7 +46,7 @@ public class ReplaySystem extends JavaPlugin {
 		
 		Long start = System.currentTimeMillis();
 
-		LogUtils.log("Loading Replay v" + getDescription().getVersion() + " by " + getDescription().getAuthors().get(0));
+		getLogger().info("Loading Replay v" + getDescription().getVersion() + " by " + getDescription().getAuthors().get(0));
 		
 		ConfigManager.loadConfigs();
 		ReplayManager.register();
@@ -60,7 +60,7 @@ public class ReplaySystem extends JavaPlugin {
 			ReplayCleanup.cleanupReplays();
 		}
 		
-		LogUtils.log("Finished (" + (System.currentTimeMillis() - start) + "ms)");
+		getLogger().info("Finished (" + (System.currentTimeMillis() - start) + "ms)");
 
 	}
 	
