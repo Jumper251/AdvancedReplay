@@ -66,4 +66,8 @@ public interface INPC {
     Player[] getVisible();
 
     void setLastEquipment(List<WrapperPlayServerEntityEquipment> list);
+
+    void updateSkin();
+
+    WrappedGameProfile getProfile();
 }

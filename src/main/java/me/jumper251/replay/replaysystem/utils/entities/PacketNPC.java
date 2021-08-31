@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.utils.entities;
 import com.comphenix.packetwrapper.*;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
 import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
+import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MathUtils;
@@ -249,6 +250,22 @@ public class PacketNPC implements INPC {
                 packet.sendPacket(player);
             }
         }
+    }
+
+    public void updateSkin() {
+        WrapperPlayServerPlayerInfo remove = getInfoRemovePacket();
+        WrapperPlayServerPlayerInfo add = getInfoAddPacket();
+        for (Player player : Arrays.asList(this.visible)) {
+            if (player != null) {
+                remove.sendPacket(player);
+                add.sendPacket(player);
+            }
+        }
+    }
+
+    @Override
+    public WrappedGameProfile getProfile() {
+        return profile;
     }
 
     private WrapperPlayServerPlayerInfo getInfoAddPacket() {

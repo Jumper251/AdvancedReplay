@@ -95,6 +95,16 @@ public class PacketNPCOld implements INPC {
         this.spawnPacket.setMetadata(this.data);
         this.spawnPacket.setPosition(this.location.toVector());
 
+        WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
+
+        destroyPacket.setEntityIds(new int[]{this.id});
+
+        for (Player player : players) {
+            destroyPacket.sendPacket(player);
+        }
+
+        Arrays.fill(players, null);
+
         for (Player player : Arrays.asList(this.visible)) {
             this.spawnPacket.sendPacket(player);
 
@@ -200,6 +210,10 @@ public class PacketNPCOld implements INPC {
             }
         }
 
+    }
+
+    public void updateSkin() {
+        respawn(visible);
     }
 
 
@@ -361,5 +375,10 @@ public class PacketNPCOld implements INPC {
     public void setLastEquipmentOld(List<WrapperPlayServerEntityEquipment> list) {
         this.lastEquipment = list;
 
+    }
+
+    @Override
+    public WrappedGameProfile getProfile() {
+        return profile;
     }
 }
