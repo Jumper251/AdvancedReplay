@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.function.Function;
 
 
 public class Replayer {
@@ -45,6 +46,8 @@ public class Replayer {
 
     private boolean silent;
 
+    private Function<ActionData, ActionData> actionTransformer;
+    
     public Replayer(Replay replay, Player watcher) {
         this.replay = replay;
         this.watcher = watcher;
@@ -115,7 +118,8 @@ public class Replayer {
                         Replayer.this.currentTicks++;
                     }
 
-                    updateXPBar();
+                    // Disable the XP bar animation
+//                    updateXPBar();
                 } else {
 
                     stop();
@@ -136,6 +140,10 @@ public class Replayer {
             List<ActionData> list = data.getActions().get(tick);
             for (ActionData action : list) {
 
+            	if (actionTransformer != null) {
+            		action = actionTransformer.apply(action);
+            	}
+            	
                 utils.handleAction(action, data, reversed);
 
                 if (action.getType() == ActionType.CUSTOM) {
@@ -219,6 +227,10 @@ public class Replayer {
 
     public ReplaySession getSession() {
         return session;
+    }
+    
+    public void setActionTransformer(Function<ActionData, ActionData> transformer) {
+    	this.actionTransformer = transformer;
     }
 
     public boolean isPaused() {

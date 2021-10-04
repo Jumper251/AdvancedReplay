@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Replay {
 
@@ -27,6 +28,8 @@ public class Replay {
 
     private boolean isRecording, isPlaying;
 
+    private Consumer<Replayer> replayPreStartCallback;
+    
     public Replay() {
         this.id = StringUtils.getRandomString(6);
         this.data = new ReplayData();
@@ -60,9 +63,12 @@ public class Replay {
         }
 
     }
-
+    
     private void startReplay(Player watcher) {
         this.replayer = new Replayer(this, watcher);
+        if (replayPreStartCallback != null) {
+        	replayPreStartCallback.accept(replayer);
+        }
         this.replayer.start();
         this.isPlaying = true;
     }
@@ -113,5 +119,9 @@ public class Replay {
 
     public void setReplayInfo(ReplayInfo replayInfo) {
         this.replayInfo = replayInfo;
+    }
+    
+    public void setReplayPreStartCallback(Consumer<Replayer> callback) {
+    	replayPreStartCallback = callback;
     }
 }

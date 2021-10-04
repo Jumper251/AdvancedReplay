@@ -1,20 +1,36 @@
 package me.jumper251.replay.replaysystem.utils.entities;
 
-import com.comphenix.packetwrapper.*;
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
-import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.*;
-import me.jumper251.replay.replaysystem.utils.NPCManager;
-import me.jumper251.replay.utils.MathUtils;
-import me.jumper251.replay.utils.StringUtils;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import com.comphenix.packetwrapper.WrapperPlayServerAnimation;
+import com.comphenix.packetwrapper.WrapperPlayServerBed;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
+import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
+import com.comphenix.packetwrapper.WrapperPlayServerNamedEntitySpawn;
+import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
+import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
+import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
+import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
+import com.comphenix.protocol.wrappers.BlockPosition;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.PlayerInfoData;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedGameProfile;
+
+import me.jumper251.replay.replaysystem.utils.NPCManager;
+import me.jumper251.replay.utils.MathUtils;
+import me.jumper251.replay.utils.StringUtils;
 
 
 public class PacketNPC implements INPC {
@@ -255,6 +271,7 @@ public class PacketNPC implements INPC {
     public void updateSkin() {
         WrapperPlayServerPlayerInfo remove = getInfoRemovePacket();
         WrapperPlayServerPlayerInfo add = getInfoAddPacket();
+        
         for (Player player : Arrays.asList(this.visible)) {
             if (player != null) {
                 remove.sendPacket(player);
