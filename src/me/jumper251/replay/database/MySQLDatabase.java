@@ -37,7 +37,7 @@ public class MySQLDatabase extends Database {
 	@Override
 	public void connect() {
 		try {
-			String dsn = this.getConnection();
+			String dsn = this.getDataSourceName();
 			this.connection = DriverManager.getConnection(dsn, this.user, this.password);
 			LogUtils.log("Successfully conntected to MySQL database");
 		} catch (SQLException e) {
