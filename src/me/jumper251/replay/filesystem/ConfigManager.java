@@ -120,7 +120,7 @@ public class ConfigManager {
 		if (USE_DATABASE) {
 			
 			String host = sqlCfg.getString("host");
-			int port = sqlCfg.getInt("port");
+			int port = sqlCfg.getInt("port", 3306);
 			String username = sqlCfg.getString("username");
 			String database = sqlCfg.getString("database");
 			String password = sqlCfg.getString("password");
