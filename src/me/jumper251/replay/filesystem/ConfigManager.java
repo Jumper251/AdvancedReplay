@@ -38,6 +38,7 @@ public class ConfigManager {
 	public static void loadConfigs() {
 		if(!sqlFile.exists()){
 			sqlCfg.set("host", "localhost");
+			sqlCfg.set("port", 3306);
 			sqlCfg.set("username", "username");
 			sqlCfg.set("database", "database");
 			sqlCfg.set("password", "password");
@@ -119,12 +120,13 @@ public class ConfigManager {
 		if (USE_DATABASE) {
 			
 			String host = sqlCfg.getString("host");
+			int port = sqlCfg.getInt("port", 3306);
 			String username = sqlCfg.getString("username");
 			String database = sqlCfg.getString("database");
 			String password = sqlCfg.getString("password");
 			String prefix = sqlCfg.getString("prefix", "");
 
-			MySQLDatabase mysql = new MySQLDatabase(host, database, username, password, prefix);
+			MySQLDatabase mysql = new MySQLDatabase(host, port, database, username, password, prefix);
 			DatabaseRegistry.registerDatabase(mysql);
 			DatabaseRegistry.getDatabase().getService().createReplayTable();
 			

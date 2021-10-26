@@ -21,8 +21,8 @@ public class MySQLDatabase extends Database {
 	private Connection connection;
 	private MySQLService service;
 	
-	public MySQLDatabase(String host, String database, String user, String password, String prefix) {
-		super(host, database, user, password);
+	public MySQLDatabase(String host, int port, String database, String user, String password, String prefix) {
+		super(host, port, database, user, password);
 
 		this.service = new MySQLService(this, prefix);
 		new AutoReconnector(ReplaySystem.instance);
@@ -30,14 +30,19 @@ public class MySQLDatabase extends Database {
 	}
 
 	@Override
+	public String getDataSourceName() {
+		return String.format("jdbc:mysql://%s:%d/%s?useSSL=false&characterEncoding=latin1", this.host, this.port, this.database);
+	}
+
+	@Override
 	public void connect() {
 		try {
-			this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":3306/" + this.database + "?useSSL=false&characterEncoding=latin1", this.user, this.password);
-			LogUtils.log("Successfully conntected to database");
+			String dsn = this.getDataSourceName();
+			this.connection = DriverManager.getConnection(dsn, this.user, this.password);
+			LogUtils.log("Successfully conntected to MySQL database");
 		} catch (SQLException e) {
-			LogUtils.log("Unable to connect to database: " + e.getMessage());
+			LogUtils.log("Unable to connect to MySQL database: " + e.getMessage());
 		}
-
 	}
 
 	@Override
