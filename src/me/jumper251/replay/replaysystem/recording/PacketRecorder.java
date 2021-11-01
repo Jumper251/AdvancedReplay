@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -18,9 +19,11 @@ import com.comphenix.packetwrapper.WrapperPlayClientEntityAction;
 import com.comphenix.packetwrapper.WrapperPlayClientLook;
 import com.comphenix.packetwrapper.WrapperPlayClientPosition;
 import com.comphenix.packetwrapper.WrapperPlayClientPositionLook;
+import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
+import com.comphenix.packetwrapper.WrapperPlayServerMultiBlockChange;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMove;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
@@ -32,17 +35,21 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
+import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
+import com.comphenix.protocol.wrappers.WrappedBlockData;
 
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.types.AnimationData;
+import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
 import me.jumper251.replay.replaysystem.data.types.EntityActionData;
 import me.jumper251.replay.replaysystem.data.types.EntityData;
 import me.jumper251.replay.replaysystem.data.types.EntityItemData;
 import me.jumper251.replay.replaysystem.data.types.EntityMovingData;
 import me.jumper251.replay.replaysystem.data.types.FishingData;
+import me.jumper251.replay.replaysystem.data.types.ItemData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
@@ -95,7 +102,7 @@ public class PacketRecorder extends AbstractListener{
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
 				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
 				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Server.ENTITY_VELOCITY, PacketType.Play.Server.SPAWN_ENTITY_LIVING,
-				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT) {
+				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT, PacketType.Play.Server.BLOCK_CHANGE) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
             		
@@ -310,6 +317,26 @@ public class PacketRecorder extends AbstractListener{
             				}
             			}
             		}
+
+					if (event.getPacketType() == PacketType.Play.Server.BLOCK_CHANGE) {
+						WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(event.getPacket());
+	
+						LocationData loc = LocationData.fromLocation(packet.getBukkitLocation(event.getPlayer().getWorld()));
+						addData(
+							p.getName(),
+							new BlockChangeData(loc, new ItemData(0, 0), new ItemData(packet.getBlockData().getType().getId(), packet.getBlockData().getData())));
+					}
+	
+					if (event.getPacketType() == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
+						WrapperPlayServerMultiBlockChange packet = new WrapperPlayServerMultiBlockChange(event.getPacket());
+	
+						for (MultiBlockChangeInfo record : packet.getRecords()) {
+							LocationData loc = LocationData.fromLocation(record.getLocation(event.getPlayer().getWorld()));
+							addData(
+								p.getName(),
+								new BlockChangeData(loc, new ItemData(0, 0), new ItemData(record.getData().getType().getId(), record.getData().getData())));
+						}
+					}
 
             }
             
