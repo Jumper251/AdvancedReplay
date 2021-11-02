@@ -1,5 +1,6 @@
 package me.jumper251.replay.replaysystem.recording;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.comphenix.packetwrapper.WrapperPlayClientBlockDig;
 import com.comphenix.packetwrapper.WrapperPlayClientEntityAction;
@@ -54,6 +56,7 @@ import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.replaysystem.data.types.MetadataUpdate;
 import me.jumper251.replay.replaysystem.data.types.MovingData;
 import me.jumper251.replay.replaysystem.data.types.PacketData;
+import me.jumper251.replay.replaysystem.data.types.SerializableItemStack;
 import me.jumper251.replay.replaysystem.data.types.VelocityData;
 import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
@@ -322,9 +325,9 @@ public class PacketRecorder extends AbstractListener{
 						WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(event.getPacket());
 	
 						LocationData loc = LocationData.fromLocation(packet.getBukkitLocation(event.getPlayer().getWorld()));
-						addData(
-							p.getName(),
-							new BlockChangeData(loc, new ItemData(0, 0), new ItemData(packet.getBlockData().getType().getId(), packet.getBlockData().getData())));
+						ItemData before = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(Material.AIR)));
+						ItemData after = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(packet.getBlockData().getType())));
+						addData(p.getName(), new BlockChangeData(loc, before, after));
 					}
 	
 					if (event.getPacketType() == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
@@ -332,9 +335,9 @@ public class PacketRecorder extends AbstractListener{
 	
 						for (MultiBlockChangeInfo record : packet.getRecords()) {
 							LocationData loc = LocationData.fromLocation(record.getLocation(event.getPlayer().getWorld()));
-							addData(
-								p.getName(),
-								new BlockChangeData(loc, new ItemData(0, 0), new ItemData(record.getData().getType().getId(), record.getData().getData())));
+							ItemData before = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(Material.AIR)));
+							ItemData after = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(record.getData().getType())));
+							addData(p.getName(), new BlockChangeData(loc, before, after));
 						}
 					}
 
