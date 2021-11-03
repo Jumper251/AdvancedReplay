@@ -85,13 +85,36 @@ public class ReplayAPI {
 		}
 	}
 
-	public void leaveReplay(Player watcher) {
+	public int getReplayTickLength(Player watcher) {
+		if (ReplayHelper.replaySessions.containsKey(watcher.getName())) {
+			Replayer replayer = ReplayHelper.replaySessions.get(watcher.getName());
+			if (replayer != null) {
+				int duration = replayer.getReplay().getData().getDuration() / 20;
+				return duration;
+			}
+		}
+		return -1;
+	}
+
+	public boolean leaveReplay(Player watcher) {
 		if (ReplayHelper.replaySessions.containsKey(watcher.getName())) {
 			Replayer replayer = ReplayHelper.replaySessions.get(watcher.getName());
 			if (replayer != null) {
 				replayer.stop();
+				return true;
 			}
 		}
+		return false;
+	}
+
+	public boolean isInReplay(Player watcher) {
+		if (ReplayHelper.replaySessions.containsKey(watcher.getName())) {
+			Replayer replayer = ReplayHelper.replaySessions.get(watcher.getName());
+			if (replayer != null) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void registerReplaySaver(IReplaySaver replaySaver) {
