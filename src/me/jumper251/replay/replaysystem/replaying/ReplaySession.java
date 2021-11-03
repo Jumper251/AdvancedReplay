@@ -115,13 +115,12 @@ public class ReplaySession {
 						player.showPlayer(all);
 					}
 				}
+
+				ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(replayer.getReplay(), player);
+				Bukkit.getPluginManager().callEvent(finishEvent);
 				
 			}
 		}.runTask(ReplaySystem.getInstance());
-		
-		
-		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer.getReplay(), player);
-		Bukkit.getPluginManager().callEvent(finishEvent);
 	}
 	
 	public ReplayPacketListener getPacketListener() {

@@ -84,6 +84,15 @@ public class ReplayAPI {
 			}
 		}
 	}
+
+	public void leaveReplay(Player watcher) {
+		if (ReplayHelper.replaySessions.containsKey(watcher.getName())) {
+			Replayer replayer = ReplayHelper.replaySessions.get(watcher.getName());
+			if (replayer != null) {
+				replayer.stop();
+			}
+		}
+	}
 	
 	public void registerReplaySaver(IReplaySaver replaySaver) {
 		ReplaySaver.register(replaySaver);
