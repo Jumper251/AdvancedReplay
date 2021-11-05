@@ -510,12 +510,22 @@ public class ReplayingUtils {
 
 				if (id == 9) id = 8;
 				if (id == 11) id = 10;
+
 				
 				if (ConfigManager.REAL_CHANGES) {
 					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17)) {
-						loc.getBlock().setType(getBlockMaterial(blockChange.getAfter()), true);
+						final Material netherPortalMat = MaterialBridge.getWithoutLegacy("NETHER_PORTAL");
+						final Material obsidianMat = MaterialBridge.getWithoutLegacy("OBSIDIAN");
+						final Material enderEyeMat = MaterialBridge.getWithoutLegacy("ENDER_EYE");
+						boolean applyPhysics = !(getBlockMaterial(blockChange.getAfter()) == netherPortalMat || getBlockMaterial(blockChange.getAfter()) == obsidianMat);
+
+						Material placingMaterial = getBlockMaterial(blockChange.getAfter());
+						if (placingMaterial != enderEyeMat) {
+							loc.getBlock().setType(placingMaterial, applyPhysics);
+						}
 					} else {
-						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
+						boolean applyPhysics = !(id == 90 || id == 49);
+						loc.getBlock().setTypeIdAndData(id, (byte) subId, applyPhysics);
 					}
 				} else {
 					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17)) {

@@ -5,8 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import com.comphenix.packetwrapper.WrapperPlayClientUseEntity;
 import com.comphenix.packetwrapper.WrapperPlayServerCamera;
@@ -85,11 +90,13 @@ public class ReplayPacketListener extends AbstractListener {
 		};
 		
 	    ProtocolLibrary.getProtocolManager().addPacketListener(this.packetAdapter);
+		Bukkit.getPluginManager().registerEvents(this, ReplaySystem.getInstance());
 	}
 	
 	@Override
 	public void unregister() {
 		ProtocolLibrary.getProtocolManager().removePacketListener(this.packetAdapter);
+		HandlerList.unregisterAll(this);
 	}
 	
 	public boolean isRegistered() {
@@ -125,6 +132,13 @@ public class ReplayPacketListener extends AbstractListener {
 			this.spectating.put(p, entityID);
 		} else if (this.spectating.containsKey(p)){
 			this.spectating.remove(p);
+		}
+	}
+
+	@EventHandler
+	void onTNTBeginExplode(ExplosionPrimeEvent event) {
+		if(event.getEntityType() == EntityType.PRIMED_TNT) {
+			event.setCancelled(true);
 		}
 	}
 }

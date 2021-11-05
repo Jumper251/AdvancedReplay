@@ -25,6 +25,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerBlockChange;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
+import com.comphenix.packetwrapper.WrapperPlayServerExplosion;
 import com.comphenix.packetwrapper.WrapperPlayServerMultiBlockChange;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMove;
 import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMoveLook;
@@ -35,6 +36,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
@@ -60,6 +62,7 @@ import me.jumper251.replay.replaysystem.data.types.SerializableItemStack;
 import me.jumper251.replay.replaysystem.data.types.VelocityData;
 import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
+import me.jumper251.replay.utils.MaterialBridge;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
@@ -105,7 +108,7 @@ public class PacketRecorder extends AbstractListener{
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
 				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
 				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Server.ENTITY_VELOCITY, PacketType.Play.Server.SPAWN_ENTITY_LIVING,
-				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT, PacketType.Play.Server.BLOCK_CHANGE) {
+				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT, PacketType.Play.Server.BLOCK_CHANGE, PacketType.Play.Server.MULTI_BLOCK_CHANGE, PacketType.Play.Server.EXPLOSION) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
             		
@@ -329,14 +332,31 @@ public class PacketRecorder extends AbstractListener{
 						ItemData after = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(packet.getBlockData().getType())));
 						addData(p.getName(), new BlockChangeData(loc, before, after));
 					}
-	
+
 					if (event.getPacketType() == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
 						WrapperPlayServerMultiBlockChange packet = new WrapperPlayServerMultiBlockChange(event.getPacket());
 	
-						for (MultiBlockChangeInfo record : packet.getRecords()) {
-							LocationData loc = LocationData.fromLocation(record.getLocation(event.getPlayer().getWorld()));
+						Material firstMaterial = packet.getRecords()[0].getData().getType();
+						final Material endPortalMat = MaterialBridge.getWithoutLegacy("END_PORTAL");
+						final Material bedrockMat = MaterialBridge.getWithoutLegacy("BEDROCK");
+
+						if (firstMaterial == endPortalMat || firstMaterial == bedrockMat) {
+							for (MultiBlockChangeInfo record : packet.getRecords()) {
+								LocationData loc = LocationData.fromLocation(record.getLocation(event.getPlayer().getWorld()));
+								ItemData before = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(Material.AIR)));
+								ItemData after = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(record.getData().getType())));
+								addData(p.getName(), new BlockChangeData(loc, before, after));
+							}
+						}
+					}
+
+					if (event.getPacketType() == PacketType.Play.Server.EXPLOSION) {
+						WrapperPlayServerExplosion packet = new WrapperPlayServerExplosion(event.getPacket());
+	
+						for (BlockPosition pos : packet.getRecords()) {
+							LocationData loc = LocationData.fromLocation(pos.toLocation(event.getPlayer().getWorld()));
 							ItemData before = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(Material.AIR)));
-							ItemData after = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(record.getData().getType())));
+							ItemData after = new ItemData(SerializableItemStack.fromItemStack(new ItemStack(Material.AIR)));
 							addData(p.getName(), new BlockChangeData(loc, before, after));
 						}
 					}
