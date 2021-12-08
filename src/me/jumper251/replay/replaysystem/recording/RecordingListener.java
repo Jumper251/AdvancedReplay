@@ -89,8 +89,9 @@ public class RecordingListener extends AbstractListener {
 				boolean isInteractable = e.getClickedBlock() != null && ItemUtils.isInteractable(e.getClickedBlock().getType());
 				if(e.getItem() != null && ItemUtils.isUsable(e.getItem().getType()) && (!isInteractable || p.isSneaking())) {
 					if (!this.recorder.getData().getWatcher(p.getName()).isBlocking()) {
-						this.recorder.getData().getWatcher(p.getName()).setBlocking(true);
-						this.packetRecorder.addData(p.getName(), new MetadataUpdate(this.recorder.getData().getWatcher(p.getName()).isBurning(), true, this.recorder.getData().getWatcher(p.getName()).isElytra()));
+						PlayerWatcher watcher = this.recorder.getData().getWatcher(p.getName());
+						watcher.setBlocking(true);
+						this.packetRecorder.addData(p.getName(), MetadataUpdate.fromWatcher(watcher));
 					
 					}
 				}
@@ -133,8 +134,9 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (recorder.getPlayers().contains(p.getName())) {
 			if (recorder.getData().getWatcher(p.getName()).isBlocking()) {
-   				recorder.getData().getWatcher(p.getName()).setBlocking(false);
-   				this.packetRecorder.addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false, recorder.getData().getWatcher(p.getName()).isElytra()));
+				PlayerWatcher watcher = this.recorder.getData().getWatcher(p.getName());
+   				watcher.setBlocking(false);
+   				this.packetRecorder.addData(p.getName(), MetadataUpdate.fromWatcher(watcher));
    				
 				InvData data = NPCManager.copyFromPlayer(p, true, true);
 				if (p.getItemInHand() != null && p.getItemInHand().getAmount() <= 1) {

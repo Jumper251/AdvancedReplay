@@ -33,8 +33,9 @@ public class ReplaySystem extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		for (Replay replay : new HashMap<>(ReplayManager.activeReplays).values()) {
-		    if (replay.isRecording()) {
+		    if (replay.isRecording() && replay.getRecorder().getData().getActions().size() > 0) {
 				replay.getRecorder().stop(ConfigManager.SAVE_STOP);
+				
 			}
 		}
 

@@ -199,6 +199,14 @@ public class ReplayListener extends AbstractListener {
 			e.setCancelled(true);
 		}
 		
+		boolean isReplayItem = ReplayHelper.replaySessions.values()
+				.stream()
+				.anyMatch(replayer -> replayer.getUtils().getEntities().containsValue(e.getItem()));
+		
+		if (isReplayItem) {
+			e.setCancelled(true);
+		}
+		
 	}
 	
 	@EventHandler

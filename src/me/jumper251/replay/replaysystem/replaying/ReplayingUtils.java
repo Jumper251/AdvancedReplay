@@ -175,7 +175,8 @@ public class ReplayingUtils {
 				data.getWatcher(action.getName()).setBurning(!reversed ? update.isBurning() : false);
 				data.getWatcher(action.getName()).setBlocking(!reversed ? update.isBlocking() : false);
 				data.getWatcher(action.getName()).setElytra(!reversed ? update.isGliding() : false);
-				
+				data.getWatcher(action.getName()).setSwimming(!reversed ? update.isSwimming() : false);
+
 				WrappedDataWatcher dataWatcher = data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData()));
 				npc.setData(dataWatcher);
 				
@@ -361,6 +362,8 @@ public class ReplayingUtils {
 	}
 	
 	public void forward() {
+		boolean paused = this.replayer.isPaused();
+
 		this.replayer.setPaused(true);
 		int currentTick = this.replayer.getCurrentTicks();
 		int forwardTicks = currentTick + (10 * 20);
@@ -374,10 +377,12 @@ public class ReplayingUtils {
 			this.replayer.executeTick(i, false);
 		}
 		this.replayer.setCurrentTicks(forwardTicks);
-		this.replayer.setPaused(false);
+		this.replayer.setPaused(paused);
 	}
 	
 	public void backward() {
+		boolean paused = this.replayer.isPaused();
+
 		this.replayer.setPaused(true);
 		int currentTick = this.replayer.getCurrentTicks();
 		int backwardTicks = currentTick - (10 * 20);
@@ -390,7 +395,7 @@ public class ReplayingUtils {
 			this.replayer.executeTick(i, true);
 		}
 		this.replayer.setCurrentTicks(backwardTicks);
-		this.replayer.setPaused(false);
+		this.replayer.setPaused(paused);
 	}
 
 	public void jumpTo(Integer seconds) {
@@ -426,7 +431,7 @@ public class ReplayingUtils {
 		
 		int tabMode = Bukkit.getPlayer(action.getName()) != null ? 0 : 2;
 		
-		if (VersionUtil.isAbove(VersionEnum.V1_17) && Bukkit.getPlayer(action.getName()) != null) {
+		if (VersionUtil.isAbove(VersionEnum.V1_14) && Bukkit.getPlayer(action.getName()) != null) {
 			tabMode = 2;
 			spawnData.setUuid(UUID.randomUUID());
 		}
@@ -448,7 +453,7 @@ public class ReplayingUtils {
 			tabMode = 2;
 		}
 		
-		if ((spawnData.getSignature() != null && (Bukkit.getPlayer(action.getName()) == null || VersionUtil.isAbove(VersionEnum.V1_17))) || (spawnData.getSignature() != null && ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName()))) {
+		if ((spawnData.getSignature() != null && (Bukkit.getPlayer(action.getName()) == null || VersionUtil.isAbove(VersionEnum.V1_14))) || (spawnData.getSignature() != null && ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName()))) {
 			WrappedGameProfile profile = new WrappedGameProfile(spawnData.getUuid(), action.getName());
 			WrappedSignedProperty signed = new WrappedSignedProperty(spawnData.getSignature().getName(), spawnData.getSignature().getValue(), spawnData.getSignature().getSignature());
 			profile.getProperties().put(spawnData.getSignature().getName(), signed);

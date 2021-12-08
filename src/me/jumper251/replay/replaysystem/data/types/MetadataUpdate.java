@@ -1,5 +1,7 @@
 package me.jumper251.replay.replaysystem.data.types;
 
+import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
+
 public class MetadataUpdate extends PacketData {
 
 	/**
@@ -7,7 +9,7 @@ public class MetadataUpdate extends PacketData {
 	 */
 	private static final long serialVersionUID = -8969498588009941633L;
 
-	private boolean burning, blocking, gliding;
+	private boolean burning, blocking, gliding, swimming;
 		
 	public MetadataUpdate(boolean burning, boolean blocking) {
 		this.burning = burning;
@@ -18,6 +20,12 @@ public class MetadataUpdate extends PacketData {
 		this(burning, blocking);
 		
 		this.gliding = gliding;
+	}
+	
+	public MetadataUpdate(boolean burning, boolean blocking, boolean gliding, boolean swimming) {
+		this(burning, blocking, gliding);
+		
+		this.swimming = swimming;
 	}
 	
 	public boolean isBurning() {
@@ -31,6 +39,13 @@ public class MetadataUpdate extends PacketData {
 	public boolean isGliding() {
 		return gliding;
 	}
+	
+	public boolean isSwimming() {
+		return swimming;
+	}
 
+	public static MetadataUpdate fromWatcher(PlayerWatcher watcher) {
+		return new MetadataUpdate(watcher.isBurning(), watcher.isBlocking(), watcher.isElytra(), watcher.isSwimming());
+	}
 	
 }

@@ -2,10 +2,16 @@ package me.jumper251.replay.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
+import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 
@@ -21,7 +27,8 @@ public class ReflectionHelper {
 	
 	private Class<?> playerClass;
 
-	
+	private Class<?> entityToggleSwimEventClass;
+
 	
 	private Method matchMaterial;
 	
@@ -43,6 +50,10 @@ public class ReflectionHelper {
 			this.blockClass = Class.forName("org.bukkit.block.Block");
 			this.blockDataClass = Class.forName("org.bukkit.block.data.BlockData");
 			this.playerClass = Class.forName("org.bukkit.entity.Player");
+
+			if (VersionUtil.isAbove(VersionEnum.V1_13)) {
+				this.entityToggleSwimEventClass = Class.forName("org.bukkit.event.entity.EntityToggleSwimEvent");
+			}
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -78,6 +89,11 @@ public class ReflectionHelper {
 		return this.blockDataGetMaterial.invoke(blockData);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Class<? extends Event> getSwimEvent() {
+		return (Class<? extends Event>) this.entityToggleSwimEventClass;
+	}
+	
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
 		try {
 			this.sendTitle.invoke(player, title, subtitle, fadeIn, stay, fadeOut);
@@ -88,6 +104,16 @@ public class ReflectionHelper {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Event> void registerEvent(Class<T> event, Listener listener, Consumer<T> handler) {
+		Bukkit.getPluginManager().registerEvent(event, listener, EventPriority.MONITOR, (l, e) -> {
+			if (e.getClass().equals(event)) {
+				handler.accept((T) e);
+			}
+		}, ReplaySystem.getInstance(), true);
+		
 	}
 	
 	

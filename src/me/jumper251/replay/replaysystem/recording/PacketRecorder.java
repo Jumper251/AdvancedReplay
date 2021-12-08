@@ -143,8 +143,9 @@ public class PacketRecorder extends AbstractListener{
                			
                			if(packet.getStatus() == PlayerDigType.RELEASE_USE_ITEM) {
                				if (recorder.getData().getWatcher(p.getName()).isBlocking()) {
-               					recorder.getData().getWatcher(p.getName()).setBlocking(false);
-               					addData(p.getName(), new MetadataUpdate(recorder.getData().getWatcher(p.getName()).isBurning(), false, recorder.getData().getWatcher(p.getName()).isElytra()));
+               					PlayerWatcher watcher = recorder.getData().getWatcher(p.getName());
+        						watcher.setBlocking(false);
+               					addData(p.getName(), MetadataUpdate.fromWatcher(watcher));
                				}
                			}
                		}
@@ -354,10 +355,10 @@ public class PacketRecorder extends AbstractListener{
 	
 	public void addData(String name, PacketData data) {
 		if (!optimizer.shouldRecord(data)) return;
-		
+	
 		List<PacketData> list = new ArrayList<PacketData>();
 		if(this.packetData.containsKey(name)) {
-			list = this.packetData.get(name);
+			list = this.packetData.getOrDefault(name, new ArrayList<>());
 		}
 		
 		list.add(data);

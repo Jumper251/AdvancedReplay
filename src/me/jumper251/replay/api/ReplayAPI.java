@@ -46,17 +46,27 @@ public class ReplayAPI {
 			}
 		}
 		
+		return recordReplay(name, sender, toRecord);
+	}
+	
+	public Replay recordReplay(String name, CommandSender sender, List<Player> players) {
 		Replay replay = new Replay();
 		if (name != null) replay.setId(name);
-		replay.recordAll(toRecord, sender);
+		replay.recordAll(players, sender);
 		
 		return replay;
 	}
 	
 	public void stopReplay(String name, boolean save) {
+		stopReplay(name, save, false);
+	}
+	
+	public void stopReplay(String name, boolean save, boolean ignoreEmpty) {
 		if (ReplayManager.activeReplays.containsKey(name)) {
 			Replay replay = ReplayManager.activeReplays.get(name);
-			if (replay.isRecording()) replay.getRecorder().stop(save);
+			
+			boolean shouldSave = save && (replay.getRecorder().getData().getActions().size() > 0 || !ignoreEmpty);
+			if (replay.isRecording()) replay.getRecorder().stop(shouldSave);
 		}
 	}
 	

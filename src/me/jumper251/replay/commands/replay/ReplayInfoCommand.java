@@ -2,6 +2,7 @@ package me.jumper251.replay.commands.replay;
 
 
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,8 @@ public class ReplayInfoCommand extends SubCommand {
 
 		if (ReplaySaver.exists(name)) {
 			cs.sendMessage(ReplaySystem.PREFIX + "Loading replay §e" + name + "§7...");
-			
+
+
 			ReplaySaver.load(name, replay -> {
 				ReplayInfo info = replay.getReplayInfo() != null ? replay.getReplayInfo() : new ReplayInfo(replay.getId(), replay.getData().getCreator(), null, replay.getData().getDuration());
 				ReplayStats stats = ReplayOptimizer.analyzeReplay(replay);				
