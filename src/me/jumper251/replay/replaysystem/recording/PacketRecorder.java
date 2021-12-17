@@ -2,6 +2,9 @@ package me.jumper251.replay.replaysystem.recording;
 
 import java.util.ArrayList;
 
+
+
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -207,7 +210,7 @@ public class PacketRecorder extends AbstractListener{
             			
             			EntityType type = packet.getType();
             			if (type == null) type = packet.getEntity(p.getWorld()).getType();
-
+            			            			
             			if (!spawnedEntities.containsKey(packet.getEntityID())) {
             				LocationData location = null;
             				

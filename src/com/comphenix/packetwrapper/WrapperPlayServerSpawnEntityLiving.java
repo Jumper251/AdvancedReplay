@@ -31,6 +31,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.PacketConstructor;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
+import me.jumper251.replay.replaysystem.utils.entities.EntityMappings;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
@@ -115,6 +116,13 @@ public class WrapperPlayServerSpawnEntityLiving extends AbstractPacket {
 	 */
 	@SuppressWarnings("deprecation")
 	public EntityType getType() {
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			String type = EntityMappings.getInstance().getType(handle.getIntegers().read(1));
+			if (type != null) {
+				return EntityType.valueOf(type);
+			}
+		}
+		
 		return EntityType.fromId(handle.getIntegers().read(1));
 	}
 
@@ -125,6 +133,11 @@ public class WrapperPlayServerSpawnEntityLiving extends AbstractPacket {
 	 */
 	@SuppressWarnings("deprecation")
 	public void setType(EntityType value) {
+		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+			handle.getIntegers().write(1, EntityMappings.getInstance().getTypeId(value.toString()));
+			return;
+		}
+		
 		handle.getIntegers().write(1, (int) value.getTypeId());
 	}
 
