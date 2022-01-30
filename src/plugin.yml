@@ -1,5 +1,6 @@
 name: AdvancedReplay
 version: 1.8
+api-version: 1.18
 main: me.jumper251.replay.ReplaySystem
 author: Jumper251
 depend: [ProtocolLib]
