@@ -185,9 +185,9 @@ public class ReplayListener extends AbstractListener {
 		Player p = e.getPlayer();	
 		if (ReplayHelper.replaySessions.containsKey(p.getName())) {
 			Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
-			p.getInventory().clear();
 			replayer.stop();
-			
+			replayer.getSession().resetPlayer();
+
 		}
 
 	}

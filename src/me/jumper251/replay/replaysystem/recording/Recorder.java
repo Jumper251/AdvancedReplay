@@ -88,7 +88,10 @@ public class Recorder {
 						PacketData packetData = it.next();
 						
 						if (packetData instanceof BlockChangeData && !ConfigManager.RECORD_BLOCKS) continue;
-						if (packetData instanceof EntityItemData && !ConfigManager.RECORD_ITEMS) continue;
+						if (packetData instanceof EntityItemData) {
+							EntityItemData data = (EntityItemData) packetData;
+							if (data.getAction() != 2 && !ConfigManager.RECORD_ITEMS) continue;
+						}
 						if ((packetData instanceof EntityData || packetData instanceof EntityMovingData || packetData instanceof EntityAnimationData) && !ConfigManager.RECORD_ENTITIES) continue;
 						if (packetData instanceof ChatData && !ConfigManager.RECORD_CHAT) continue;
 

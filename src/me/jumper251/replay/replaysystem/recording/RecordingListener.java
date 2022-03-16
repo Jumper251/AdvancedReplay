@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 
 
+
 import java.util.List;
 import java.util.Set;
 
@@ -309,8 +310,8 @@ public class RecordingListener extends AbstractListener {
 
 
 			ItemData before = new ItemData(e.getBlockReplacedState().getType().getId(), e.getBlockReplacedState().getData().getData());
-			ItemData after = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromItemStack(e.getItemInHand(), true)) : new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
-			
+			ItemData after = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromMaterial(MaterialBridge.getBlockDataMaterial(e.getBlockPlaced()))) : new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
+
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 
 			// Change PlayerItemInHand when last block in hand

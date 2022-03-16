@@ -104,7 +104,14 @@ public class ReplayingUtils {
 				MovingData movingData = (MovingData) action.getPacketData();
 				
 				if (VersionUtil.isAbove(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_8)) {
-					npc.move(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true, movingData.getYaw(), movingData.getPitch());
+					double distance = npc.getLocation().distance(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()));
+
+					if (distance > 8) {
+						npc.teleport(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true);
+
+					} else {
+						npc.move(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true, movingData.getYaw(), movingData.getPitch());
+					}
 				}
 				
 				if (VersionUtil.isBetween(VersionEnum.V1_9, VersionEnum.V1_14)) {

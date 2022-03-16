@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.replaying;
 import java.util.ArrayList;
 
 
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -58,7 +59,7 @@ public class Replayer {
 	
 	private ReplayingUtils utils;
 	private ReplaySession session;
-	
+		
 	public Replayer(Replay replay, Player watcher) {
 		this.replay = replay;
 		this.watcher = watcher;
@@ -110,15 +111,11 @@ public class Replayer {
 				
 				if (currentTicks < duration) {
 
-					executeTick(currentTicks, false);
-						
-					Replayer.this.currentTicks++;
+					executeTick(currentTicks++, false);
 
-					
 					if ((currentTicks + 2) < duration && speed == 2)  {
-						executeTick(currentTicks, false);
-						
-						Replayer.this.currentTicks++;
+						executeTick(currentTicks++, false);
+
 					}
 					
 					updateXPBar();
@@ -136,9 +133,10 @@ public class Replayer {
 	public void executeTick(int tick, boolean reversed) {
 		ReplayData data = this.replay.getData();
 		if (!data.getActions().isEmpty() && data.getActions().containsKey(tick)) {
+
 			if (tick == 0 && started) return;
 			this.started = true;
-			
+
 			List<ActionData> list = data.getActions().get(tick);
 			for (ActionData action : list) {
 								

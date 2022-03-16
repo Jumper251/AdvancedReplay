@@ -26,7 +26,7 @@ public class ReplayCommand extends AbstractCommand {
 		return new SubCommand[] { new ReplayStartCommand(this), 
 				new ReplayStopCommand(this).addAlias("save"), 
 				new ReplayPlayCommand(this), 
-				new ReplayDeleteCommand(this),
+				new ReplayDeleteCommand(this).addAlias("remove"),
 				new ReplayJumpCommand(this),
 				new ReplayLeaveCommand(this),
 				new ReplayInfoCommand(this),

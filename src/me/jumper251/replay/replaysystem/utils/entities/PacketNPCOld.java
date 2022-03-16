@@ -140,7 +140,9 @@ public class PacketNPCOld implements INPC{
 		destroyPacket.setEntityIds(new int[] { this.id });
 		
 		for (Player player : Arrays.asList(this.visible)) {
-			destroyPacket.sendPacket(player);
+			if(player != null){				
+				destroyPacket.sendPacket(player);
+			}
 		}
 		
 		Arrays.fill(this.visible, null);

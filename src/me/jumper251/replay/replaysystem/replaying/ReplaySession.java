@@ -95,15 +95,7 @@ public class ReplaySession {
 			
 			@Override
 			public void run() {
-				player.getInventory().clear();
-				player.getInventory().setContents(content);
-				
-				if (player.getGameMode() != GameMode.CREATIVE) {
-					player.setFlying(false);
-					player.setAllowFlight(false);
-				}
-				player.setLevel(level);
-				player.setExp(xp);
+				resetPlayer();
 				
 				player.teleport(start);
 				
@@ -122,6 +114,19 @@ public class ReplaySession {
 		
 		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer.getReplay(), player);
 		Bukkit.getPluginManager().callEvent(finishEvent);
+	}
+	
+	public void resetPlayer() {
+		player.getInventory().clear();
+		player.getInventory().setContents(content);
+		
+		if (player.getGameMode() != GameMode.CREATIVE) {
+			player.setFlying(false);
+			player.setAllowFlight(false);
+		}
+		
+		player.setLevel(level);
+		player.setExp(xp);
 	}
 	
 	public ReplayPacketListener getPacketListener() {
