@@ -55,7 +55,7 @@ public class ReplaySystem extends JavaPlugin {
 		ReplaySaver.register(ConfigManager.USE_DATABASE ? new DatabaseReplaySaver() : new DefaultReplaySaver());
 		
 		updater = new Updater();
-		metrics = new Metrics(this);
+		metrics = new Metrics(this, 2188);
 		
 		if (ConfigManager.CLEANUP_REPLAYS > 0) {
 			ReplayCleanup.cleanupReplays();
