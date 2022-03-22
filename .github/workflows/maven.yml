@@ -28,5 +28,5 @@ jobs:
         # Artifact name
         name: Replay.jar
         # A file, directory or wildcard pattern that describes what to upload
-        path: /target/Replay.jar
+        path: target/Replay.jar
         # The desired behavior if no files are found using the provided path.
