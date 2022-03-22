@@ -58,18 +58,23 @@ public class ReplayListCommand extends SubCommand {
 				@Override
 				public void print(String element) {
 					String message = String.format(" §6§o%s    §e%s", (getCreationDate(element) != null ? format.format(getCreationDate(element)) : ""), element);
-					
-					if (cs instanceof Player && DatabaseReplaySaver.getInfo(element) != null && DatabaseReplaySaver.getInfo(element).getCreator() != null) {
-						ReplayInfo info  = DatabaseReplaySaver.getInfo(element);
-						
-						BaseComponent[] comps = new ComponentBuilder(message)
-								.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder("§7Replay §e§l" + info.getID() + "\n\n§7Created by: §6" + info.getCreator() + "\n§7Duration: §6" + (info.getDuration() / 20) + " §8sec").create()))
-								.event(new ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + info.getID()))
-								.create();
-						
-						((Player)cs).spigot().sendMessage(comps);
-						
-					} else {	
+					if (cs instanceof Player) {
+						BaseComponent[] comps;
+						if (DatabaseReplaySaver.getInfo(element) != null && DatabaseReplaySaver.getInfo(element).getCreator() != null) {
+							ReplayInfo info = DatabaseReplaySaver.getInfo(element);
+
+							comps = new ComponentBuilder(message)
+									.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder("§7Replay §e§l" + info.getID() + "\n\n§7Created by: §6" + info.getCreator() + "\n§7Duration: §6" + (info.getDuration() / 20) + " §8sec" + "\n\n§7Click to play!").create()))
+									.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + info.getID()))
+									.create();
+						} else {
+							comps = new ComponentBuilder(message)
+									.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder("§7Replay §e§l" + element + "\n\n§7Click to play!").create()))
+									.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + element))
+									.create();
+						}
+						((Player) cs).spigot().sendMessage(comps);
+					} else {
 						cs.sendMessage(message);
 					}
 					
