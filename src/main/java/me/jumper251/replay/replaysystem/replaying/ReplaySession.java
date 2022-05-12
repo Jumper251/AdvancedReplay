@@ -123,7 +123,7 @@ public class ReplaySession {
 		}.runTask(ReplaySystem.getInstance());
 		
 		
-		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer, player);
+		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer.getReplay(), player, this.replayer);
 		Bukkit.getPluginManager().callEvent(finishEvent);
 	}
 	
