@@ -438,7 +438,7 @@ public class ReplayingUtils {
 		
 		int tabMode = Bukkit.getPlayer(action.getName()) != null ? 0 : 2;
 		
-		if (VersionUtil.isAbove(VersionEnum.V1_14) && Bukkit.getPlayer(action.getName()) != null) {
+		if (Bukkit.getPlayer(action.getName()) != null) {
 			tabMode = 2;
 			spawnData.setUuid(UUID.randomUUID());
 		}

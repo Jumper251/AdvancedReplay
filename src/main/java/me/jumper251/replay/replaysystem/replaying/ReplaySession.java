@@ -2,7 +2,9 @@ package me.jumper251.replay.replaysystem.replaying;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
+import me.jumper251.replay.api.ReplaySessionStartEvent;
 import org.bukkit.Bukkit;
 
 import org.bukkit.GameMode;
@@ -43,6 +45,15 @@ public class ReplaySession {
 	}
 	
 	public void startSession() {
+		ReplaySessionStartEvent event;
+		Bukkit.getPluginManager().callEvent(event = new ReplaySessionStartEvent(this.replayer, this.player));
+
+		if (event.isCancelled()){
+			stopSession();
+			ReplaySystem.getInstance().getLogger().log(Level.INFO, "Replay start event cancelled.");
+			return;
+		}
+
 		this.content = this.player.getInventory().getContents();
 		this.start = this.player.getLocation();
 		
@@ -52,23 +63,23 @@ public class ReplaySession {
 		this.player.setHealth(this.player.getMaxHealth());
 		this.player.setFoodLevel(20);
 		this.player.getInventory().clear();
-		
-		ItemConfigOption teleport = ItemConfig.getItem(ItemConfigType.TELEPORT);
-		ItemConfigOption time = ItemConfig.getItem(ItemConfigType.SPEED);
-		ItemConfigOption leave = ItemConfig.getItem(ItemConfigType.LEAVE);
-		ItemConfigOption backward = ItemConfig.getItem(ItemConfigType.BACKWARD);
-		ItemConfigOption forward = ItemConfig.getItem(ItemConfigType.FORWARD);
-		ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.PAUSE);
+		if(!event.isHandlingButtons()) {
+			ItemConfigOption teleport = ItemConfig.getItem(ItemConfigType.TELEPORT);
+			ItemConfigOption time = ItemConfig.getItem(ItemConfigType.SPEED);
+			ItemConfigOption leave = ItemConfig.getItem(ItemConfigType.LEAVE);
+			ItemConfigOption backward = ItemConfig.getItem(ItemConfigType.BACKWARD);
+			ItemConfigOption forward = ItemConfig.getItem(ItemConfigType.FORWARD);
+			ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.PAUSE);
 
-		List<ItemConfigOption> configItems = Arrays.asList(teleport, time, leave, backward, forward, pauseResume);
+			List<ItemConfigOption> configItems = Arrays.asList(teleport, time, leave, backward, forward, pauseResume);
 
-		configItems.stream()
-			.filter(ItemConfigOption::isEnabled)
-			.forEach(item -> {
-				this.player.getInventory().setItem(item.getSlot(), ReplayHelper.createItem(item));
-			});
-		
-		
+			configItems.stream()
+					.filter(ItemConfigOption::isEnabled)
+					.forEach(item -> {
+						this.player.getInventory().setItem(item.getSlot(), ReplayHelper.createItem(item));
+					});
+		}
+
 		this.player.setAllowFlight(true);
 		this.player.setFlying(true);
 		
@@ -112,7 +123,7 @@ public class ReplaySession {
 		}.runTask(ReplaySystem.getInstance());
 		
 		
-		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer.getReplay(), player);
+		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer, player);
 		Bukkit.getPluginManager().callEvent(finishEvent);
 	}
 	

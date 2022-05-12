@@ -109,12 +109,10 @@ public class PacketRecorder extends AbstractListener{
             			if (event.getPacketType() == PacketType.Play.Client.POSITION) {
             				WrapperPlayClientPosition packet = new WrapperPlayClientPosition(event.getPacket());
             				data = new MovingData(packet.getX(), packet.getY(), packet.getZ(), p.getLocation().getPitch(), p.getLocation().getYaw());
-            			            				
             				if (recorder.getData().getWatcher(p.getName()).isBurning() && p.getFireTicks() <= 20) {
             					recorder.getData().getWatcher(p.getName()).setBurning(false);
             					addData(p.getName(), new MetadataUpdate(false, recorder.getData().getWatcher(p.getName()).isBlocking(), recorder.getData().getWatcher(p.getName()).isElytra()));
             				}
-            		
             			} 
             			
             			if (event.getPacketType() == PacketType.Play.Client.LOOK) {

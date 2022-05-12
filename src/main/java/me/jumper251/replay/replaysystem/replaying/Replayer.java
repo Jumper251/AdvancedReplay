@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -91,14 +92,11 @@ public class Replayer {
 			Optional<SpawnData> spawnData = findFirstSpawn(data);
 			if (spawnData.isPresent()) watcher.teleport(LocationData.toLocation(spawnData.get().getLocation()));
 		}
-		
-		
+
 		this.session.startSession();
 		
 		this.speed = 1;
-		
-		executeTick(0, false);
-		
+
 		this.run = new BukkitRunnable() {
 			
 			@Override
@@ -125,9 +123,9 @@ public class Replayer {
 				}
 			}
 		};
-		
+		executeTick(0, false);
 		this.run.runTaskTimerAsynchronously(ReplaySystem.getInstance(), 1, 1);
-		
+
 	}
 	
 	public void executeTick(int tick, boolean reversed) {
