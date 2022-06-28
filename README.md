@@ -1,3 +1,6 @@
-# AdvancedReplay
+AdvancedReplay-Extended.
 
-Spigot Plugin: https://www.spigotmc.org/resources/advancedreplay-1-9-1-13.52849/
+This is a dependency plugin for BW1058-ReplayAddon.
+Features:
+ - World Management System. Automatically uploads and downloads worlds from the database for bungee servers.
+ - Viaversion 1.8 fix.
