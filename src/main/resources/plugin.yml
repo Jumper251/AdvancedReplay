@@ -3,6 +3,7 @@ version: ${project.version}
 main: me.jumper251.replay.ReplaySystem
 author: Jumper251
 depend: [ProtocolLib]
+load: POSTWORLD
 commands:
   replay:
     description: Main Replay command

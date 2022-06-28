@@ -19,9 +19,50 @@
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
+        <repository>
+            <id>glaremasters</id>
+            <url>https://repo.glaremasters.me/repository/concuncan/</url>
+        </repository>
     </repositories>
-
     <dependencies>
+        <dependency>
+            <groupId>slimeworldmanager-plugin-2.2.1</groupId>
+            <artifactId>slimeworldmanager-plugin-2.2.1</artifactId>
+            <scope>system</scope>
+            <version>1.0</version>
+            <systemPath>H:\projectApisSpigot\slimeworldmanager-plugin-2.2.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>4.0.3</version>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.21</version>
+        </dependency>
+
+        <!-- HikariCP Logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.32</version>
+            <optional>true</optional>
+        </dependency>
         <!--This adds the Spigot API artifact to the build -->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -52,7 +93,32 @@
 
     <build>
         <finalName>Replay</finalName><!-- Match SpigotMC file name -->
-
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.3.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>me.jumper251.replay.libs.com.zaxxer.hikari</shadedPattern>
+                                </relocation>                                <relocation>
+                                    <pattern>org.apache.commons.io</pattern>
+                                    <shadedPattern>me.jumper251.replay.libs.org.apache.commons.io</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <!-- Auto update plugin.yml version -->
         <resources>
             <resource>

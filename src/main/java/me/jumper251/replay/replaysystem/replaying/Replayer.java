@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import me.jumper251.replay.api.Monitor;
+import me.jumper251.replay.api.ReplaySessionStartEvent;
+import me.jumper251.replay.dev.mrflyn.extended.WorldHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -50,6 +53,8 @@ public class Replayer {
 	private Player watcher;
 	
 	private Replay replay;
+
+	private String spawnWorld;
 	
 	private BukkitRunnable run;
 	
@@ -77,31 +82,36 @@ public class Replayer {
 	
 	
 	public void start() {
+
 		ReplayData data = this.replay.getData();
 		int duration = data.getDuration();
-		
+		Location start = watcher.getLocation();
+		SpawnData tempSpawnData;
 		if (data.getActions().containsKey(0)) {
 			for (ActionData startData : data.getActions().get(0)) {
 				if (startData.getPacketData() instanceof SpawnData) {
-					SpawnData spawnData = (SpawnData) startData.getPacketData();
-					watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
+					tempSpawnData = (SpawnData) startData.getPacketData();
+					WorldHandler.onReplayStart(this, tempSpawnData);
 					break;
 				}
 			}
 		} else {
-			Optional<SpawnData> spawnData = findFirstSpawn(data);
-			if (spawnData.isPresent()) watcher.teleport(LocationData.toLocation(spawnData.get().getLocation()));
+			Optional<SpawnData> spawnData1 = findFirstSpawn(data);
+			if (spawnData1.isPresent()){
+				tempSpawnData = spawnData1.get();
+				WorldHandler.onReplayStart(this, tempSpawnData);
+			}
 		}
 
-		this.session.startSession();
+
+		this.session.startSession(start);
 		
 		this.speed = 1;
 
 		this.run = new BukkitRunnable() {
-			
 			@Override
 			public void run() {
-				
+				if (Replayer.this.spawnWorld==null)return;
 				if (Replayer.this.paused) return;
 				
 				Replayer.this.tmpTicks += speed;
@@ -129,6 +139,7 @@ public class Replayer {
 	}
 	
 	public void executeTick(int tick, boolean reversed) {
+		if (Replayer.this.spawnWorld==null)return;
 		ReplayData data = this.replay.getData();
 		if (!data.getActions().isEmpty() && data.getActions().containsKey(tick)) {
 
@@ -139,18 +150,24 @@ public class Replayer {
 			for (ActionData action : list) {
 								
 				utils.handleAction(action, data, reversed);
-				
-				if (action.getType() == ActionType.CUSTOM) {
-					if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
-						for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
+
+				if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
+					for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
+						if (action.getType() == ActionType.CUSTOM || hook instanceof Monitor)
 							hook.onPlay(action, Replayer.this);
-						}
 					}
 				}
 			
 			}
 			
 			if (tick == 0) data.getActions().remove(tick);
+		}else {
+			if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
+				for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {
+					if (hook instanceof Monitor)
+						hook.onPlay(null, Replayer.this);
+				}
+			}
 		}
 	}
 	
@@ -255,5 +272,13 @@ public class Replayer {
 		if (message != null) {
 			this.watcher.sendMessage(ReplaySystem.PREFIX + message);
 		}
+	}
+
+	public void setSpawnWorld(String spawnWorld){
+		this.spawnWorld = spawnWorld;
+	}
+
+	public String getSpawnWorld(){
+		return this.spawnWorld;
 	}
 }

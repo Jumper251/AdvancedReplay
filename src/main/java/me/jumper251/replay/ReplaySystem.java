@@ -4,6 +4,12 @@ package me.jumper251.replay;
 import java.util.HashMap;
 
 
+import me.jumper251.replay.dev.mrflyn.extended.VanillaListeners;
+import me.jumper251.replay.dev.mrflyn.extended.worldmanagers.IWorldManger;
+import me.jumper251.replay.dev.mrflyn.extended.worldmanagers.SWMWorldManager;
+import me.jumper251.replay.dev.mrflyn.extended.worldmanagers.VanillaWorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -26,6 +32,8 @@ public class ReplaySystem extends JavaPlugin {
 	
 	public static Updater updater;
 	public static Metrics metrics;
+	public IWorldManger worldManger;
+	public VanillaWorldManager vanillaWorldManager;
 	
 	public final static String PREFIX = "§8[§3Replay§8] §r§7";
 
@@ -35,7 +43,6 @@ public class ReplaySystem extends JavaPlugin {
 		for (Replay replay : new HashMap<>(ReplayManager.activeReplays).values()) {
 		    if (replay.isRecording() && replay.getRecorder().getData().getActions().size() > 0) {
 				replay.getRecorder().stop(ConfigManager.SAVE_STOP);
-				
 			}
 		}
 
@@ -44,23 +51,43 @@ public class ReplaySystem extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		
+
+		if (Bukkit.getServer().getPluginManager().getPlugin("SlimeWorldManager")!=null){
+			worldManger = new SWMWorldManager();
+
+		}else {
+			worldManger = new VanillaWorldManager();
+		}
+
+
+
+		vanillaWorldManager = new VanillaWorldManager();
+
 		Long start = System.currentTimeMillis();
 
 		getLogger().info("Loading Replay v" + getDescription().getVersion() + " by " + getDescription().getAuthors().get(0));
 		
 		ConfigManager.loadConfigs();
 		ReplayManager.register();
-		
 		ReplaySaver.register(ConfigManager.USE_DATABASE ? new DatabaseReplaySaver() : new DefaultReplaySaver());
-		
+
+		if (ConfigManager.UPLOAD_WORLDS&&ConfigManager.USE_DATABASE){
+			getServer().getPluginManager().registerEvents(worldManger.getListener(), this);
+
+		}
+
+
 		updater = new Updater();
 		metrics = new Metrics(this, 2188);
 		
 		if (ConfigManager.CLEANUP_REPLAYS > 0) {
 			ReplayCleanup.cleanupReplays();
 		}
-		
+
+		for(World w : Bukkit.getWorlds()){
+			worldManger.onWorldLoad(w);
+		}
+
 		getLogger().info("Finished (" + (System.currentTimeMillis() - start) + "ms)");
 
 	}

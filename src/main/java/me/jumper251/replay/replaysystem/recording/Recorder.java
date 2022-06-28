@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import me.jumper251.replay.dev.mrflyn.extended.WorldHandler;
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -182,7 +183,8 @@ public class Recorder {
 						signArr[0] =  new SignatureData(props.get("name"), props.get("value"), props.get("signature"));
 					}
 					
-					ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0]));
+					ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0],
+							WorldHandler.UUID_HASHCODE.get(loc.getWorld().getUID())));
 					addData(first ? 0 : currentTick, spawnData);
 				
 					ActionData invData = new ActionData(0, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));
@@ -199,7 +201,8 @@ public class Recorder {
 		}
 		
 		if (!ConfigManager.USE_OFFLINE_SKINS || Bukkit.getOnlineMode()) {
-			ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0]));
+			ActionData spawnData = new ActionData(0, ActionType.SPAWN, player.getName(), new SpawnData(player.getUniqueId(), LocationData.fromLocation(loc), signArr[0],
+					WorldHandler.UUID_HASHCODE.get(loc.getWorld().getUID())));
 			addData(currentTick, spawnData);
 		
 			ActionData invData = new ActionData(currentTick, ActionType.PACKET, player.getName(), NPCManager.copyFromPlayer(player, true, true));

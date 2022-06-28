@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import me.jumper251.replay.dev.mrflyn.extended.WorldHandler;
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -344,7 +345,8 @@ public class ReplayingUtils {
 				npc.remove();
 				replayer.getNPCList().remove(action.getName());
 				
-				SpawnData oldSpawnData = new SpawnData(npc.getUuid(), LocationData.fromLocation(npc.getLocation()), signatures.get(action.getName()));
+				SpawnData oldSpawnData = new SpawnData(npc.getUuid(), LocationData.fromLocation(npc.getLocation()), signatures.get(action.getName()),
+						WorldHandler.UUID_HASHCODE.get(npc.getLocation().getWorld().getUID()));
 				this.lastSpawnActions.addLast(new ActionData(0, ActionType.SPAWN, action.getName(), oldSpawnData));
 				
 				if (action.getType() == ActionType.DESPAWN) {
@@ -447,7 +449,7 @@ public class ReplayingUtils {
 		this.replayer.getNPCList().put(action.getName(), npc);
 		this.replayer.getReplay().getData().getWatchers().put(action.getName(), new PlayerWatcher(action.getName()));
 
-		Location spawn = LocationData.toLocation(spawnData.getLocation());
+		Location spawn = LocationData.toLocation(spawnData.getLocation(), this.replayer.getSpawnWorld());
 		
 		if(VersionUtil.isCompatible(VersionEnum.V1_8)) {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).resetValue().getData());

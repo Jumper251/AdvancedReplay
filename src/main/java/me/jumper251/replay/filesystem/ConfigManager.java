@@ -4,6 +4,10 @@ import java.io.File;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,53 +34,65 @@ public class ConfigManager {
 	public static boolean RECORD_CHAT;
 	public static boolean SAVE_STOP, RECORD_STARTUP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	public static boolean WORLD_RESET;
-	
+	public static boolean UPLOAD_WORLDS;
+	public static List<String> BLACKLISTED_UPLOAD_WORDLS = new ArrayList<>();
+
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
 	public static String DEATH_MESSAGE, LEAVE_MESSAGE, CHAT_FORMAT, JOIN_MESSAGE;
 	
 	public static void loadConfigs() {
-		if(!sqlFile.exists()){
-			sqlCfg.set("host", "localhost");
-			sqlCfg.set("port", 3306);
-			sqlCfg.set("username", "username");
-			sqlCfg.set("database", "database");
-			sqlCfg.set("password", "password");
-			sqlCfg.set("prefix", "");
-
+//		if(!sqlFile.exists()){
+			sqlCfg.addDefault("host", "localhost");
+			sqlCfg.addDefault("port", 3306);
+			sqlCfg.addDefault("username", "username");
+			sqlCfg.addDefault("database", "database");
+			sqlCfg.addDefault("password", "password");
+			sqlCfg.addDefault("poolSize", 50);
+			sqlCfg.addDefault("maxLifetime", 1800);
+			sqlCfg.addDefault("timeout", 30000L);
+			sqlCfg.addDefault("ssl", false);
+			sqlCfg.addDefault("verifyCertificate", true);
+			sqlCfg.addDefault("prefix", "");
+			sqlCfg.options().copyDefaults(true);
 			try {
 				sqlCfg.save(sqlFile);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+//		}
 		
-		if (!file.exists()) {
+//		if (!file.exists()) {
 			LogUtils.log("Creating Config files...");
 			
-			cfg.set("general.max_length", 3600);
-			cfg.set("general.record_on_startup", false);
-			cfg.set("general.save_on_stop", false);
-			cfg.set("general.use_mysql", false);
-			cfg.set("general.use_offline_skins", true);
-			cfg.set("general.quality", "high");
-			cfg.set("general.cleanup_replays", -1);
-			cfg.set("general.hide_players", false);
-			cfg.set("general.add_new_players", false);	
-			cfg.set("general.update_notifications", true);
+			cfg.addDefault("general.max_length", 3600);
+			cfg.addDefault("general.record_on_startup", false);
+			cfg.addDefault("general.save_on_stop", false);
+			cfg.addDefault("general.use_mysql", false);
+			cfg.addDefault("general.upload_worlds", false);
+			cfg.addDefault("general.blacklisted_upload_worlds", Collections.singletonList("black_listed_world_name"));
+			cfg.addDefault("general.use_offline_skins", true);
+			cfg.addDefault("general.quality", "high");
+			cfg.addDefault("general.cleanup_replays", -1);
+			cfg.addDefault("general.hide_players", false);
+			cfg.addDefault("general.add_new_players", false);	
+			cfg.addDefault("general.update_notifications", true);
 			
-			cfg.set("general.death_message", "&6{name} &7died.");
-			cfg.set("general.quit_message", "&6{name} &7left the game.");
-			cfg.set("general.join_message", "&6{name} &7joined the game.");
+			cfg.addDefault("general.death_message", "&6{name} &7died.");
+			cfg.addDefault("general.quit_message", "&6{name} &7left the game.");
+			cfg.addDefault("general.join_message", "&6{name} &7joined the game.");
 
-			cfg.set("replaying.world.reset_changes", false);
+			cfg.addDefault("replaying.world.reset_changes", false);
 			
-			cfg.set("recording.blocks.enabled", true);
-			cfg.set("recording.blocks.real_changes", true);
-			cfg.set("recording.entities.enabled", false);
-			cfg.set("recording.entities.items.enabled", true);
-			cfg.set("recording.chat.enabled", false);
-			cfg.set("recording.chat.format", "&r<{name}> {message}");
+			cfg.addDefault("recording.blocks.enabled", true);
+			cfg.addDefault("recording.blocks.real_changes", true);
+			cfg.addDefault("recording.entities.enabled", false);
+			cfg.addDefault("recording.entities.items.enabled", true);
+			cfg.addDefault("recording.chat.enabled", false);
+			cfg.addDefault("recording.chat.format", "&r<{name}> {message}");
+			cfg.options().copyDefaults(true);
+			cfg.options().header("Only set upload_worlds to true if you're running a minigame server in a bungee/velocity network. Mysql is compulsory for this mode.");
+			cfg.options().header("When upload_worlds in true advancedReplay uses an uploaded copy of the world to show the replay. Useful if you want to view the replay in other servers.");
 
 
 			try {
@@ -84,7 +100,7 @@ public class ConfigManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+//		}
 			
 		ItemConfig.loadConfig();
 		
@@ -102,6 +118,8 @@ public class ConfigManager {
 		CLEANUP_REPLAYS = cfg.getInt("general.cleanup_replays", -1);
 		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
+		UPLOAD_WORLDS = cfg.getBoolean("general.upload_worlds");
+		BLACKLISTED_UPLOAD_WORDLS = cfg.getStringList("general.blacklisted_upload_worlds");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
 
 		DEATH_MESSAGE = cfg.getString("general.death_message");
@@ -124,9 +142,15 @@ public class ConfigManager {
 			String username = sqlCfg.getString("username");
 			String database = sqlCfg.getString("database");
 			String password = sqlCfg.getString("password");
+			int poolSize = sqlCfg.getInt("poolSize", 50);
+			int maxLifetime = sqlCfg.getInt("maxLifetime", 1800);
+			long timeout = sqlCfg.getLong("timeout", 30000L);
+			boolean ssl = sqlCfg.getBoolean("ssl", false);
+			boolean verifyCertificate = sqlCfg.getBoolean("verifyCertificate", true);
 			String prefix = sqlCfg.getString("prefix", "");
 
-			MySQLDatabase mysql = new MySQLDatabase(host, port, database, username, password, prefix);
+			MySQLDatabase mysql =
+					new MySQLDatabase(host, port, database, username, password, prefix, poolSize, maxLifetime, ssl, verifyCertificate, timeout);
 			DatabaseRegistry.registerDatabase(mysql);
 			DatabaseRegistry.getDatabase().getService().createReplayTable();
 			

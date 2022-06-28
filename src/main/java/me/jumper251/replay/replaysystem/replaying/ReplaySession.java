@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import me.jumper251.replay.api.ReplaySessionStartEvent;
+import me.jumper251.replay.replaysystem.data.types.LocationData;
 import org.bukkit.Bukkit;
 
 import org.bukkit.GameMode;
@@ -43,27 +44,19 @@ public class ReplaySession {
 		
 		this.packetListener = new ReplayPacketListener(replayer);
 	}
-	
-	public void startSession() {
-		ReplaySessionStartEvent event;
-		Bukkit.getPluginManager().callEvent(event = new ReplaySessionStartEvent(this.replayer, this.player));
 
-		if (event.isCancelled()){
-			stopSession();
-			ReplaySystem.getInstance().getLogger().log(Level.INFO, "Replay start event cancelled.");
-			return;
-		}
-
+	public void startSession(Location start) {
 		this.content = this.player.getInventory().getContents();
-		this.start = this.player.getLocation();
-		
+		this.start = start;
 		this.level = this.player.getLevel();
 		this.xp = this.player.getExp();
 
 		this.player.setHealth(this.player.getMaxHealth());
 		this.player.setFoodLevel(20);
 		this.player.getInventory().clear();
-		if(!event.isHandlingButtons()) {
+		ReplaySessionStartEvent event = new ReplaySessionStartEvent(this.replayer, this.player);
+		Bukkit.getPluginManager().callEvent(event);
+		if (!event.isHandlingButtons()) {
 			ItemConfigOption teleport = ItemConfig.getItem(ItemConfigType.TELEPORT);
 			ItemConfigOption time = ItemConfig.getItem(ItemConfigType.SPEED);
 			ItemConfigOption leave = ItemConfig.getItem(ItemConfigType.LEAVE);
@@ -82,11 +75,11 @@ public class ReplaySession {
 
 		this.player.setAllowFlight(true);
 		this.player.setFlying(true);
-		
+
 		if (ConfigManager.HIDE_PLAYERS) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if (all == this.player) continue;
-				
+
 				this.player.hidePlayer(all);
 			}
 		}
@@ -100,8 +93,8 @@ public class ReplaySession {
 		}
 		
 		this.packetListener.unregister();
-
-		
+		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer.getReplay(), player, this.replayer);
+		Bukkit.getPluginManager().callEvent(finishEvent);
 		new BukkitRunnable() {
 			
 			@Override
@@ -123,8 +116,7 @@ public class ReplaySession {
 		}.runTask(ReplaySystem.getInstance());
 		
 		
-		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(this.replayer.getReplay(), player, this.replayer);
-		Bukkit.getPluginManager().callEvent(finishEvent);
+
 	}
 	
 	public void resetPlayer() {

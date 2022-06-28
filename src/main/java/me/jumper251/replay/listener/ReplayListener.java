@@ -5,6 +5,9 @@ package me.jumper251.replay.listener;
 import java.util.Arrays;
 
 
+import me.jumper251.replay.api.ReplaySessionFinishEvent;
+import me.jumper251.replay.dev.mrflyn.extended.WorldHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 
 import org.bukkit.entity.Player;
@@ -39,6 +42,24 @@ import me.jumper251.replay.replaysystem.utils.entities.INPC;
 
 
 public class ReplayListener extends AbstractListener {
+
+	@EventHandler
+	public void onReplayStop(ReplaySessionFinishEvent e){
+		//TODO: fix
+		String name = e.getPlayer().getWorld().getName();
+		ReplaySystem.getInstance().getLogger().info(name);
+		ReplaySystem.getInstance().getLogger().info(WorldHandler.WORLD_WATCHER.toString());
+		if (!WorldHandler.WORLD_WATCHER.containsKey(name))return;
+		WorldHandler.WORLD_WATCHER.put(name, WorldHandler.WORLD_WATCHER.get(name)-1);
+		ReplaySystem.getInstance().getLogger().info(WorldHandler.WORLD_WATCHER.toString());
+		// UNLOAD IF WATCHERS<1;
+		if (WorldHandler.WORLD_WATCHER.get(name)<1){
+			Bukkit.getScheduler().runTask(ReplaySystem.getInstance(), ()->{
+				ReplaySystem.getInstance().worldManger.unloadWorld(name);
+			});
+		}
+
+	}
 
 	@SuppressWarnings("deprecation")
 	@EventHandler (priority = EventPriority.MONITOR)

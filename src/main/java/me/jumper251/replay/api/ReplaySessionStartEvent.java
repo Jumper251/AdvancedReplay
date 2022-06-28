@@ -9,9 +9,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ReplaySessionStartEvent extends Event implements Cancellable {
+public class ReplaySessionStartEvent extends Event{
     private static final HandlerList HANDLERS = new HandlerList();
-    private boolean cancelled = false;
     private boolean handleButtons = false;
 
     private Replayer replayer;
@@ -50,13 +49,4 @@ public class ReplaySessionStartEvent extends Event implements Cancellable {
         this.handleButtons = b;
     }
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        this.cancelled = b;
-    }
 }

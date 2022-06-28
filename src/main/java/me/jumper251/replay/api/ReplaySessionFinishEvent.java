@@ -16,7 +16,7 @@ public class ReplaySessionFinishEvent extends Event {
     private Replayer replayer;
 
     private Player player;
-    
+    //Replay is just there for backward compatibility
     public ReplaySessionFinishEvent(Replay replay, Player player, Replayer replayer) {
     	super(!Bukkit.isPrimaryThread());
     	this.replayer =replayer;

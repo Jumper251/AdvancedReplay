@@ -16,13 +16,16 @@ public class SpawnData extends PacketData {
 	private UUID uuid;
 	
 	private LocationData location;
+
+	private String worldHashCode;
 	
 	private SignatureData signature;
 	
-	public SpawnData(UUID uuid, LocationData location, SignatureData signature) {
+	public SpawnData(UUID uuid, LocationData location, SignatureData signature, String worldHashCode) {
 		this.uuid = uuid;
 		this.location = location;
 		this.signature = signature;
+		this.worldHashCode = worldHashCode;
 	}
 	
 	public UUID getUuid() {
@@ -41,4 +44,7 @@ public class SpawnData extends PacketData {
 		this.uuid = uuid;
 	}
 
+	public String getWorldHashCode(){
+		return this.worldHashCode;
+	}
 }

@@ -11,12 +11,14 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.database.DatabaseRegistry;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.ReplayInfo;
 import me.jumper251.replay.utils.fetcher.Acceptor;
 import me.jumper251.replay.utils.fetcher.Consumer;
+import org.bukkit.Bukkit;
 
 public class DatabaseReplaySaver implements IReplaySaver {
 
@@ -52,36 +54,33 @@ public class DatabaseReplaySaver implements IReplaySaver {
 
 	@Override
 	public void loadReplay(String replayName, Consumer<Replay> consumer) {
-		
 		DatabaseRegistry.getDatabase().getService().getPool().execute(new Acceptor<Replay>(consumer) {
-
 			@Override
 			public Replay getValue() {
 				try {
-					
+
 					byte[] data = DatabaseRegistry.getDatabase().getService().getReplayData(replayName);
-					
+
 					ByteArrayInputStream byteIn = new ByteArrayInputStream(data);
 					GZIPInputStream gIn = new GZIPInputStream(byteIn);
 					ObjectInputStream objectIn = new ObjectInputStream(gIn);
-					
+
 					ReplayData replayData = (ReplayData) objectIn.readObject();
-					
+
 					objectIn.close();
 					gIn.close();
 					byteIn.close();
-					
+
 					return new Replay(replayName, replayData);
-					
-					
+
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				return null;
 			}
 		});
-		
 	}
 
 	@Override

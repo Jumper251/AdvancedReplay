@@ -66,4 +66,8 @@ public class LocationData implements Serializable{
 		return new Location(Bukkit.getWorld(locationData.getWorld()), locationData.getX(), locationData.getY(), locationData.getZ());
 	}
 
+	public static Location toLocation(LocationData locationData, String worldName) {
+		return new Location(Bukkit.getWorld(worldName), locationData.getX(), locationData.getY(), locationData.getZ());
+	}
+
 }
