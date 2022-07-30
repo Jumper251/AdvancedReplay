@@ -319,6 +319,8 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	 * @return The current Type
 	 */
 	public int getType() {
+		if (VersionUtil.isAbove(VersionEnum.V1_19)) return 0;
+
 		return handle.getIntegers().read(6);
 	}
 
@@ -366,6 +368,14 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	 * @return The current object Data
 	 */
 	public int getObjectData() {
+		if (VersionUtil.isBetween(VersionEnum.V1_14, VersionEnum.V1_18)) {
+			return handle.getIntegers().read(6);
+		}
+
+		if (VersionUtil.isAbove(VersionEnum.V1_19)) {
+			return handle.getIntegers().read(4);
+		}
+
 		return handle.getIntegers().read(7);
 	}
 
@@ -378,6 +388,16 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	 * @param value - new object data.
 	 */
 	public void setObjectData(int value) {
+		if (VersionUtil.isBetween(VersionEnum.V1_14, VersionEnum.V1_18)) {
+			handle.getIntegers().write(6, value);
+			return;
+		}
+
+		if (VersionUtil.isAbove(VersionEnum.V1_19)) {
+			handle.getIntegers().write(4, value);
+			return;
+		}
+
 		handle.getIntegers().write(7, value);
 	}
 }

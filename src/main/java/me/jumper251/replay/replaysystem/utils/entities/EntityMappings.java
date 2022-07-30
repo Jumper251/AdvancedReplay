@@ -101,6 +101,10 @@ public class EntityMappings {
 		entityLookup.put("ZOMBIE_HORSE", 108);
 		entityLookup.put("ZOMBIE_VILLAGER", 109);
 		entityLookup.put("ZOMBIFIED_PIGLIN", 110);
+		entityLookup.put("WARDEN", 111);
+		entityLookup.put("FROG", 112);
+		entityLookup.put("TADPOLE", 113);
+		entityLookup.put("ALLAY", 114);
 	}
 	
 	public static EntityMappings getInstance() {

@@ -3,13 +3,15 @@ package me.jumper251.replay.replaysystem.recording;
 import java.util.ArrayList;
 
 
-
-
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.comphenix.protocol.PacketTypeEnum;
+import me.jumper251.replay.replaysystem.utils.entities.EntityMappings;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -60,6 +62,10 @@ import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class PacketRecorder extends AbstractListener{
 
+	private static final List<PacketType> RECORDED_PACKETS = new ArrayList<>(Arrays.asList(PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION,
+			PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Server.ENTITY_VELOCITY,
+			PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT));
+
 	private PacketAdapter packetAdapter;
 	
 	private HashMap<String, List<PacketData>> packetData;
@@ -93,12 +99,12 @@ public class PacketRecorder extends AbstractListener{
 	@Override
 	public void register() {
 		super.register();
-		
-		
-		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST,
-				PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK, PacketType.Play.Client.ENTITY_ACTION, PacketType.Play.Client.ARM_ANIMATION, 
-				PacketType.Play.Client.BLOCK_DIG, PacketType.Play.Server.SPAWN_ENTITY, PacketType.Play.Server.ENTITY_DESTROY, PacketType.Play.Server.ENTITY_VELOCITY, PacketType.Play.Server.SPAWN_ENTITY_LIVING,
-				PacketType.Play.Server.REL_ENTITY_MOVE, PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, PacketType.Play.Server.ENTITY_LOOK, PacketType.Play.Server.POSITION, PacketType.Play.Server.ENTITY_TELEPORT) {
+
+		if (VersionUtil.isBelow(VersionEnum.V1_18)) {
+			RECORDED_PACKETS.add(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
+		}
+
+		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST, RECORDED_PACKETS) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
             		
@@ -191,17 +197,30 @@ public class PacketRecorder extends AbstractListener{
             
             			}
         				if ((type == 90 || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityType.FISHING_HOOK))  && !spawnedHooks.contains(packet.getEntityID())) {
-        					location.setYaw(packet.getYaw());
-        					location.setPitch(packet.getPitch());
-        					
         					if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
         						addData(p.getName(), new FishingData(oldPacket.getEntityID(), location, oldPacket.getOptionalSpeedX(), oldPacket.getOptionalSpeedY(), oldPacket.getOptionalSpeedZ()));
         					} else {
         						addData(p.getName(), new FishingData(packet.getEntityID(), location, packet.getOptionalSpeedX(), packet.getOptionalSpeedY(), packet.getOptionalSpeedZ()));
         					}
         					spawnedHooks.add(packet.getEntityID());
-        					
         				}
+
+						if (VersionUtil.isAbove(VersionEnum.V1_19) && ConfigManager.RECORD_ENTITIES) {
+							EntityType livingType = event.getPacket().getEntityTypeModifier().read(0);
+
+							if (EntityMappings.getInstance().getTypeId(livingType.toString()) != 0) {
+								LocationData locationData = new LocationData(packet.getX(), packet.getY(), packet.getZ(), p.getWorld().getName());
+
+								if (!spawnedEntities.containsKey(packet.getEntityID())) {
+									EntityData entData = new EntityData(0, packet.getEntityID(), locationData, livingType.toString());
+									addData(p.getName(), entData);
+
+									spawnedEntities.put(packet.getEntityID(), entData);
+									entityLookup.put(packet.getEntityID(), p.getName());
+									idLookup.put(packet.getEntityID(), packet.getEntity(p.getWorld()));
+								}
+							}
+						}
 
             		}
             		
@@ -220,14 +239,14 @@ public class PacketRecorder extends AbstractListener{
             				} else {
             					location = new LocationData(packet.getX(), packet.getY(), packet.getZ(), p.getWorld().getName());
             				}
-            				
+
             				EntityData entData = new EntityData(0, packet.getEntityID(), location, type.toString());
             				addData(p.getName(), entData);
-            				
+
             				spawnedEntities.put(packet.getEntityID(), entData);
             				entityLookup.put(packet.getEntityID(), p.getName());
             				idLookup.put(packet.getEntityID(), packet.getEntity(p.getWorld()));
-            				
+
             			}
             			
             		}
@@ -324,7 +343,7 @@ public class PacketRecorder extends AbstractListener{
 	    ProtocolLibrary.getProtocolManager().addPacketListener(this.packetAdapter);
 	    this.registerExternalListeners();
 	}
-	
+
 	@Override
 	public void unregister() {
 		super.unregister();

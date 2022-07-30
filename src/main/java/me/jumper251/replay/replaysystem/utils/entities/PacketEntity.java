@@ -4,16 +4,11 @@ package me.jumper251.replay.replaysystem.utils.entities;
 import java.util.Arrays;
 import java.util.UUID;
 
+import com.comphenix.packetwrapper.*;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityStatus;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
 import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
@@ -29,7 +24,7 @@ public class PacketEntity implements IEntity{
 		
 	private Location location, origin;
 	
-	private WrapperPlayServerSpawnEntityLiving spawnPacket;
+	private SpawnPacket spawnPacket;
 	
 	private float yaw, pitch;
 	
@@ -43,7 +38,11 @@ public class PacketEntity implements IEntity{
 	
 	public PacketEntity(int id, EntityType type) {
 		this.id = id;
-		this.spawnPacket = new WrapperPlayServerSpawnEntityLiving();
+		if (VersionUtil.isAbove(VersionEnum.V1_19)) {
+			this.spawnPacket = new SpawnPacket(new WrapperPlayServerSpawnEntity());
+		} else {
+			this.spawnPacket = new SpawnPacket(new WrapperPlayServerSpawnEntityLiving());
+		}
 		this.type = type;
 	}
 	
@@ -57,7 +56,7 @@ public class PacketEntity implements IEntity{
 		this.oldVisible = players[0];
 		this.location = loc;
 		this.origin = loc;
-		
+
 		this.spawnPacket.setEntityID(this.id);
 		this.spawnPacket.setType(this.type);
 		this.spawnPacket.setUniqueId(UUID.randomUUID());

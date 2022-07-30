@@ -31,15 +31,13 @@ public class FishingUtils {
 		packet.setOptionalSpeedZ(fishing.getZ());
 		
 		if (VersionUtil.isAbove(VersionEnum.V1_14)) {
-			packet.setType(throwerID); // Object data index changed
+			packet.setObjectData(throwerID); // Object data index changed
 			packet.getHandle().getEntityTypeModifier().write(0, EntityType.FISHING_HOOK);
 		}
-		
+
 		packet.setX(loc.getX());
 		packet.setY(loc.getY());
 		packet.setZ(loc.getZ());
-		packet.setPitch(loc.getPitch());
-		packet.setYaw(loc.getYaw());
 		
 		return packet;
 	}
