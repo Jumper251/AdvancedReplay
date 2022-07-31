@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -285,6 +286,15 @@ public class ReplayListener extends AbstractListener {
 		}
 
 
+	}
+
+	@EventHandler
+	public void onDeath(PlayerDeathEvent e) {
+		Player p = e.getEntity();
+		if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+			e.setKeepLevel(true);
+			e.setKeepInventory(true);
+		}
 	}
 	
 	@EventHandler

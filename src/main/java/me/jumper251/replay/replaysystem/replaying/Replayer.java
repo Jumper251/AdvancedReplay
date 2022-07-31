@@ -78,6 +78,7 @@ public class Replayer {
 	public void start() {
 		ReplayData data = this.replay.getData();
 		int duration = data.getDuration();
+		this.session.setStart(watcher.getLocation());
 		
 		if (data.getActions().containsKey(0)) {
 			for (ActionData startData : data.getActions().get(0)) {
