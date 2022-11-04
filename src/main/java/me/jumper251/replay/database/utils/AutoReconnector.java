@@ -21,7 +21,7 @@ public class AutoReconnector extends BukkitRunnable{
 	@Override
 	public void run() {
 		MySQLDatabase database = (MySQLDatabase) DatabaseRegistry.getDatabase();
-		database.update("USE "+database.getDatabase()+"");
+		database.update("USE `"+database.getDatabase()+"`");
 	}
 
 }
