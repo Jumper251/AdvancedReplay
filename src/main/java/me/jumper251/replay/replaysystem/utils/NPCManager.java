@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 
-import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 import com.comphenix.protocol.wrappers.Pair;
 
@@ -103,38 +103,38 @@ public class NPCManager {
 		return list;
 	}
 	
-	public static List<com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment> updateEquipmentOld(int id, InvData data) {
-		List<com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment> list = new ArrayList<com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment>();
+	public static List<replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment> updateEquipmentOld(int id, InvData data) {
+		List<replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment> list = new ArrayList<replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment>();
 
-			com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet = new com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
+		replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet = new replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
 			packet.setEntityID(id);
 			packet.setSlot(4);
 			packet.setItem(fromID(data.getHead()));
 			list.add(packet);
-		
-		
-			com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet1 = new com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
+
+
+		replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet1 = new replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
 			packet1.setEntityID(id);
 			packet1.setSlot(3);
 			packet1.setItem(fromID(data.getChest()));
 			list.add(packet1);
-		
-		
-			com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet2 = new com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
+
+
+		replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet2 = new replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
 			packet2.setEntityID(id);
 			packet2.setSlot(2);
 			packet2.setItem(fromID(data.getLeg()));
 			list.add(packet2);
-		
-		
-			com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet3 = new com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
+
+
+		replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet3 = new replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
 			packet3.setEntityID(id);
 			packet3.setSlot(1);
 			packet3.setItem(fromID(data.getBoots()));
 			list.add(packet3);
-		
-		
-			com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet4 = new com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
+
+
+		replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet4 = new replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment();
 			packet4.setEntityID(id);
 			packet4.setSlot(0);
 			packet4.setItem(fromID(data.getMainHand()));

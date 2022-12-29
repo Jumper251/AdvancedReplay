@@ -8,10 +8,10 @@ import java.util.stream.IntStream;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import com.comphenix.packetwrapper.WrapperPlayClientUseEntity;
-import com.comphenix.packetwrapper.WrapperPlayServerCamera;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerGameStateChange;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayClientUseEntity;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerCamera;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerGameStateChange;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;

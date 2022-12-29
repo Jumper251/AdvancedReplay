@@ -2,17 +2,6 @@ package me.jumper251.replay.replaysystem.utils.entities;
 
 
 import java.util.ArrayList;
-
-
-
-
-
-
-
-
-
-
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -20,18 +9,18 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.comphenix.packetwrapper.WrapperPlayServerAnimation;
-import com.comphenix.packetwrapper.WrapperPlayServerBed;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
-import com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment;
-import com.comphenix.packetwrapper.old.WrapperPlayServerEntityTeleport;
-import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
-import com.comphenix.packetwrapper.old.WrapperPlayServerNamedEntitySpawn;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerAnimation;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerBed;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
+import replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment;
+import replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityTeleport;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
+import replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerNamedEntitySpawn;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
@@ -384,7 +373,7 @@ public class PacketNPCOld implements INPC{
 		return this.visible;
 	}
 	
-	public void setLastEquipment(List<com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment> list) {
+	public void setLastEquipment(List<replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment> list) {
 	}
 	
 	public void setLastEquipmentOld(List<WrapperPlayServerEntityEquipment> list) {

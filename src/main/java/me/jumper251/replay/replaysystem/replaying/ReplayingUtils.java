@@ -27,10 +27,10 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.comphenix.packetwrapper.AbstractPacket;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
+import replaylib.com.comphenix.packetwrapper.AbstractPacket;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
@@ -166,11 +166,11 @@ public class ReplayingUtils {
 						packet.sendPacket(replayer.getWatchingPlayer());
 					}
 				} else {
-					List<com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment> equipment = NPCManager.updateEquipmentOld(npc.getId(), invData);
+					List<replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment> equipment = NPCManager.updateEquipmentOld(npc.getId(), invData);
 					PacketNPCOld oldNPC = (PacketNPCOld) npc;
 					oldNPC.setLastEquipmentOld(equipment);
 					
-					for (com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet : equipment) {
+					for (replaylib.com.comphenix.packetwrapper.old.WrapperPlayServerEntityEquipment packet : equipment) {
 						packet.sendPacket(replayer.getWatchingPlayer());
 					}
 				}

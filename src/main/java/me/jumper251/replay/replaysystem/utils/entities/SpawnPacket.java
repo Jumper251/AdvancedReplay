@@ -1,7 +1,7 @@
 package me.jumper251.replay.replaysystem.utils.entities;
 
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

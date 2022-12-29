@@ -51,7 +51,7 @@
     </properties>
 
     <build>
-        <finalName>Replay</finalName><!-- Match SpigotMC file name -->
+        <finalName>AdvancedReplay</finalName><!-- Match SpigotMC file name -->
 
         <!-- Auto update plugin.yml version -->
         <resources>

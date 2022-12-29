@@ -4,12 +4,13 @@ package me.jumper251.replay.replaysystem.utils.entities;
 import java.util.Arrays;
 import java.util.UUID;
 
-import com.comphenix.packetwrapper.*;
+import replaylib.com.comphenix.packetwrapper.*;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
+import replaylib.com.comphenix.packetwrapper.*;
+import replaylib.com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 import me.jumper251.replay.utils.MathUtils;

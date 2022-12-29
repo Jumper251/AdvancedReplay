@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.comphenix.packetwrapper.WrapperPlayServerTitle;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerTitle;
 import com.comphenix.protocol.wrappers.EnumWrappers.TitleAction;
 
 import me.jumper251.replay.filesystem.ItemConfig;

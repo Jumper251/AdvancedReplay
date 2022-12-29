@@ -9,27 +9,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.comphenix.protocol.PacketTypeEnum;
 import me.jumper251.replay.replaysystem.utils.entities.EntityMappings;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
-import com.comphenix.packetwrapper.WrapperPlayClientBlockDig;
-import com.comphenix.packetwrapper.WrapperPlayClientEntityAction;
-import com.comphenix.packetwrapper.WrapperPlayClientLook;
-import com.comphenix.packetwrapper.WrapperPlayClientPosition;
-import com.comphenix.packetwrapper.WrapperPlayClientPositionLook;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
-import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMove;
-import com.comphenix.packetwrapper.WrapperPlayServerRelEntityMoveLook;
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayClientBlockDig;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayClientEntityAction;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayClientLook;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayClientPosition;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayClientPositionLook;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerRelEntityMove;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerRelEntityMoveLook;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerSpawnEntity;
+import replaylib.com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -57,7 +55,6 @@ import me.jumper251.replay.replaysystem.recording.optimization.ReplayOptimizer;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
-
 
 
 public class PacketRecorder extends AbstractListener{
@@ -171,7 +168,7 @@ public class PacketRecorder extends AbstractListener{
             		if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY) {
             			WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity(event.getPacket());
             			
-            			com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity oldPacket = new com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity(event.getPacket());
+            			WrapperPlayServerSpawnEntity oldPacket = new WrapperPlayServerSpawnEntity(event.getPacket());
             			int type = VersionUtil.isCompatible(VersionEnum.V1_8) ? oldPacket.getType() : packet.getType(); 
             			
     					LocationData location = null;
@@ -234,7 +231,7 @@ public class PacketRecorder extends AbstractListener{
             				LocationData location = null;
             				
             				if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
-            					com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntityLiving oldPacket = new com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntityLiving(event.getPacket());
+            					WrapperPlayServerSpawnEntityLiving oldPacket = new WrapperPlayServerSpawnEntityLiving(event.getPacket());
             					location = new LocationData(oldPacket.getX(), oldPacket.getY(), oldPacket.getZ(), p.getWorld().getName());
             				} else {
             					location = new LocationData(packet.getX(), packet.getY(), packet.getZ(), p.getWorld().getName());
