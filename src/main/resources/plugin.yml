@@ -7,3 +7,4 @@ commands:
   replay:
     description: Main Replay command
     aliases: [rp]
+    permission: replay.command
