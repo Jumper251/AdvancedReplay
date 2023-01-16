@@ -23,7 +23,7 @@ import java.util.List;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.IntEnum;
+import me.jumper251.replay.utils.IntEnum;
 
 public class WrapperPlayServerScoreboardTeam extends AbstractPacket {
 	public static final PacketType TYPE =

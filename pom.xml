@@ -6,7 +6,7 @@
 
     <groupId>me.jumper251</groupId>
     <artifactId>AdvancedReplay</artifactId>
-    <version>1.8.2</version>
+    <version>1.8.3</version>
 
     <repositories>
         <!-- This adds the Spigot Maven repository to the build -->
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.8.0</version>
+            <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

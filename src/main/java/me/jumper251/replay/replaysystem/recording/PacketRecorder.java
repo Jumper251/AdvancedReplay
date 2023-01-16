@@ -1,11 +1,9 @@
 package me.jumper251.replay.replaysystem.recording;
 
-import java.util.ArrayList;
+import java.util.*;
 
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -68,7 +66,7 @@ public class PacketRecorder extends AbstractListener{
 
 	private PacketAdapter packetAdapter;
 	
-	private HashMap<String, List<PacketData>> packetData;
+	private Map<String, List<PacketData>> packetData;
 	
 	private List<Integer> spawnedItems;
 	private HashMap<Integer, EntityData> spawnedEntities;
@@ -84,7 +82,7 @@ public class PacketRecorder extends AbstractListener{
 	
 	public PacketRecorder(Recorder recorder) {
 		super();
-		this.packetData = new HashMap<String, List<PacketData>>();
+		this.packetData = new ConcurrentHashMap<>();
 		this.spawnedItems = new ArrayList<Integer>();
 		this.spawnedEntities = new HashMap<Integer, EntityData>();
 		this.entityLookup = new HashMap<Integer, String>();
@@ -387,7 +385,7 @@ public class PacketRecorder extends AbstractListener{
 		this.packetData.put(name, list);
 	}
 	
-	public HashMap<String, List<PacketData>> getPacketData() {
+	public Map<String, List<PacketData>> getPacketData() {
 		return packetData;
 	}
 	

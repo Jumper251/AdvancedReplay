@@ -1,15 +1,13 @@
 package me.jumper251.replay.replaysystem.utils.entities;
 
-import java.util.ArrayList;
+import java.util.*;
 
 
-
-
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.*;
+import com.google.common.collect.Lists;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -26,12 +24,6 @@ import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
 import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
-import com.comphenix.protocol.wrappers.BlockPosition;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.PlayerInfoData;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
 
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MathUtils;
@@ -157,7 +149,11 @@ public class PacketNPC implements INPC{
 		
 		if(this.oldVisible != null){				
 			if(this.tabMode == 2){
-				getInfoRemovePacket().sendPacket(this.oldVisible);
+				if (VersionUtil.isAbove(VersionEnum.V1_19)) {
+					ProtocolLibrary.getProtocolManager().sendServerPacket(this.oldVisible, getPlayerInfoRemovePacket());
+				} else {
+					getInfoRemovePacket().sendPacket(this.oldVisible);
+				}
 			}
 				
 			destroyPacket.sendPacket(this.oldVisible);
@@ -234,7 +230,17 @@ public class PacketNPC implements INPC{
 		WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata();
 		
 		packet.setEntityID(this.id);
-		packet.setMetadata(this.data.getWatchableObjects());
+		if (VersionUtil.isAbove(VersionEnum.V1_19)) {
+			// https://www.spigotmc.org/threads/unable-to-modify-entity-metadata-packet-using-protocollib-1-19-3.582442/
+			List<WrappedDataValue> wrappedDataValueList = Lists.newArrayList();
+			this.data.getWatchableObjects().stream().filter(Objects::nonNull).forEach(entry -> {
+				WrappedDataWatcher.WrappedDataWatcherObject dataWatcherObject = entry.getWatcherObject();
+				wrappedDataValueList.add(new WrappedDataValue(dataWatcherObject.getIndex(), dataWatcherObject.getSerializer(), entry.getRawValue()));
+			});
+			packet.getHandle().getDataValueCollectionModifier().write(0, wrappedDataValueList);
+		} else {
+			packet.setMetadata(this.data.getWatchableObjects());
+		}
 		
 		for (Player player : Arrays.asList(this.visible)) {
 			if (player != null) {
@@ -308,6 +314,14 @@ public class PacketNPC implements INPC{
 
 		infoPacket.setData(dataList);
 		return infoPacket;
+	}
+
+	private PacketContainer getPlayerInfoRemovePacket() {
+		PacketContainer packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO_REMOVE);
+		packet.getModifier().writeDefaults();
+		packet.getModifier().withType(List.class).write(0, Collections.singletonList(uuid));
+
+		return packet;
 	}
 	
 	public int getId() {

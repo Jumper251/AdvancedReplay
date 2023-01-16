@@ -297,7 +297,10 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			// Change PlayerItemInHand
-			itemInHand(p, e.getItem().getItemStack());
+
+			if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR) {
+				itemInHand(p, e.getItem().getItemStack());
+			}
 		}
 	}
 	

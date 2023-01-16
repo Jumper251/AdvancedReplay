@@ -36,7 +36,7 @@ public class ReplayAPI {
 	
 	
 	public Replay recordReplay(String name, CommandSender sender, Player... players) {
-		List<Player> toRecord = new ArrayList<Player>();
+		List<Player> toRecord = new ArrayList<>();
 		
 		if (players != null && players.length > 0) { 
 			toRecord = Arrays.asList(players);
@@ -55,6 +55,14 @@ public class ReplayAPI {
 		replay.recordAll(players, sender);
 		
 		return replay;
+	}
+
+	public Replay recordReplay(String name, List<Player> players) {
+		return recordReplay(name, null, players);
+	}
+
+	public Replay recordReplay(String name, Player... players) {
+		return recordReplay(name, null, players);
 	}
 	
 	public void stopReplay(String name, boolean save) {

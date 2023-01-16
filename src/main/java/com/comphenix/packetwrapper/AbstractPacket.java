@@ -61,7 +61,7 @@ public abstract class AbstractPacket {
 	public void sendPacket(Player receiver) {
 		try {
 			ProtocolLibrary.getProtocolManager().sendServerPacket(receiver, getHandle());
-		} catch (InvocationTargetException e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Cannot send packet.", e);
 		}
 	}
@@ -76,7 +76,7 @@ public abstract class AbstractPacket {
 	@Deprecated
 	public void recievePacket(Player sender) {
 		try {
-			ProtocolLibrary.getProtocolManager().recieveClientPacket(sender, getHandle());
+			ProtocolLibrary.getProtocolManager().receiveClientPacket(sender, getHandle());
 		} catch (Exception e) {
 			throw new RuntimeException("Cannot recieve packet.", e);
 		}
@@ -89,7 +89,7 @@ public abstract class AbstractPacket {
 	 */
 	public void receivePacket(Player sender) {
 		try {
-			ProtocolLibrary.getProtocolManager().recieveClientPacket(sender, getHandle());
+			ProtocolLibrary.getProtocolManager().receiveClientPacket(sender, getHandle());
 		} catch (Exception e) {
 			throw new RuntimeException("Cannot recieve packet.", e);
 		}

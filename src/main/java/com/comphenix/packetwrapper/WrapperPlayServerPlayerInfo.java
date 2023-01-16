@@ -20,10 +20,14 @@ package com.comphenix.packetwrapper;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
+import com.google.common.collect.Sets;
+import me.jumper251.replay.utils.VersionUtil;
 
 import java.util.List;
+import java.util.Set;
 
 public class WrapperPlayServerPlayerInfo extends AbstractPacket {
     public static final PacketType TYPE = PacketType.Play.Server.PLAYER_INFO;
@@ -42,7 +46,12 @@ public class WrapperPlayServerPlayerInfo extends AbstractPacket {
     }
 
     public void setAction(PlayerInfoAction value) {
-        handle.getPlayerInfoAction().write(0, value);
+        if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_19)) {
+            Set<PlayerInfoAction> types = Sets.newHashSet(value);
+            handle.getPlayerInfoActions().write(0, types);
+        } else {
+            handle.getPlayerInfoAction().write(0, value);
+        }
     }
 
     public List<PlayerInfoData> getData() {
@@ -50,6 +59,10 @@ public class WrapperPlayServerPlayerInfo extends AbstractPacket {
     }
 
     public void setData(List<PlayerInfoData> value) {
-        handle.getPlayerInfoDataLists().write(0, value);
+        if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_19)) {
+            handle.getPlayerInfoDataLists().write(1, value);
+        } else {
+            handle.getPlayerInfoDataLists().write(0, value);
+        }
     }
 }

@@ -133,7 +133,7 @@ public class Recorder {
 	}
 	
 	public void addData(int tick, ActionData actionData) {
-		List<ActionData> list = new ArrayList<ActionData>();
+		List<ActionData> list = new ArrayList<>();
 		if(this.data.getActions().containsKey(tick)) {
 			list = this.data.getActions().get(tick);
 		}
@@ -148,10 +148,12 @@ public class Recorder {
 
 		if (save) {
 			this.data.setDuration(this.currentTick);
-			this.data.setCreator(this.sender.getName());
-			this.data.setWatchers(new HashMap<String, PlayerWatcher>());
+
+			String creator = this.sender != null ? this.sender.getName() : "CONSOLE";
+			this.data.setCreator(creator);
+			this.data.setWatchers(new HashMap<>());
 			this.replay.setData(this.data);
-			this.replay.setReplayInfo(new ReplayInfo(this.replay.getId(), this.sender.getName(), System.currentTimeMillis(), this.currentTick));
+			this.replay.setReplayInfo(new ReplayInfo(this.replay.getId(), creator, System.currentTimeMillis(), this.currentTick));
 			ReplaySaver.save(this.replay);
 		} else {
 			this.data.getActions().clear();
