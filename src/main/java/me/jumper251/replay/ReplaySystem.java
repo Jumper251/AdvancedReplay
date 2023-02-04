@@ -4,6 +4,7 @@ package me.jumper251.replay;
 import java.util.HashMap;
 
 
+import me.jumper251.replay.replaysystem.replaying.ReplayWorldManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -23,6 +24,8 @@ public class ReplaySystem extends JavaPlugin {
 
 	
 	public static ReplaySystem instance;
+
+	public static ReplayWorldManager replayWorldManager;
 	
 	public static Updater updater;
 	public static Metrics metrics;
@@ -56,6 +59,8 @@ public class ReplaySystem extends JavaPlugin {
 		
 		updater = new Updater();
 		metrics = new Metrics(this, 2188);
+
+		replayWorldManager = new ReplayWorldManager();
 		
 		if (ConfigManager.CLEANUP_REPLAYS > 0) {
 			ReplayCleanup.cleanupReplays();

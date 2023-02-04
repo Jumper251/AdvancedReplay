@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import me.jumper251.replay.replaysystem.data.types.BlockChangeData;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -59,6 +61,8 @@ public class Replayer {
 	
 	private ReplayingUtils utils;
 	private ReplaySession session;
+
+	private World world;
 		
 	public Replayer(Replay replay, Player watcher) {
 		this.replay = replay;
@@ -75,41 +79,68 @@ public class Replayer {
 	}
 	
 	
-	public void start() {
+	public void prepare() {
+		SpawnData spawnData = null;
+		ReplayData data = this.replay.getData();
+		if (data.getActions().containsKey(0)) {
+			for (ActionData startData : data.getActions().get(0)) {
+				if (startData.getPacketData() instanceof SpawnData) {
+					spawnData = (SpawnData) startData.getPacketData();
+				}
+			}
+		} else {
+			Optional<SpawnData> spawnDataOptional = findFirstSpawn(data);
+			if (spawnDataOptional.isPresent()) spawnData = spawnDataOptional.get();
+		}
+
+		if (spawnData == null) {
+			System.out.println("Spawn data is null!");
+			return;
+		}
+
+		ReplaySystem.replayWorldManager.cloneReplayWorld(this, spawnData.getLocation().getWorld(), watcher.getName());
+	}
+
+	public void start(World world) {
+		this.world = world;
 		ReplayData data = this.replay.getData();
 		int duration = data.getDuration();
 		this.session.setStart(watcher.getLocation());
-		
+
 		if (data.getActions().containsKey(0)) {
 			for (ActionData startData : data.getActions().get(0)) {
 				if (startData.getPacketData() instanceof SpawnData) {
 					SpawnData spawnData = (SpawnData) startData.getPacketData();
+					spawnData.getLocation().setWorld(world.getName());
 					watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
 					break;
 				}
 			}
 		} else {
-			Optional<SpawnData> spawnData = findFirstSpawn(data);
-			if (spawnData.isPresent()) watcher.teleport(LocationData.toLocation(spawnData.get().getLocation()));
+			Optional<SpawnData> spawnDataOptional = findFirstSpawn(data);
+			if (spawnDataOptional.isPresent()) {
+				SpawnData spawnData = spawnDataOptional.get();
+				spawnData.getLocation().setWorld(world.getName());
+				watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
+			}
 		}
-		
-		
+
 		this.session.startSession();
-		
+
 		this.speed = 1;
-		
+
 		executeTick(0, false);
-		
+
 		this.run = new BukkitRunnable() {
-			
+
 			@Override
 			public void run() {
-				
+
 				if (Replayer.this.paused) return;
-				
+
 				Replayer.this.tmpTicks += speed;
 				if (Replayer.this.tmpTicks % 1 != 0) return;
-				
+
 				if (currentTicks < duration) {
 
 					executeTick(currentTicks++, false);
@@ -118,17 +149,16 @@ public class Replayer {
 						executeTick(currentTicks++, false);
 
 					}
-					
+
 					updateXPBar();
 				} else {
-					
+
 					stop();
 				}
 			}
 		};
-		
+
 		this.run.runTaskTimerAsynchronously(ReplaySystem.getInstance(), 1, 1);
-		
 	}
 	
 	public void executeTick(int tick, boolean reversed) {
@@ -140,7 +170,15 @@ public class Replayer {
 
 			List<ActionData> list = data.getActions().get(tick);
 			for (ActionData action : list) {
-								
+
+				if (action.getPacketData() instanceof SpawnData) {
+					((SpawnData)action.getPacketData()).getLocation().setWorld(world.getName());
+				}
+
+				if (action.getPacketData() instanceof BlockChangeData) {
+					((BlockChangeData)action.getPacketData()).getLocation().setWorld(world.getName());
+				}
+
 				utils.handleAction(action, data, reversed);
 				
 				if (action.getType() == ActionType.CUSTOM) {

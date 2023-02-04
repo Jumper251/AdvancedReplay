@@ -2,8 +2,10 @@ package me.jumper251.replay.replaysystem.data.types;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public class LocationData implements Serializable{
 
@@ -23,6 +25,7 @@ public class LocationData implements Serializable{
 		this.y = y;
 		this.z = z;
 		this.world = world;
+		StringUtils.substringBefore(world, "_game");
 	}
 	
 	public float getPitch() {
@@ -31,6 +34,10 @@ public class LocationData implements Serializable{
 	
 	public String getWorld() {
 		return world;
+	}
+
+	public void setWorld(String world) {
+		this.world = world;
 	}
 	
 	public double getX() {
@@ -59,13 +66,16 @@ public class LocationData implements Serializable{
 	
 	
 	public static LocationData fromLocation(Location loc) {
-		return new LocationData(loc.getX(), loc.getY(), loc.getZ(), loc.getWorld().getName());
+		return new LocationData(loc.getX(), loc.getY(), loc.getZ(), StringUtils.substringBefore(loc.getWorld().getName(), "_game"));
 	}
 	
 	public static Location toLocation(LocationData locationData) {
 		return new Location(Bukkit.getWorld(locationData.getWorld()), locationData.getX(), locationData.getY(), locationData.getZ());
 	}
 
+	public static Location toLocation(LocationData locationData, World world) {
+		return new Location(world, locationData.getX(), locationData.getY(), locationData.getZ());
+	}
 
 	@Override
 	public String toString() {

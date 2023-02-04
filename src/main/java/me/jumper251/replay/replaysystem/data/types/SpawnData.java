@@ -32,6 +32,10 @@ public class SpawnData extends PacketData {
 	public LocationData getLocation() {
 		return location;
 	}
+
+	public void setLocation(LocationData location) {
+		this.location = location;
+	}
 	
 	public SignatureData getSignature() {
 		return signature;

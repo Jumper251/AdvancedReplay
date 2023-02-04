@@ -66,7 +66,7 @@ public class Replay {
 		
 	private void startReplay(Player watcher) {
 		this.replayer = new Replayer(this, watcher);
-		this.replayer.start();
+		this.replayer.prepare();
 		this.isPlaying = true;
 	}
 	
