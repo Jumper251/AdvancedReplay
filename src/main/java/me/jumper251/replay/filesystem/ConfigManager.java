@@ -12,12 +12,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.database.DatabaseRegistry;
 import me.jumper251.replay.database.MySQLDatabase;
+import me.jumper251.replay.database.PostgreSQLDatabase;
 import me.jumper251.replay.replaysystem.recording.optimization.ReplayQuality;
 import me.jumper251.replay.utils.LogUtils;
 
 public class ConfigManager {
 
-	public static File sqlFile = new File(ReplaySystem.getInstance().getDataFolder(), "mysql.yml");
+	public static File sqlFile = new File(ReplaySystem.getInstance().getDataFolder(), "database.yml");
 	public static FileConfiguration sqlCfg = YamlConfiguration.loadConfiguration(sqlFile);
 	
 	public static File file = new File(ReplaySystem.getInstance().getDataFolder(), "config.yml");
@@ -28,8 +29,9 @@ public class ConfigManager {
 	public static boolean RECORD_BLOCKS, REAL_CHANGES;
 	public static boolean RECORD_ITEMS, RECORD_ENTITIES;
 	public static boolean RECORD_CHAT;
-	public static boolean SAVE_STOP, RECORD_STARTUP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
+	public static boolean SAVE_STOP, RECORD_STARTUP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, ADD_PLAYERS;
 	public static boolean WORLD_RESET;
+	public static String STORAGE;
 	
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
@@ -57,7 +59,7 @@ public class ConfigManager {
 			cfg.set("general.max_length", 3600);
 			cfg.set("general.record_on_startup", false);
 			cfg.set("general.save_on_stop", false);
-			cfg.set("general.use_mysql", false);
+			cfg.set("general.storage", "FILE"); //FILE, MYSQL, POSTGRESQL
 			cfg.set("general.use_offline_skins", true);
 			cfg.set("general.quality", "high");
 			cfg.set("general.cleanup_replays", -1);
@@ -102,7 +104,7 @@ public class ConfigManager {
 		CLEANUP_REPLAYS = cfg.getInt("general.cleanup_replays", -1);
 		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
-		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
+		if (initial ) STORAGE = cfg.getString("general.storage");
 
 		DEATH_MESSAGE = cfg.getString("general.death_message");
 		LEAVE_MESSAGE = cfg.getString("general.quit_message");
@@ -117,7 +119,7 @@ public class ConfigManager {
 		RECORD_ENTITIES = cfg.getBoolean("recording.entities.enabled");
 		RECORD_CHAT = cfg.getBoolean("recording.chat.enabled");
 
-		if (USE_DATABASE) {
+		if (STORAGE.toUpperCase()=="POSTGRESQL" || STORAGE.toUpperCase()=="MYSQL") {
 			
 			String host = sqlCfg.getString("host");
 			int port = sqlCfg.getInt("port", 3306);
@@ -126,10 +128,15 @@ public class ConfigManager {
 			String password = sqlCfg.getString("password");
 			String prefix = sqlCfg.getString("prefix", "");
 
-			MySQLDatabase mysql = new MySQLDatabase(host, port, database, username, password, prefix);
-			DatabaseRegistry.registerDatabase(mysql);
-			DatabaseRegistry.getDatabase().getService().createReplayTable();
-			
+			if (STORAGE=="MYSQL") {
+				MySQLDatabase mysql = new MySQLDatabase(host, port, database, username, password, prefix);
+				DatabaseRegistry.registerDatabase(mysql);
+				DatabaseRegistry.getDatabase().getService().createReplayTable();
+			} else {
+				PostgreSQLDatabase postgresql = new PostgreSQLDatabase(host, port, database, username, password, prefix);
+				DatabaseRegistry.registerDatabase(postgresql);
+				DatabaseRegistry.getDatabase().getService().createReplayTable();
+			}
 		}
 
 

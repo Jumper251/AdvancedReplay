@@ -42,7 +42,7 @@ public class ReplayMigrateCommand extends SubCommand {
 				migrationSaver = new DefaultReplaySaver();
 				
 			} else if (option.equalsIgnoreCase("database") && ReplaySaver.replaySaver instanceof DefaultReplaySaver) {
-				ConfigManager.USE_DATABASE = true;
+				ConfigManager.STORAGE = "POSTGRESQL";
 				ConfigManager.loadData(false);
 
 				migrationSaver = new DatabaseReplaySaver();
