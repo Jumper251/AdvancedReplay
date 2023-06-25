@@ -4,6 +4,8 @@ package me.jumper251.replay;
 import java.util.HashMap;
 
 
+import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
+import me.jumper251.replay.replaysystem.replaying.Replayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -29,14 +31,20 @@ public class ReplaySystem extends JavaPlugin {
 	
 	public final static String PREFIX = "§8[§3Replay§8] §r§7";
 
+	public static boolean isPluginDisabling = false;
+
 	
 	@Override
 	public void onDisable() {
+		isPluginDisabling = true;
 		for (Replay replay : new HashMap<>(ReplayManager.activeReplays).values()) {
 		    if (replay.isRecording() && replay.getRecorder().getData().getActions().size() > 0) {
 				replay.getRecorder().stop(ConfigManager.SAVE_STOP);
-				
 			}
+		}
+		for(Replayer replay : ReplayHelper.replaySessions.values()){
+			System.out.println("Stopping Replay");
+			replay.stop();
 		}
 
 	}

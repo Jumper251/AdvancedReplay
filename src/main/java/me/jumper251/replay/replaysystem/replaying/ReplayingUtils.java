@@ -567,15 +567,9 @@ public class ReplayingUtils {
 	public void despawn(List<Entity> entities, int[] ids) {
 		
 		if (entities != null && entities.size() > 0) {
-			new BukkitRunnable() {
-			
-				@Override
-				public void run() {
-					for (Entity en : entities) {
-						if (en != null) en.remove();
-					}
-				}
-			}.runTask(ReplaySystem.getInstance());
+			for (Entity en : entities) {
+				if (en != null) en.remove();
+			}
 		}
 		
 		if (ids != null && ids.length > 0) {
