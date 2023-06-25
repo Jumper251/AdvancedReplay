@@ -91,28 +91,21 @@ public class ReplaySession {
 		
 		this.packetListener.unregister();
 
-		
-		new BukkitRunnable() {
-			
-			@Override
-			public void run() {
-				resetPlayer();
-				
-				player.teleport(start);
-				
-				
-				if (ConfigManager.HIDE_PLAYERS) {
-					for (Player all : Bukkit.getOnlinePlayers()) {
-						if (all == player) continue;
-						
-						player.showPlayer(all);
-					}
-				}
+		resetPlayer();
 
-				ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(replayer.getReplay(), player);
-				Bukkit.getPluginManager().callEvent(finishEvent);
+		player.teleport(start);
+
+
+		if (ConfigManager.HIDE_PLAYERS) {
+			for (Player all : Bukkit.getOnlinePlayers()) {
+				if (all == player) continue;
+
+				player.showPlayer(all);
 			}
-		}.runTask(ReplaySystem.getInstance());
+		}
+
+		ReplaySessionFinishEvent finishEvent = new ReplaySessionFinishEvent(replayer.getReplay(), player);
+		Bukkit.getPluginManager().callEvent(finishEvent);
 		
 
 	}
