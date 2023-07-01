@@ -105,6 +105,8 @@ public class EntityMappings {
 		entityLookup.put("FROG", 112);
 		entityLookup.put("TADPOLE", 113);
 		entityLookup.put("ALLAY", 114);
+		entityLookup.put("CAMEL", 115);
+		entityLookup.put("SNIFFER", 116);
 	}
 	
 	public static EntityMappings getInstance() {
