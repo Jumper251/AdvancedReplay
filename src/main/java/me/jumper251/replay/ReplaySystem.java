@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 
+import me.jumper251.replay.database.DatabaseRegistry;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.saving.DatabaseReplaySaver;
 import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
@@ -52,7 +53,13 @@ public class ReplaySystem extends JavaPlugin {
 		ConfigManager.loadConfigs();
 		ReplayManager.register();
 		
-		ReplaySaver.register(ConfigManager.USE_DATABASE ? new DatabaseReplaySaver() : new DefaultReplaySaver());
+		if (ConfigManager.USE_DATABASE) {
+			ReplaySaver.register(new DatabaseReplaySaver());
+			DatabaseRegistry.getDatabase().getService().getReplays().stream()
+					.forEach(info -> DatabaseReplaySaver.replayCache.put(info.getID(), info));
+		} else {
+			ReplaySaver.register(new DefaultReplaySaver());
+		}
 		
 		updater = new Updater();
 		metrics = new Metrics(this, 2188);

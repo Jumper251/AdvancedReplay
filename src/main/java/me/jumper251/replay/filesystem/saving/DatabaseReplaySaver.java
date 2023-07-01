@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -20,7 +21,7 @@ import me.jumper251.replay.utils.fetcher.Consumer;
 
 public class DatabaseReplaySaver implements IReplaySaver {
 
-	public static HashMap<String, ReplayInfo> replayCache;
+	public static Map<String, ReplayInfo> replayCache = new HashMap<>();
 	
 	@Override
 	public void saveReplay(Replay replay) {
@@ -86,12 +87,7 @@ public class DatabaseReplaySaver implements IReplaySaver {
 
 	@Override
 	public boolean replayExists(String replayName) {
-		if (replayCache != null) {
-			return replayCache.containsKey(replayName);
-			
-		} else {
-			return DatabaseRegistry.getDatabase().getService().exists(replayName);
-		}
+		return replayCache.containsKey(replayName);
 	}
 
 	@Override
@@ -103,13 +99,6 @@ public class DatabaseReplaySaver implements IReplaySaver {
 
 	@Override
 	public List<String> getReplays() {
-		if (replayCache == null) {
-			replayCache = new HashMap<String, ReplayInfo>();
-			
-			DatabaseRegistry.getDatabase().getService().getReplays().stream()
-			.forEach(info -> replayCache.put(info.getID(), info));
-		}
-		
 		return new ArrayList<String>(replayCache.keySet());
 	}
 	
@@ -120,13 +109,10 @@ public class DatabaseReplaySaver implements IReplaySaver {
 	}
 	
 	private void updateCache(String id, ReplayInfo info) {
-		if (replayCache == null) replayCache = new HashMap<String, ReplayInfo>();
-		
 		if (info != null && id != null) {
 			replayCache.put(id, info);
 		} else if (replayCache.containsKey(id)) {
 			replayCache.remove(id);
 		}
 	}
-
 }
