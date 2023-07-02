@@ -58,7 +58,7 @@ public class ConfigManager {
 			cfg.set("general.record_on_startup", false);
 			cfg.set("general.save_on_stop", false);
 			cfg.set("general.use_mysql", false);
-			cfg.set("general.use_offline_skins", true);
+			cfg.set("general.use_offline_skins", false);
 			cfg.set("general.quality", "high");
 			cfg.set("general.cleanup_replays", -1);
 			cfg.set("general.hide_players", false);

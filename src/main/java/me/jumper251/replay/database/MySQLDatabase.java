@@ -37,10 +37,12 @@ public class MySQLDatabase extends Database {
 	@Override
 	public void connect() {
 		try {
+			Class.forName("com.mysql.jdbc.Driver");
+
 			String dsn = this.getDataSourceName();
 			this.connection = DriverManager.getConnection(dsn, this.user, this.password);
 			LogUtils.log("Successfully conntected to MySQL database");
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			LogUtils.log("Unable to connect to MySQL database: " + e.getMessage());
 		}
 	}
