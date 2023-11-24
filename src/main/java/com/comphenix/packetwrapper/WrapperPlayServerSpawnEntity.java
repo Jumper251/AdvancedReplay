@@ -32,6 +32,7 @@ import com.comphenix.protocol.injector.PacketConstructor;
 
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+import org.bukkit.util.Vector;
 
 public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	public static final PacketType TYPE = PacketType.Play.Server.SPAWN_ENTITY;
@@ -195,6 +196,12 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
 	 */
 	public void setY(double value) {
 		handle.getDoubles().write(1, value);
+	}
+
+	public void setPosition(Vector position) {
+		setX(position.getX());
+		setY(position.getY());
+		setZ(position.getZ());
 	}
 
 	/**

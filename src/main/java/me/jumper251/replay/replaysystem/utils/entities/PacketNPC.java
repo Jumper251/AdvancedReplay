@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.utils.entities;
 import java.util.*;
 
 
+import com.comphenix.packetwrapper.*;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
@@ -11,19 +12,8 @@ import com.google.common.collect.Lists;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.comphenix.packetwrapper.WrapperPlayServerAnimation;
-import com.comphenix.packetwrapper.WrapperPlayServerBed;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityHeadRotation;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityLook;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
-import com.comphenix.packetwrapper.WrapperPlayServerNamedEntitySpawn;
-import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam.Mode;
 import com.comphenix.packetwrapper.v15.WrapperPlayServerRelEntityMoveLook;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
 
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MathUtils;
@@ -49,7 +39,7 @@ public class PacketNPC implements INPC{
 	
 	private Location location, origin;
 	
-	private WrapperPlayServerNamedEntitySpawn spawnPacket;
+	private NPCSpawnPacket spawnPacket;
 	
 	private float yaw, pitch;
 	
@@ -65,7 +55,12 @@ public class PacketNPC implements INPC{
 		this.name = name;
 		this.tabMode = 1;
 		this.lastEquipment = new ArrayList<WrapperPlayServerEntityEquipment>();
-		this.spawnPacket = new WrapperPlayServerNamedEntitySpawn();
+
+		if (VersionUtil.isAbove(VersionEnum.V1_20)) {
+			this.spawnPacket = new NPCSpawnPacket(new WrapperPlayServerSpawnEntity());
+		} else {
+			this.spawnPacket = new NPCSpawnPacket(new WrapperPlayServerNamedEntitySpawn());
+		}
 	}
 	
 	public PacketNPC() {
@@ -81,7 +76,7 @@ public class PacketNPC implements INPC{
 		NPCManager.names.add(this.name);
 
 		this.spawnPacket.setEntityID(this.id);
-		this.spawnPacket.setPlayerUUID(uuid);
+		this.spawnPacket.setUniqueId(uuid);
 		this.spawnPacket.setPosition(loc.toVector());
 		this.spawnPacket.setYaw(this.yaw);
 		this.spawnPacket.setPitch(this.pitch);
@@ -329,7 +324,7 @@ public class PacketNPC implements INPC{
 	}
 	
 	public WrapperPlayServerNamedEntitySpawn getSpawnPacket() {
-		return spawnPacket;
+		return null;
 	}
 	
 	public String getName() {
