@@ -245,6 +245,11 @@ public class PacketNPC implements INPC{
 	}
 	
 	public void animate(int id) {
+		if (id == 1 && VersionUtil.isAbove(VersionEnum.V1_21)) {
+			hurt();
+			return;
+		}
+
 		WrapperPlayServerAnimation packet = new WrapperPlayServerAnimation();
 		
 		packet.setEntityID(this.id);
@@ -253,6 +258,17 @@ public class PacketNPC implements INPC{
 		for (Player player : Arrays.asList(this.visible)) {
 			if (player != null) {
 				packet.sendPacket(player);
+			}
+		}
+	}
+
+	private void hurt() {
+		PacketContainer packet = new PacketContainer(PacketType.Play.Server.HURT_ANIMATION);
+		packet.getIntegers().write(0, this.id);
+
+		for (Player player : this.visible) {
+			if (player != null) {
+				ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
 			}
 		}
 	}

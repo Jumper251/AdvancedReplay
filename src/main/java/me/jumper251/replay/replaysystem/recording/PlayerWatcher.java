@@ -47,9 +47,14 @@ public class PlayerWatcher implements Serializable{
 			
 			byte value = (byte) (burnByte | sneakByte | oldBlock | elytraByte);
 			
-			
-			builder.setValue(0, value);
-			
+
+			if (VersionUtil.isAbove(VersionEnum.V1_20)) {
+
+				builder.setByte(0, value);
+			} else {
+				builder.setValue(0, value);
+			}
+
 			if (VersionUtil.isAbove(VersionEnum.V1_14)) {
 				builder.setPoseField(getActivePose());
 			}
@@ -68,7 +73,7 @@ public class PlayerWatcher implements Serializable{
 			} else if (VersionUtil.isBetween(VersionEnum.V1_14, VersionEnum.V1_16)) {
 				builder.setValue(7, blockByte);
 			} else if (VersionUtil.isAbove(VersionEnum.V1_17)) {
-				builder.setValue(8, blockByte);
+				builder.setByte(8, blockByte);
 			} else {
 				builder.setValue(5, blockByte);
 			}
@@ -79,7 +84,7 @@ public class PlayerWatcher implements Serializable{
 	
 	private String getActivePose() {
 		if (this.sneaking) {
-			
+
 			return VersionUtil.isCompatible(VersionEnum.V1_14) ? "SNEAKING" : EntityPose.CROUCHING.toString();
 		} else if (this.swimming) {
 			

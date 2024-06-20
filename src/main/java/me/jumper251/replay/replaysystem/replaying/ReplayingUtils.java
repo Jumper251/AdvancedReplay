@@ -451,9 +451,10 @@ public class ReplayingUtils {
 		
 		if(VersionUtil.isCompatible(VersionEnum.V1_8)) {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).resetValue().getData());
+		} else if (VersionUtil.isAbove(VersionEnum.V1_21)) {
+			npc.setData(new WrappedDataWatcher());
 		} else {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).setArrows(0).resetValue().getData());
-
 		}
 		
 		if (ConfigManager.HIDE_PLAYERS && !action.getName().equals(this.replayer.getWatchingPlayer().getName())) {

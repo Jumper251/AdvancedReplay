@@ -8,27 +8,22 @@ import org.bukkit.entity.Player;
 
 public class VersionUtil {
 
-	public static String VERSION;
-	
-	public static String CLEAN_VERSION;
-	
+	public static VersionEnum VERSION;
+
 	static {
-        String bpName = Bukkit.getServer().getClass().getPackage().getName();
-         VERSION = bpName.substring(bpName.lastIndexOf(".") + 1, bpName.length());
-         
-         CLEAN_VERSION = VERSION.substring(0, VERSION.length() - 3);
+		VERSION = VersionEnum.parseVersion();
 	}
-	
+
 	public static boolean isCompatible(VersionEnum ve){
-		return VERSION.toLowerCase().contains(ve.toString().toLowerCase());
+		return VERSION.equals(ve);
 	}
 	
 	public static boolean isAbove(VersionEnum ve) {		
-		return VersionEnum.valueOf(CLEAN_VERSION.toUpperCase()).getOrder() >= ve.getOrder();
+		return VERSION.getOrder() >= ve.getOrder();
 	}
 	
 	public static boolean isBelow(VersionEnum ve) {
-		return VersionEnum.valueOf(CLEAN_VERSION.toUpperCase()).getOrder() <= ve.getOrder();
+		return VERSION.getOrder() <= ve.getOrder();
 	}
 	
 	public static boolean isBetween(VersionEnum ve1, VersionEnum ve2) {
@@ -68,18 +63,24 @@ public class VersionUtil {
 		V1_18(11),
 		V1_19(12),
 		V1_20(13),
-		CRAFTBUK(14),
-		V1_21(15);
+		V1_21(14);
 
 		
 		private int order;
 		
-		private VersionEnum(int order) {
+		VersionEnum(int order) {
 			this.order = order;
 		}
 		
 		public int getOrder() {
 			return order;
+		}
+
+		public static VersionEnum parseVersion() {
+			String version = Bukkit.getBukkitVersion().split("-")[0];
+			String majorMinor = version.split("\\.")[0] + "_" + version.split("\\.")[1];
+
+			return VersionEnum.valueOf("V" + majorMinor);
 		}
 
 	}

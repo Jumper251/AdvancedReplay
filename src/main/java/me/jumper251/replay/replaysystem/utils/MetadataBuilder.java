@@ -3,6 +3,7 @@ package me.jumper251.replay.replaysystem.utils;
 
 import java.lang.reflect.Method;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.entity.Entity;
 
 import com.comphenix.protocol.wrappers.EnumWrappers.EntityPose;
@@ -28,7 +29,21 @@ public class MetadataBuilder {
 	
 	public MetadataBuilder setValue(int index, Object value) {
 		this.data.setObject(index, value);
-		
+		return this;
+	}
+
+	public MetadataBuilder setByte(int index, byte value)  {
+		this.data.setByte(index, value, false);
+		return this;
+	}
+
+	public MetadataBuilder setBoolean(int index, boolean value) {
+		this.data.setBoolean(index, value, false);
+		return this;
+	}
+
+	public MetadataBuilder setInteger(int index, int value) {
+		this.data.setInteger(index, value, false);
 		return this;
 	}
 	
@@ -42,7 +57,7 @@ public class MetadataBuilder {
 	
 	public MetadataBuilder resetValue() {
 		if (VersionUtil.isAbove(VersionEnum.V1_14)) {
-			return setValue(0, (byte) 0).setPoseField("STANDING");
+			return setByte(0, (byte) 0).setPoseField("STANDING");
 		} else {
 			return setValue(0, (byte) 0);
 		}
@@ -87,7 +102,11 @@ public class MetadataBuilder {
 	}
 	
 	public MetadataBuilder setPoseField(String type) {
-		if (VersionUtil.isAbove(VersionEnum.V1_17)) {
+		if (VersionUtil.isAbove(VersionEnum.V1_21)) {
+			EntityPose pose = EntityPose.valueOf(type);
+			this.data.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(6, WrappedDataWatcher.Registry.get(EnumWrappers.getEntityPoseClass(), false)), pose.toNms());
+			return this;
+		} else if (VersionUtil.isAbove(VersionEnum.V1_17)) {
 			return setValue(6, EntityPose.valueOf(type).toNms());
 		}
 		
