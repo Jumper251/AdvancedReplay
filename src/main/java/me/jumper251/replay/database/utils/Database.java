@@ -14,8 +14,6 @@ public abstract class Database {
     		this.database = database;
     		this.user = user;
     		this.password = password;
-    		
-    		connect();
     }
     
     public abstract void connect(); 

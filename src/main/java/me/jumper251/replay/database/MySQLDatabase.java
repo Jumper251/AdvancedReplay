@@ -7,7 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.database.utils.AutoReconnector;
 import me.jumper251.replay.database.utils.Database;
@@ -20,18 +22,27 @@ public class MySQLDatabase extends Database {
 
 	private Connection connection;
 	private MySQLService service;
+	private List<String> properties;
+
+	public static final List<String> DEFAULT_PROPERTIES = Lists.newArrayList("useSSL=false", "characterEncoding=latin1");
 	
-	public MySQLDatabase(String host, int port, String database, String user, String password, String prefix) {
+	public MySQLDatabase(String host, int port, String database, String user, String password, String prefix, List<String> properties) {
 		super(host, port, database, user, password);
 
 		this.service = new MySQLService(this, prefix);
+		this.properties = properties;
 		new AutoReconnector(ReplaySystem.instance);
+
+		connect();
 
 	}
 
 	@Override
 	public String getDataSourceName() {
-		return String.format("jdbc:mysql://%s:%d/%s?useSSL=false&characterEncoding=latin1", this.host, this.port, this.database);
+		if (properties != null && !properties.isEmpty()) {
+			return String.format("jdbc:mysql://%s:%d/%s?%s", this.host, this.port, this.database, String.join("&", properties));
+		}
+		return String.format("jdbc:mysql://%s:%d/%s", this.host, this.port, this.database);
 	}
 
 	@Override

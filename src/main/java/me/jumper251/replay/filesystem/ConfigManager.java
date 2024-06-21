@@ -4,6 +4,7 @@ import java.io.File;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,6 +44,7 @@ public class ConfigManager {
 			sqlCfg.set("database", "database");
 			sqlCfg.set("password", "password");
 			sqlCfg.set("prefix", "");
+			sqlCfg.set("properties", MySQLDatabase.DEFAULT_PROPERTIES);
 
 			try {
 				sqlCfg.save(sqlFile);
@@ -125,8 +127,9 @@ public class ConfigManager {
 			String database = sqlCfg.getString("database");
 			String password = sqlCfg.getString("password");
 			String prefix = sqlCfg.getString("prefix", "");
+			List<String> properties = (List<String>) sqlCfg.getList("properties", MySQLDatabase.DEFAULT_PROPERTIES);
 
-			MySQLDatabase mysql = new MySQLDatabase(host, port, database, username, password, prefix);
+			MySQLDatabase mysql = new MySQLDatabase(host, port, database, username, password, prefix, properties);
 			DatabaseRegistry.registerDatabase(mysql);
 			DatabaseRegistry.getDatabase().getService().createReplayTable();
 			
