@@ -158,6 +158,8 @@ public class Replayer {
 	}
 	
 	private void updateXPBar() {
+		if (!ConfigManager.USE_XP_BAR) return;
+
 		int level = currentTicks / 20;
 		float percentage = (float) currentTicks / this.replay.getData().getDuration();
 

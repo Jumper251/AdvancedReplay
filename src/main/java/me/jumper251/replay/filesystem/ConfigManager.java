@@ -31,7 +31,10 @@ public class ConfigManager {
 	public static boolean RECORD_CHAT;
 	public static boolean SAVE_STOP, RECORD_STARTUP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	public static boolean WORLD_RESET;
-	
+
+	public static boolean USE_XP_BAR;
+
+
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
 	public static String DEATH_MESSAGE, LEAVE_MESSAGE, CHAT_FORMAT, JOIN_MESSAGE;
@@ -72,7 +75,8 @@ public class ConfigManager {
 			cfg.set("general.join_message", "&6{name} &7joined the game.");
 
 			cfg.set("replaying.world.reset_changes", false);
-			
+			cfg.set("replaying.use_xp_bar", true);
+
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
 			cfg.set("recording.entities.enabled", false);
@@ -118,6 +122,8 @@ public class ConfigManager {
 		RECORD_ITEMS = cfg.getBoolean("recording.entities.items.enabled");
 		RECORD_ENTITIES = cfg.getBoolean("recording.entities.enabled");
 		RECORD_CHAT = cfg.getBoolean("recording.chat.enabled");
+
+		USE_XP_BAR = cfg.getBoolean("replaying.use_xp_bar", true);
 
 		if (USE_DATABASE) {
 			

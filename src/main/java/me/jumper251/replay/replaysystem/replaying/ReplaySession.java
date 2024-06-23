@@ -125,9 +125,11 @@ public class ReplaySession {
 			player.setFlying(false);
 			player.setAllowFlight(false);
 		}
-		
-		player.setLevel(level);
-		player.setExp(xp);
+
+		if (ConfigManager.USE_XP_BAR) {
+			player.setLevel(level);
+			player.setExp(xp);
+		}
 	}
 
 	public void setStart(Location start) {
