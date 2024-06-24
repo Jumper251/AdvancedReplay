@@ -98,7 +98,7 @@ public class Replayer {
 		
 		this.speed = 1;
 		
-		executeTick(0, false);
+		executeTick(0, ReplayingMode.PLAYING);
 		
 		this.run = new BukkitRunnable() {
 			
@@ -112,10 +112,10 @@ public class Replayer {
 				
 				if (currentTicks < duration) {
 
-					executeTick(currentTicks++, false);
+					executeTick(currentTicks++, ReplayingMode.PLAYING);
 
 					if ((currentTicks + 2) < duration && speed == 2)  {
-						executeTick(currentTicks++, false);
+						executeTick(currentTicks++, ReplayingMode.PLAYING);
 
 					}
 					
@@ -130,8 +130,8 @@ public class Replayer {
 		this.run.runTaskTimerAsynchronously(ReplaySystem.getInstance(), 1, 1);
 		
 	}
-	
-	public void executeTick(int tick, boolean reversed) {
+
+	public void executeTick(int tick, ReplayingMode mode) {
 		ReplayData data = this.replay.getData();
 		if (!data.getActions().isEmpty() && data.getActions().containsKey(tick)) {
 
@@ -141,7 +141,7 @@ public class Replayer {
 			List<ActionData> list = data.getActions().get(tick);
 			for (ActionData action : list) {
 								
-				utils.handleAction(action, data, reversed);
+				utils.handleAction(action, data, mode);
 				
 				if (action.getType() == ActionType.CUSTOM) {
 					if (ReplayAPI.getInstance().getHookManager().isRegistered()) {

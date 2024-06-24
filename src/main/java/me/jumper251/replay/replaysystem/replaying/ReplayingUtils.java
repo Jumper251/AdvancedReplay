@@ -79,7 +79,9 @@ public class ReplayingUtils {
 		this.signatures = new HashMap<>();
 	}
 	
-	public void handleAction(ActionData action, ReplayData data, boolean reversed) {
+	public void handleAction(ActionData action, ReplayData data, ReplayingMode mode) {
+		boolean reversed = mode == ReplayingMode.REVERSED;
+
 		if (action.getType() == ActionType.SPAWN) {
 			if (!reversed) {
 				spawnNPC(action);
@@ -313,8 +315,17 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof FishingData) {
 				FishingData fishing = (FishingData) action.getPacketData();
-				spawnProjectile(null, fishing, replayer.getWatchingPlayer().getWorld(), npc.getId());
-				
+				int ownerId = replayer.getNPCList().getOrDefault(fishing.getOwner(), npc).getId();
+
+				if (mode == ReplayingMode.PLAYING) {
+					spawnProjectile(null, fishing, replayer.getWatchingPlayer().getWorld(), ownerId);
+				}
+
+				if (reversed && hooks.containsKey(fishing.getId())) {
+					despawn(null, new int[] { hooks.get(fishing.getId()) });
+					hooks.remove(fishing.getId());
+
+				}
 			}
 			
 			if (action.getPacketData() instanceof VelocityData) {
@@ -381,7 +392,7 @@ public class ReplayingUtils {
 		}
 
 		for (int i = currentTick; i < forwardTicks; i++) {
-			this.replayer.executeTick(i, false);
+			this.replayer.executeTick(i, ReplayingMode.FORWARD);
 		}
 		this.replayer.setCurrentTicks(forwardTicks);
 		this.replayer.setPaused(paused);
@@ -399,7 +410,7 @@ public class ReplayingUtils {
 		}
 
 		for (int i = currentTick; i > backwardTicks; i--) {
-			this.replayer.executeTick(i, true);
+			this.replayer.executeTick(i, ReplayingMode.REVERSED);
 		}
 		this.replayer.setCurrentTicks(backwardTicks);
 		this.replayer.setPaused(paused);
@@ -413,7 +424,7 @@ public class ReplayingUtils {
 
 			if ((targetTicks - 2) > 0) {
 				for (int i = currentTick; i > targetTicks; i--) {
-					this.replayer.executeTick(i, true);
+					this.replayer.executeTick(i, ReplayingMode.REVERSED);
 				}
 
 				this.replayer.setCurrentTicks(targetTicks);
@@ -425,7 +436,7 @@ public class ReplayingUtils {
 
 			if ((targetTicks + 2) < duration) {
 				for (int i = currentTick; i < targetTicks; i++) {
-					this.replayer.executeTick(i, false);
+					this.replayer.executeTick(i, ReplayingMode.FORWARD);
 				}
 				this.replayer.setCurrentTicks(targetTicks);
 				this.replayer.setPaused(false);

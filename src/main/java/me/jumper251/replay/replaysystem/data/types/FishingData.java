@@ -13,13 +13,16 @@ public class FishingData extends PacketData {
 	private double x, y, z;
 	
 	private int id;
+
+	private String owner;
 	
-	public FishingData(int id, LocationData location, double x, double y, double z)  {
+	public FishingData(int id, LocationData location, double x, double y, double z, String owner)  {
 		this.location = location;
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.id = id;
+		this.owner = owner;
 	}
 	
 	public LocationData getLocation() {
@@ -42,4 +45,7 @@ public class FishingData extends PacketData {
 		return id;
 	}
 
+	public String getOwner() {
+		return owner;
+	}
 }

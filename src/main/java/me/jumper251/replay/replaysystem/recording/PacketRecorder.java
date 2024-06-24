@@ -195,10 +195,18 @@ public class PacketRecorder extends AbstractListener{
             
             			}
         				if ((type == 90 || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityType.FISHING_HOOK))  && !spawnedHooks.contains(packet.getEntityID())) {
+							int throwerId = VersionUtil.isCompatible(VersionEnum.V1_8) ? oldPacket.getObjectData() : packet.getObjectData();
+
+							String ownerName = Bukkit.getOnlinePlayers().stream()
+									.filter(player -> (player.getWorld().getName().equals(p.getWorld().getName()) && player.getEntityId() == throwerId))
+									.findFirst()
+									.map(Player::getName)
+									.orElse(null);
+
         					if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
-        						addData(p.getName(), new FishingData(oldPacket.getEntityID(), location, oldPacket.getOptionalSpeedX(), oldPacket.getOptionalSpeedY(), oldPacket.getOptionalSpeedZ()));
+        						addData(p.getName(), new FishingData(oldPacket.getEntityID(), location, oldPacket.getOptionalSpeedX(), oldPacket.getOptionalSpeedY(), oldPacket.getOptionalSpeedZ(), ownerName));
         					} else {
-        						addData(p.getName(), new FishingData(packet.getEntityID(), location, packet.getOptionalSpeedX(), packet.getOptionalSpeedY(), packet.getOptionalSpeedZ()));
+        						addData(p.getName(), new FishingData(packet.getEntityID(), location, packet.getOptionalSpeedX(), packet.getOptionalSpeedY(), packet.getOptionalSpeedZ(), ownerName));
         					}
         					spawnedHooks.add(packet.getEntityID());
         				}
