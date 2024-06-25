@@ -93,15 +93,15 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
 	public List<String> onTabComplete(CommandSender cs, Command cmd, String label, String[] args) {
 		String perm = args.length >= 1 ? args[0] : "overview";
 		
-		if (!checkPermission(cs, perm)) return new ArrayList<String>();
-		
-		
 		if (args.length == 1) {
 			return this.subCommands.stream()
 					.map(SubCommand::getLabel)
 					.filter(name -> StringUtil.startsWithIgnoreCase(name, args[0]))
+					.filter(name -> checkPermission(cs, name))
 					.collect(Collectors.toList());
 		} else {
+			if (!checkPermission(cs, perm)) return new ArrayList<>();
+
 			SubCommand sub = this.subCommands.stream()
 					.filter(sc -> sc.getLabel().equalsIgnoreCase(args[0]) || sc.getAliases().contains(args[0]))
 					.findAny()
