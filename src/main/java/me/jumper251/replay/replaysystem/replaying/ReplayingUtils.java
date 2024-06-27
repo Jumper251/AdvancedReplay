@@ -1,7 +1,6 @@
 package me.jumper251.replay.replaysystem.replaying;
 
 
-
 import java.util.ArrayDeque;
 
 
@@ -14,6 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity;
 import me.jumper251.replay.replaysystem.data.types.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -59,9 +59,9 @@ import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 
 public class ReplayingUtils {
-
+	
 	private Replayer replayer;
-		
+	
 	private Map<String, SignatureData> signatures;
 	
 	private Deque<ActionData> lastSpawnActions;
@@ -69,7 +69,7 @@ public class ReplayingUtils {
 	private HashMap<Integer, Entity> itemEntities;
 	
 	private HashMap<Integer, Integer> hooks;
-
+	
 	public ReplayingUtils(Replayer replayer) {
 		this.replayer = replayer;
 		this.itemEntities = new HashMap<Integer, Entity>();
@@ -81,17 +81,18 @@ public class ReplayingUtils {
 	
 	public void handleAction(ActionData action, ReplayData data, ReplayingMode mode) {
 		boolean reversed = mode == ReplayingMode.REVERSED;
-
+		
 		if (action.getType() == ActionType.SPAWN) {
 			if (!reversed) {
 				spawnNPC(action);
-			} else if (reversed && replayer.getNPCList().containsKey(action.getName())){
+			} else if (reversed && replayer.getNPCList().containsKey(action.getName())) {
 				INPC npc = this.replayer.getNPCList().get(action.getName());
 				npc.remove();
 				replayer.getNPCList().remove(action.getName());
-
+				
 			}
-		}	
+		}
+		
 		
 		if (action.getType() == ActionType.MESSAGE && !reversed) {
 			ChatData message = (ChatData) action.getPacketData();
@@ -100,17 +101,35 @@ public class ReplayingUtils {
 		
 		if (action.getType() == ActionType.PACKET && this.replayer.getNPCList().containsKey(action.getName())) {
 			INPC npc = this.replayer.getNPCList().get(action.getName());
-
+			
+			if (action.getPacketData() instanceof EntityDestroyData) {
+				EntityDestroyData destroyData = (EntityDestroyData) action.getPacketData();
+				
+				if (!reversed) {
+					WrapperPlayServerEntityDestroy packet = new WrapperPlayServerEntityDestroy();
+					packet.setEntityIds(new int[]{destroyData.getId()});
+					
+					packet.sendPacket(replayer.getWatchingPlayer());
+				}
+			}
+			
+			if (action.getPacketData() instanceof TNTSpawnData) {
+				TNTSpawnData tntSpawn = (TNTSpawnData) action.getPacketData();
+				
+				if (!reversed) {
+					spawnTNT(tntSpawn);
+				}
+			}
 			
 			if (action.getPacketData() instanceof MovingData) {
 				MovingData movingData = (MovingData) action.getPacketData();
 				
 				if (VersionUtil.isAbove(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_8)) {
 					double distance = npc.getLocation().distance(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()));
-
+					
 					if (distance > 8) {
 						npc.teleport(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true);
-
+						
 					} else {
 						npc.move(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true, movingData.getYaw(), movingData.getPitch());
 					}
@@ -120,14 +139,14 @@ public class ReplayingUtils {
 					npc.teleport(new Location(npc.getOrigin().getWorld(), movingData.getX(), movingData.getY(), movingData.getZ()), true);
 					npc.look(movingData.getYaw(), movingData.getPitch());
 				}
-		
+				
 			}
 			
 			if (action.getPacketData() instanceof EntityActionData) {
 				EntityActionData eaData = (EntityActionData) action.getPacketData();
 				if (eaData.getAction() == PlayerAction.START_SNEAKING) {
 					data.getWatcher(action.getName()).setSneaking(reversed ? false : true);
-
+					
 					npc.setData(data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData())));
 				} else if (eaData.getAction() == PlayerAction.STOP_SNEAKING) {
 					data.getWatcher(action.getName()).setSneaking(reversed);
@@ -146,21 +165,21 @@ public class ReplayingUtils {
 					replayer.getWatchingPlayer().playSound(npc.getLocation(), Sound.ENTITY_PLAYER_HURT, 5F, 5.0F);
 				}
 			}
-
+			
 			if (action.getPacketData() instanceof ChatData) {
 				ChatData chatData = (ChatData) action.getPacketData();
-
+				
 				replayer.sendMessage(new MessageBuilder(ConfigManager.CHAT_FORMAT)
 						.set("name", action.getName())
 						.set("message", chatData.getMessage())
 						.build());
 			}
-
+			
 			if (action.getPacketData() instanceof InvData) {
 				InvData invData = (InvData) action.getPacketData();
 				
 				if (!VersionUtil.isCompatible(VersionEnum.V1_8)) {
-			
+					
 					List<WrapperPlayServerEntityEquipment> equipment = VersionUtil.isBelow(VersionEnum.V1_15) ? NPCManager.updateEquipment(npc.getId(), invData) : NPCManager.updateEquipmentv16(npc.getId(), invData);
 					npc.setLastEquipment(equipment);
 					
@@ -180,18 +199,18 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof MetadataUpdate) {
 				MetadataUpdate update = (MetadataUpdate) action.getPacketData();
-
+				
 				data.getWatcher(action.getName()).setBurning(!reversed ? update.isBurning() : false);
 				data.getWatcher(action.getName()).setBlocking(!reversed ? update.isBlocking() : false);
 				data.getWatcher(action.getName()).setElytra(!reversed ? update.isGliding() : false);
 				data.getWatcher(action.getName()).setSwimming(!reversed ? update.isSwimming() : false);
-
+				
 				WrappedDataWatcher dataWatcher = data.getWatcher(action.getName()).getMetadata(new MetadataBuilder(npc.getData()));
 				npc.setData(dataWatcher);
 				
 				npc.updateMetadata();
 				
-			
+				
 			}
 			
 			if (action.getPacketData() instanceof ProjectileData) {
@@ -210,6 +229,7 @@ public class ReplayingUtils {
 				setBlockChange(blockChange);
 			}
 			
+			
 			if (action.getPacketData() instanceof BedEnterData) {
 				BedEnterData bed = (BedEnterData) action.getPacketData();
 				
@@ -222,7 +242,7 @@ public class ReplayingUtils {
 					
 					npc.updateMetadata();
 					npc.teleport(LocationData.toLocation(bed.getLocation()), true);
-
+					
 					
 				} else {
 					npc.sleep(LocationData.toLocation(bed.getLocation()));
@@ -231,19 +251,19 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof EntityItemData) {
 				EntityItemData entityData = (EntityItemData) action.getPacketData();
-
+				
 				if (entityData.getAction() == 0 && !reversed) {
 					spawnItemStack(entityData);
-				} else if (entityData.getAction() == 1){
+				} else if (entityData.getAction() == 1) {
 					if (itemEntities.containsKey(entityData.getId())) {
-						despawn(Arrays.asList(new Entity[] { itemEntities.get(entityData.getId()) }), null);
+						despawn(Arrays.asList(new Entity[]{itemEntities.get(entityData.getId())}), null);
 						
 						itemEntities.remove(entityData.getId());
 					}
 				} else {
 					if (hooks.containsKey(entityData.getId())) {
-						despawn(null, new int[] { hooks.get(entityData.getId()) });
-
+						despawn(null, new int[]{hooks.get(entityData.getId())});
+						
 						hooks.remove(entityData.getId());
 					}
 				}
@@ -251,24 +271,24 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof EntityData) {
 				EntityData entityData = (EntityData) action.getPacketData();
-
+				
 				if (entityData.getAction() == 0) {
 					if (!reversed) {
-					IEntity entity = VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketEntityOld(EntityType.valueOf(entityData.getType()))  : new PacketEntity(EntityType.valueOf(entityData.getType()));
-					entity.spawn(LocationData.toLocation(entityData.getLocation()), this.replayer.getWatchingPlayer());
-					replayer.getEntityList().put(entityData.getId(), entity);
-					} else if (replayer.getEntityList().containsKey(entityData.getId())){
+						IEntity entity = VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketEntityOld(EntityType.valueOf(entityData.getType())) : new PacketEntity(EntityType.valueOf(entityData.getType()));
+						entity.spawn(LocationData.toLocation(entityData.getLocation()), this.replayer.getWatchingPlayer());
+						replayer.getEntityList().put(entityData.getId(), entity);
+					} else if (replayer.getEntityList().containsKey(entityData.getId())) {
 						IEntity ent = replayer.getEntityList().get(entityData.getId());
 						ent.remove();
-
+						
 					}
 					
 				} else if (entityData.getAction() == 1) {
 					if (!reversed && replayer.getEntityList().containsKey(entityData.getId())) {
-					IEntity ent = replayer.getEntityList().get(entityData.getId());
-					ent.remove();
+						IEntity ent = replayer.getEntityList().get(entityData.getId());
+						ent.remove();
 					} else {
-						IEntity entity = VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketEntityOld(EntityType.valueOf(entityData.getType()))  : new PacketEntity(EntityType.valueOf(entityData.getType()));
+						IEntity entity = VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketEntityOld(EntityType.valueOf(entityData.getType())) : new PacketEntity(EntityType.valueOf(entityData.getType()));
 						entity.spawn(LocationData.toLocation(entityData.getLocation()), this.replayer.getWatchingPlayer());
 						replayer.getEntityList().put(entityData.getId(), entity);
 					}
@@ -288,14 +308,14 @@ public class ReplayingUtils {
 						ent.teleport(new Location(ent.getOrigin().getWorld(), entityMoving.getX(), entityMoving.getY(), entityMoving.getZ()), true);
 						ent.look(entityMoving.getYaw(), entityMoving.getPitch());
 					}
-		
+					
 				}
 			}
 			
 			if (action.getPacketData() instanceof EntityAnimationData) {
 				EntityAnimationData entityAnimating = (EntityAnimationData) action.getPacketData();
 				if (replayer.getEntityList().containsKey(entityAnimating.getEntId()) && !reversed) {
-
+					
 					IEntity ent = replayer.getEntityList().get(entityAnimating.getEntId());
 					ent.animate(entityAnimating.getId());
 				}
@@ -316,15 +336,15 @@ public class ReplayingUtils {
 			if (action.getPacketData() instanceof FishingData) {
 				FishingData fishing = (FishingData) action.getPacketData();
 				int ownerId = replayer.getNPCList().getOrDefault(fishing.getOwner(), npc).getId();
-
+				
 				if (mode == ReplayingMode.PLAYING) {
 					spawnProjectile(null, fishing, replayer.getWatchingPlayer().getWorld(), ownerId);
 				}
-
+				
 				if (reversed && hooks.containsKey(fishing.getId())) {
-					despawn(null, new int[] { hooks.get(fishing.getId()) });
+					despawn(null, new int[]{hooks.get(fishing.getId())});
 					hooks.remove(fishing.getId());
-
+					
 				}
 			}
 			
@@ -332,8 +352,9 @@ public class ReplayingUtils {
 				VelocityData velocity = (VelocityData) action.getPacketData();
 				int entID = -1;
 				if (hooks.containsKey(velocity.getId())) entID = hooks.get(velocity.getId());
-				if (replayer.getEntityList().containsKey(velocity.getId())) entID = replayer.getEntityList().get(velocity.getId()).getId();
-
+				if (replayer.getEntityList().containsKey(velocity.getId()))
+					entID = replayer.getEntityList().get(velocity.getId()).getId();
+				
 				if (entID != -1) {
 					WrapperPlayServerEntityVelocity packet = new WrapperPlayServerEntityVelocity();
 					packet.setEntityID(entID);
@@ -343,14 +364,14 @@ public class ReplayingUtils {
 					
 					packet.sendPacket(replayer.getWatchingPlayer());
 				}
-
+				
 			}
 			
-
+			
 		}
 		
 		if (action.getType() == ActionType.DESPAWN || action.getType() == ActionType.DEATH) {
-			if (!reversed  && replayer.getNPCList().containsKey(action.getName())) {
+			if (!reversed && replayer.getNPCList().containsKey(action.getName())) {
 				INPC npc = this.replayer.getNPCList().get(action.getName());
 				npc.remove();
 				replayer.getNPCList().remove(action.getName());
@@ -369,28 +390,28 @@ public class ReplayingUtils {
 				}
 				
 			} else {
-
+				
 				if (!this.lastSpawnActions.isEmpty()) {
 					spawnNPC(this.lastSpawnActions.pollLast());
 				}
 				
 			}
-
+			
 		}
 	}
 	
 	public void forward() {
 		boolean paused = this.replayer.isPaused();
-
+		
 		this.replayer.setPaused(true);
 		int currentTick = this.replayer.getCurrentTicks();
 		int forwardTicks = currentTick + (10 * 20);
 		int duration = this.replayer.getReplay().getData().getDuration();
-
+		
 		if ((forwardTicks + 2) >= duration) {
 			forwardTicks = duration - 20;
 		}
-
+		
 		for (int i = currentTick; i < forwardTicks; i++) {
 			this.replayer.executeTick(i, ReplayingMode.FORWARD);
 		}
@@ -400,40 +421,40 @@ public class ReplayingUtils {
 	
 	public void backward() {
 		boolean paused = this.replayer.isPaused();
-
+		
 		this.replayer.setPaused(true);
 		int currentTick = this.replayer.getCurrentTicks();
 		int backwardTicks = currentTick - (10 * 20);
-
+		
 		if ((backwardTicks - 2) <= 0) {
 			backwardTicks = 1;
 		}
-
+		
 		for (int i = currentTick; i > backwardTicks; i--) {
 			this.replayer.executeTick(i, ReplayingMode.REVERSED);
 		}
 		this.replayer.setCurrentTicks(backwardTicks);
 		this.replayer.setPaused(paused);
 	}
-
+	
 	public void jumpTo(Integer seconds) {
 		int targetTicks = (seconds * 20);
 		int currentTick = replayer.getCurrentTicks();
 		if (currentTick > targetTicks) {
 			this.replayer.setPaused(true);
-
+			
 			if ((targetTicks - 2) > 0) {
 				for (int i = currentTick; i > targetTicks; i--) {
 					this.replayer.executeTick(i, ReplayingMode.REVERSED);
 				}
-
+				
 				this.replayer.setCurrentTicks(targetTicks);
 				this.replayer.setPaused(false);
 			}
 		} else if (currentTick < targetTicks) {
 			this.replayer.setPaused(true);
 			int duration = replayer.getReplay().getData().getDuration();
-
+			
 			if ((targetTicks + 2) < duration) {
 				for (int i = currentTick; i < targetTicks; i++) {
 					this.replayer.executeTick(i, ReplayingMode.FORWARD);
@@ -445,7 +466,7 @@ public class ReplayingUtils {
 	}
 	
 	private void spawnNPC(ActionData action) {
-		SpawnData spawnData = (SpawnData)action.getPacketData();
+		SpawnData spawnData = (SpawnData) action.getPacketData();
 		
 		int tabMode = Bukkit.getPlayer(action.getName()) != null ? 0 : 2;
 		
@@ -453,14 +474,14 @@ public class ReplayingUtils {
 			tabMode = 2;
 			spawnData.setUuid(UUID.randomUUID());
 		}
-
+		
 		INPC npc = !VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketNPC(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName()) : new PacketNPCOld(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName());
 		this.replayer.getNPCList().put(action.getName(), npc);
 		this.replayer.getReplay().getData().getWatchers().put(action.getName(), new PlayerWatcher(action.getName()));
-
+		
 		Location spawn = LocationData.toLocation(spawnData.getLocation());
 		
-		if(VersionUtil.isCompatible(VersionEnum.V1_8)) {
+		if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).resetValue().getData());
 		} else if (VersionUtil.isAbove(VersionEnum.V1_20)) {
 			npc.setData(new WrappedDataWatcher());
@@ -482,9 +503,25 @@ public class ReplayingUtils {
 				this.signatures.put(action.getName(), spawnData.getSignature());
 			}
 		}
-
+		
 		npc.spawn(spawn, tabMode, this.replayer.getWatchingPlayer());
-		npc.look(spawnData.getLocation().getYaw(), spawnData.getLocation().getPitch());	  
+		npc.look(spawnData.getLocation().getYaw(), spawnData.getLocation().getPitch());
+	}
+	
+	private void spawnTNT(TNTSpawnData tntSpawnData) {
+		if (tntSpawnData != null) {
+			com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity packet = new com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity();
+			
+			packet.setType(WrapperPlayServerSpawnEntity.ObjectTypes.ACTIVATED_TNT);
+			packet.setEntityID(tntSpawnData.getId());
+			
+			LocationData loc = tntSpawnData.getLocationData();
+			packet.setX(loc.getX());
+			packet.setY(loc.getY());
+			packet.setZ(loc.getZ());
+			
+			packet.sendPacket(replayer.getWatchingPlayer());
+		}
 	}
 	
 	private void spawnProjectile(ProjectileData projData, FishingData fishing, World world, int id) {
@@ -493,19 +530,19 @@ public class ReplayingUtils {
 			if (projData.getType() == EntityType.ENDER_PEARL && VersionUtil.isCompatible(VersionEnum.V1_8)) return;
 			
 			new BukkitRunnable() {
-			
+				
 				@Override
 				public void run() {
 					Projectile proj = (Projectile) world.spawnEntity(LocationData.toLocation(projData.getSpawn()), projData.getType());
 					proj.setVelocity(LocationData.toLocation(projData.getVelocity()).toVector());
-				
+					
 				}
 			}.runTask(ReplaySystem.getInstance());
-		} 
+		}
 		
-		if (fishing != null) {			
+		if (fishing != null) {
 			int rndID = MathUtils.randInt(2000, 30000);
-			AbstractPacket packet = VersionUtil.isCompatible(VersionEnum.V1_8) ? FishingUtils.createHookPacketOld(fishing, id, rndID) : FishingUtils.createHookPacket(fishing, id, rndID);	
+			AbstractPacket packet = VersionUtil.isCompatible(VersionEnum.V1_8) ? FishingUtils.createHookPacketOld(fishing, id, rndID) : FishingUtils.createHookPacket(fishing, id, rndID);
 			
 			hooks.put(fishing.getId(), rndID);
 			packet.sendPacket(replayer.getWatchingPlayer());
@@ -515,7 +552,7 @@ public class ReplayingUtils {
 	private void setBlockChange(BlockChangeData blockChange) {
 		final Location loc = LocationData.toLocation(blockChange.getLocation());
 		
-		if (ConfigManager.WORLD_RESET && ! this.replayer.getBlockChanges().containsKey(loc)) {
+		if (ConfigManager.WORLD_RESET && !this.replayer.getBlockChanges().containsKey(loc)) {
 			this.replayer.getBlockChanges().put(loc, blockChange.getBefore());
 		}
 		
@@ -531,7 +568,7 @@ public class ReplayingUtils {
 				}
 				int id = blockChange.getAfter().getId();
 				int subId = blockChange.getAfter().getSubId();
-
+				
 				if (id == 9) id = 8;
 				if (id == 11) id = 10;
 				
@@ -555,8 +592,9 @@ public class ReplayingUtils {
 	}
 	
 	private Material getBlockMaterial(ItemData data) {
-		if (data.getItemStack() != null) return MaterialBridge.getWithoutLegacy(String.valueOf(data.getItemStack().getItemStack().get("type")));
-
+		if (data.getItemStack() != null)
+			return MaterialBridge.getWithoutLegacy(String.valueOf(data.getItemStack().getItemStack().get("type")));
+		
 		return MaterialBridge.fromID(data.getId());
 	}
 	
@@ -580,7 +618,7 @@ public class ReplayingUtils {
 		
 		if (entities != null && entities.size() > 0) {
 			new BukkitRunnable() {
-			
+				
 				@Override
 				public void run() {
 					for (Entity en : entities) {
@@ -609,7 +647,7 @@ public class ReplayingUtils {
 		} else {
 			setBlocks(changes);
 		}
-
+		
 	}
 	
 	@SuppressWarnings("deprecation")
