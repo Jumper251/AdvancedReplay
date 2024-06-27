@@ -379,18 +379,10 @@ public class PacketRecorder extends AbstractListener{
 		return en.getLocation();
 	}
 
-	
-	
 	public void addData(String name, PacketData data) {
 		if (!optimizer.shouldRecord(data)) return;
-	
-		List<PacketData> list = new ArrayList<PacketData>();
-		if(this.packetData.containsKey(name)) {
-			list = this.packetData.getOrDefault(name, new ArrayList<>());
-		}
-		
-		list.add(data);
-		this.packetData.put(name, list);
+
+		this.packetData.computeIfAbsent(name, k -> new ArrayList<>()).add(data);
 	}
 	
 	public Map<String, List<PacketData>> getPacketData() {
