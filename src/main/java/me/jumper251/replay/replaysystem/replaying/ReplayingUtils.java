@@ -462,7 +462,7 @@ public class ReplayingUtils {
 		
 		if(VersionUtil.isCompatible(VersionEnum.V1_8)) {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).resetValue().getData());
-		} else if (VersionUtil.isAbove(VersionEnum.V1_21)) {
+		} else if (VersionUtil.isAbove(VersionEnum.V1_20)) {
 			npc.setData(new WrappedDataWatcher());
 		} else {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).setArrows(0).resetValue().getData());

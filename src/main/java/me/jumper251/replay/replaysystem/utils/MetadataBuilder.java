@@ -102,7 +102,7 @@ public class MetadataBuilder {
 	}
 	
 	public MetadataBuilder setPoseField(String type) {
-		if (VersionUtil.isAbove(VersionEnum.V1_21)) {
+		if (VersionUtil.isAbove(VersionEnum.V1_20)) {
 			EntityPose pose = EntityPose.valueOf(type);
 			this.data.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(6, WrappedDataWatcher.Registry.get(EnumWrappers.getEntityPoseClass(), false)), pose.toNms());
 			return this;
