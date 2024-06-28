@@ -8,3 +8,20 @@ commands:
     description: Main Replay command
     aliases: [rp]
     permission: replay.command
+
+permissions:
+  replay.command:
+    description: Permission to use the replay command
+    children:
+      - replay.command.start
+      - replay.command.stop
+      - replay.command.info
+      - replay.command.play
+      - replay.command.reload
+      - replay.command.overview
+      - replay.command.list
+      - replay.command.migrate
+      - replay.command.delete
+      - replay.command.jump
+  replay.admin:
+    description: Permission to receive update notifications
