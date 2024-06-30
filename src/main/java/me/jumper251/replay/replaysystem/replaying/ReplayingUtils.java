@@ -1,62 +1,36 @@
 package me.jumper251.replay.replaysystem.replaying;
 
 
-import java.util.ArrayDeque;
-
-
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity;
-import me.jumper251.replay.replaysystem.data.types.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Projectile;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.comphenix.packetwrapper.AbstractPacket;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityEquipment;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityVelocity;
+import com.comphenix.packetwrapper.*;
+import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
-
-import com.comphenix.protocol.wrappers.EnumWrappers.PlayerAction;
-
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.MessageBuilder;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
+import me.jumper251.replay.replaysystem.data.types.*;
 import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
-import me.jumper251.replay.replaysystem.utils.entities.FishingUtils;
-import me.jumper251.replay.replaysystem.utils.entities.IEntity;
-import me.jumper251.replay.replaysystem.utils.entities.INPC;
-import me.jumper251.replay.replaysystem.utils.entities.PacketEntity;
-import me.jumper251.replay.replaysystem.utils.entities.PacketEntityOld;
-import me.jumper251.replay.replaysystem.utils.entities.PacketNPC;
-import me.jumper251.replay.replaysystem.utils.entities.PacketNPCOld;
+import me.jumper251.replay.replaysystem.utils.entities.*;
 import me.jumper251.replay.utils.MaterialBridge;
 import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Projectile;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ReplayingUtils {
 	
@@ -69,11 +43,13 @@ public class ReplayingUtils {
 	private HashMap<Integer, Entity> itemEntities;
 	
 	private HashMap<Integer, Integer> hooks;
+	private List<Integer> tnt;
 	
 	public ReplayingUtils(Replayer replayer) {
 		this.replayer = replayer;
 		this.itemEntities = new HashMap<Integer, Entity>();
 		this.hooks = new HashMap<Integer, Integer>();
+		this.tnt = new ArrayList<Integer>();
 		
 		this.lastSpawnActions = new ArrayDeque<>();
 		this.signatures = new HashMap<>();
@@ -107,6 +83,7 @@ public class ReplayingUtils {
 				
 				if (!reversed) {
 					WrapperPlayServerEntityDestroy packet = new WrapperPlayServerEntityDestroy();
+					
 					packet.setEntityIds(new int[]{destroyData.getId()});
 					
 					packet.sendPacket(replayer.getWatchingPlayer());
@@ -114,10 +91,21 @@ public class ReplayingUtils {
 			}
 			
 			if (action.getPacketData() instanceof TNTSpawnData) {
-				TNTSpawnData tntSpawn = (TNTSpawnData) action.getPacketData();
-				
 				if (!reversed) {
+					TNTSpawnData tntSpawn = (TNTSpawnData) action.getPacketData();
 					spawnTNT(tntSpawn);
+				}
+			}
+			
+			if (action.getPacketData() instanceof ExplosionData) {
+				if (!reversed) {
+					ExplosionData explosionData = (ExplosionData) action.getPacketData();
+					explosionData.toPacket().sendPacket(replayer.getWatchingPlayer());
+					
+					if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
+						Location loc = LocationData.toLocation(explosionData.getLocation());
+						replayer.getWatchingPlayer().playSound(loc, Sound.valueOf("EXPLODE"), 4, 45f / 63f);
+					}
 				}
 			}
 			
@@ -224,6 +212,7 @@ public class ReplayingUtils {
 				
 				if (reversed) {
 					blockChange = new BlockChangeData(blockChange.getLocation(), blockChange.getAfter(), blockChange.getBefore());
+					blockChange.setDoBlockChange(true);
 				}
 				
 				setBlockChange(blockChange);
@@ -352,7 +341,8 @@ public class ReplayingUtils {
 				VelocityData velocity = (VelocityData) action.getPacketData();
 				int entID = -1;
 				if (hooks.containsKey(velocity.getId())) entID = hooks.get(velocity.getId());
-				if (replayer.getEntityList().containsKey(velocity.getId()))
+				else if (tnt.contains(velocity.getId())) entID = velocity.getId();
+				else if (replayer.getEntityList().containsKey(velocity.getId()))
 					entID = replayer.getEntityList().get(velocity.getId()).getId();
 				
 				if (entID != -1) {
@@ -366,8 +356,6 @@ public class ReplayingUtils {
 				}
 				
 			}
-			
-			
 		}
 		
 		if (action.getType() == ActionType.DESPAWN || action.getType() == ActionType.DEATH) {
@@ -510,17 +498,32 @@ public class ReplayingUtils {
 	
 	private void spawnTNT(TNTSpawnData tntSpawnData) {
 		if (tntSpawnData != null) {
-			com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity packet = new com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity();
+			if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
+				com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity packet = new com.comphenix.packetwrapper.old.WrapperPlayServerSpawnEntity();
+				
+				packet.setType(WrapperPlayServerSpawnEntity.ObjectTypes.ACTIVATED_TNT);
+				packet.setEntityID(tntSpawnData.getId());
+				
+				LocationData loc = tntSpawnData.getLocationData();
+				packet.setX(loc.getX());
+				packet.setY(loc.getY());
+				packet.setZ(loc.getZ());
+				
+				packet.sendPacket(replayer.getWatchingPlayer());
+			} else {
+				WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity();
+				packet.getHandle().getEntityTypeModifier().write(0, EntityType.PRIMED_TNT);
+				packet.setEntityID(tntSpawnData.getId());
+				
+				LocationData loc = tntSpawnData.getLocationData();
+				packet.setX(loc.getX());
+				packet.setY(loc.getY());
+				packet.setZ(loc.getZ());
+				
+				packet.sendPacket(replayer.getWatchingPlayer());
+			}
 			
-			packet.setType(WrapperPlayServerSpawnEntity.ObjectTypes.ACTIVATED_TNT);
-			packet.setEntityID(tntSpawnData.getId());
-			
-			LocationData loc = tntSpawnData.getLocationData();
-			packet.setX(loc.getX());
-			packet.setY(loc.getY());
-			packet.setZ(loc.getZ());
-			
-			packet.sendPacket(replayer.getWatchingPlayer());
+			tnt.add(tntSpawnData.getId());
 		}
 	}
 	
@@ -556,21 +559,26 @@ public class ReplayingUtils {
 			this.replayer.getBlockChanges().put(loc, blockChange.getBefore());
 		}
 		
-		
 		new BukkitRunnable() {
 			
 			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
-				if (blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9 && blockChange.getBefore().getId() != 10 && blockChange.getBefore().getId() != 8) {
+				if (blockChange.doPlayEffect() && blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9 && blockChange.getBefore().getId() != 10 && blockChange.getBefore().getId() != 8) {
 					loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().getId(), 15);
-					
+				} else if (!blockChange.doPlayEffect() && blockChange.doBlockChange() && blockChange.getBefore().getId() == Material.TNT.getId()) {
+					if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
+						loc.getWorld().playSound(loc, Sound.valueOf("FUSE"), 1, 1);
+					} else {
+						loc.getWorld().playSound(loc, Sound.ENTITY_TNT_PRIMED, 1, 1);
+					}
 				}
+				
 				int id = blockChange.getAfter().getId();
 				int subId = blockChange.getAfter().getSubId();
 				
-				if (id == 9) id = 8;
-				if (id == 11) id = 10;
+				if (id == Material.STATIONARY_WATER.getId()) id = Material.WATER.getId();
+				if (id == Material.STATIONARY_LAVA.getId()) id = Material.LAVA.getId();
 				
 				if (ConfigManager.REAL_CHANGES) {
 					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17) || VersionUtil.isCompatible(VersionEnum.V1_18) || VersionUtil.isCompatible(VersionEnum.V1_19) || VersionUtil.isCompatible(VersionEnum.V1_20) || VersionUtil.isCompatible(VersionEnum.V1_21)) {
@@ -578,14 +586,13 @@ public class ReplayingUtils {
 					} else {
 						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
 					}
-				} else {
+				} else if (blockChange.doBlockChange()) {
 					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17) || VersionUtil.isCompatible(VersionEnum.V1_18) || VersionUtil.isCompatible(VersionEnum.V1_19) || VersionUtil.isCompatible(VersionEnum.V1_20) || VersionUtil.isCompatible(VersionEnum.V1_21)) {
 						replayer.getWatchingPlayer().sendBlockChange(loc, getBlockMaterial(blockChange.getAfter()), (byte) subId);
 					} else {
 						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
 					}
 				}
-				
 				
 			}
 		}.runTask(ReplaySystem.getInstance());

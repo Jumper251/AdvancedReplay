@@ -9,11 +9,9 @@ import me.jumper251.replay.replaysystem.data.types.*;
 import me.jumper251.replay.replaysystem.utils.ItemUtils;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.utils.MaterialBridge;
-import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -30,7 +28,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class RecordingListener extends AbstractListener {
 	
@@ -324,9 +324,6 @@ public class RecordingListener extends AbstractListener {
 		}
 	}
 	
-	private final Queue<Integer> tntQueue = new LinkedList<>();
-	
-	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onTNTExplode(EntityExplodeEvent e) {
 		if (!(e.getEntity() instanceof TNTPrimed)) return;
@@ -337,46 +334,40 @@ public class RecordingListener extends AbstractListener {
 		Player p = (Player) tnt.getSource();
 		if (!this.recorder.getPlayers().contains(p.getName())) return;
 		
-		if (!tntQueue.isEmpty()) {
-			int rndID = tntQueue.poll();
-			this.packetRecorder.addData(p.getName(), new EntityDestroyData(rndID));
-		}
-		
 		for (Block block : e.blockList()) {
-			recordBlockBreak(p, block);
-			if (block.getType() == Material.TNT) {
-				
-				int rndIDNew = MathUtils.randInt(2000, 30000);
-				tntQueue.offer(rndIDNew);
-				this.packetRecorder.addData(p.getName(), new TNTSpawnData(rndIDNew, LocationData.fromLocation(block.getLocation())));
-			}
+			//Block change is done by the explosion packet.
+			// We record the block data for reversed playing, real_changes=true and world reset
+			recordBlockBreak(p, block, false, false);
 		}
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onTNTPrime(PlayerInteractEvent e) {
 		//TNTPrimeEvent is bugged without paper, so we need to use PlayerInteractEvent instead
+		if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+		if (e.getItem() == null || !(e.getItem().getType() == Material.FLINT_AND_STEEL || e.getItem().getType() == Material.FIREBALL))
+			return;
 		Block block = e.getClickedBlock();
 		if (block == null) return;
 		if (block.getType() != Material.TNT) return;
-		if (!this.recorder.getPlayers().contains(e.getPlayer().getName())) return;
+		Player p = e.getPlayer();
+		if(p.isSneaking()) return;
+		if (!this.recorder.getPlayers().contains(p.getName())) return;
 		
-		recordBlockBreak(e.getPlayer(), block);
-		
-		Location l = block.getLocation();
-		l.add(0.5, 0, 0.5);
-		int rndID = MathUtils.randInt(2000, 30000);
-		tntQueue.offer(rndID);
-		this.packetRecorder.addData(e.getPlayer().getName(), new TNTSpawnData(rndID, LocationData.fromLocation(l)));
+		recordBlockBreak(e.getPlayer(), block, false, true);
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void recordBlockBreak(Player p, Block block) {
+	private void recordBlockBreak(Player p, Block block, boolean playEffect, boolean doBlockChange) {
 		LocationData location = LocationData.fromLocation(block.getLocation());
 		ItemData before = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromMaterial(MaterialBridge.getBlockDataMaterial(block))) : new ItemData(block.getType().getId(), block.getData());
 		ItemData after = new ItemData(0, 0);
 		
-		this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
+		this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after, playEffect, doBlockChange));
+	}
+	
+	private void recordBlockBreak(Player p, Block block) {
+		recordBlockBreak(p, block, true, true);
 	}
 	
 	@SuppressWarnings("deprecation")
