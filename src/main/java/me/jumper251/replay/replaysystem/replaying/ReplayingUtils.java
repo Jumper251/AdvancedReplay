@@ -514,6 +514,7 @@ public class ReplayingUtils {
 				WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity();
 				packet.getHandle().getEntityTypeModifier().write(0, EntityType.PRIMED_TNT);
 				packet.setEntityID(tntSpawnData.getId());
+				packet.setUniqueId(UUID.randomUUID());
 				
 				LocationData loc = tntSpawnData.getLocationData();
 				packet.setX(loc.getX());
