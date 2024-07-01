@@ -565,14 +565,12 @@ public class ReplayingUtils {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {
-				if (blockChange.doPlayEffect() && blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9 && blockChange.getBefore().getId() != 10 && blockChange.getBefore().getId() != 8) {
-					loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().getId(), 15);
-				} else if (!blockChange.doPlayEffect() && blockChange.doBlockChange() && blockChange.getBefore().getId() == Material.TNT.getId()) {
-					if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
-						loc.getWorld().playSound(loc, Sound.valueOf("FUSE"), 1, 1);
-					} else {
-						loc.getWorld().playSound(loc, Sound.ENTITY_TNT_PRIMED, 1, 1);
+				if (blockChange.doPlayEffect()) {
+					if (blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9 && blockChange.getBefore().getId() != 10 && blockChange.getBefore().getId() != 8) {
+						loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().getId(), 15);
 					}
+				} else if (blockChange.doBlockChange()) {
+					playTNTFuse(loc, blockChange);
 				}
 				
 				int id = blockChange.getAfter().getId();
@@ -582,13 +580,13 @@ public class ReplayingUtils {
 				if (id == Material.STATIONARY_LAVA.getId()) id = Material.LAVA.getId();
 				
 				if (ConfigManager.REAL_CHANGES) {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17) || VersionUtil.isCompatible(VersionEnum.V1_18) || VersionUtil.isCompatible(VersionEnum.V1_19) || VersionUtil.isCompatible(VersionEnum.V1_20) || VersionUtil.isCompatible(VersionEnum.V1_21)) {
+					if (VersionUtil.isAbove(VersionEnum.V1_13)) {
 						loc.getBlock().setType(getBlockMaterial(blockChange.getAfter()), true);
 					} else {
 						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
 					}
 				} else if (blockChange.doBlockChange()) {
-					if (VersionUtil.isCompatible(VersionEnum.V1_13) || VersionUtil.isCompatible(VersionEnum.V1_14) || VersionUtil.isCompatible(VersionEnum.V1_15) || VersionUtil.isCompatible(VersionEnum.V1_16) || VersionUtil.isCompatible(VersionEnum.V1_17) || VersionUtil.isCompatible(VersionEnum.V1_18) || VersionUtil.isCompatible(VersionEnum.V1_19) || VersionUtil.isCompatible(VersionEnum.V1_20) || VersionUtil.isCompatible(VersionEnum.V1_21)) {
+					if (VersionUtil.isAbove(VersionEnum.V1_13)) {
 						replayer.getWatchingPlayer().sendBlockChange(loc, getBlockMaterial(blockChange.getAfter()), (byte) subId);
 					} else {
 						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
@@ -597,6 +595,18 @@ public class ReplayingUtils {
 				
 			}
 		}.runTask(ReplaySystem.getInstance());
+	}
+	
+	private void playTNTFuse(Location loc, BlockChangeData blockChange) {
+		if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
+			if (MaterialBridge.fromID(blockChange.getBefore().getId()) == Material.TNT) {
+				loc.getWorld().playSound(loc, Sound.valueOf("FUSE"), 1, 1);
+			}
+		} else {
+			if (blockChange.getBefore().getItemStack().getItemStack().get("type").equals("TNT")) {
+				loc.getWorld().playSound(loc, Sound.ENTITY_TNT_PRIMED, 1, 1);
+			}
+		}
 	}
 	
 	private Material getBlockMaterial(ItemData data) {
