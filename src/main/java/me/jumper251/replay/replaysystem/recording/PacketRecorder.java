@@ -137,7 +137,6 @@ public class PacketRecorder extends AbstractListener {
 				if (!recorder.getPlayers().contains(p.getName())) return;
 				
 				if (event.getPacketType() == PacketType.Play.Server.EXPLOSION) {
-					System.out.println("EXPLOSION");
 					addData(p.getName(), ExplosionData.fromPacket(event));
 				}
 				
@@ -157,8 +156,10 @@ public class PacketRecorder extends AbstractListener {
 					}
 					
 					if (type == WrapperPlayServerSpawnEntity.ObjectTypes.ACTIVATED_TNT || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityType.PRIMED_TNT)) {
-						spawnedTNT.add(oldPacket.getEntityID());
-						addData(p.getName(), new TNTSpawnData(oldPacket.getEntityID(), location));
+						if (!spawnedTNT.contains(oldPacket.getEntityID())) {
+							spawnedTNT.add(oldPacket.getEntityID());
+							addData(p.getName(), new TNTSpawnData(oldPacket.getEntityID(), location));
+						}
 					}
 					
 					if ((type == 2 || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityType.DROPPED_ITEM)) && !spawnedItems.contains(packet.getEntityID())) {

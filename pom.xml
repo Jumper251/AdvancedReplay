@@ -6,7 +6,7 @@
 
     <groupId>me.jumper251</groupId>
     <artifactId>AdvancedReplay</artifactId>
-    <version>1.8.6</version>
+    <version>1.8.7</version>
 
     <repositories>
         <!-- This adds the Spigot Maven repository to the build -->
