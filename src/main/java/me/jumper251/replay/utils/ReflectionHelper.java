@@ -31,6 +31,8 @@ public class ReflectionHelper {
 
 	
 	private Method matchMaterial;
+
+	private Method materialName;
 	
 	private Method getBlockData;
 	
@@ -69,6 +71,10 @@ public class ReflectionHelper {
 			if (VersionUtil.isAbove(VersionEnum.V1_17)) {
 				this.sendTitle = this.playerClass.getMethod("sendTitle", String.class, String.class, int.class, int.class, int.class);
 			}
+
+			if (VersionUtil.isAbove(VersionEnum.V1_21)) {
+				this.materialName = this.materialClass.getMethod("name");
+			}
 			
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
@@ -87,6 +93,10 @@ public class ReflectionHelper {
 	
 	public Object getBlockDataMaterial(Object blockData) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		return this.blockDataGetMaterial.invoke(blockData);
+	}
+
+	public Object getMaterialName(Object material) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		return this.materialName.invoke(material);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -300,11 +300,10 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlockPlaced().getLocation());
-			
-			
-			ItemData before = new ItemData(e.getBlockReplacedState().getType().getId(), e.getBlockReplacedState().getData().getData());
+
+            ItemData before = new ItemData(e.getBlockReplacedState().getType().getId(), e.getBlockReplacedState().getData().getData());
 			ItemData after = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromMaterial(MaterialBridge.getBlockDataMaterial(e.getBlockPlaced()))) : new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
-			
+
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 			
 			// Change PlayerItemInHand when last block in hand

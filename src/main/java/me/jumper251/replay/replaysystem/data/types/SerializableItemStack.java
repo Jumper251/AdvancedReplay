@@ -1,8 +1,12 @@
 package me.jumper251.replay.replaysystem.data.types;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Map;
 
+import me.jumper251.replay.utils.ReflectionHelper;
+import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -19,7 +23,7 @@ public class SerializableItemStack implements Serializable {
 	
 	
 	private Map<String, Object> itemStack;
-	
+
 	private boolean hasEnchantment;
 	
 	private int color;
@@ -35,7 +39,6 @@ public class SerializableItemStack implements Serializable {
 		this.itemStack = itemStack;
 	}
 
-	
 	public SerializableItemStack(Map<String, Object> itemStack, boolean hasEnchantment, int color, boolean hasColor) {
 		this(itemStack);
 		
@@ -96,7 +99,19 @@ public class SerializableItemStack implements Serializable {
 	}
 	
 	public static SerializableItemStack fromMaterial(Material mat) {
-		return fromItemStack(new ItemStack(mat), false);
+		if (mat.isItem() || VersionUtil.isBelow(VersionUtil.VersionEnum.V1_20)) {
+			return fromItemStack(new ItemStack(mat), false);
+		} else {
+			Map<String, Object> serialized = new HashMap<>();
+            try {
+                serialized.put("type", ReflectionHelper.getInstance().getMaterialName(mat));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+			return new SerializableItemStack(serialized);
+
+		}
 	}
 	
 	public static SerializableItemStack fromItemStack(ItemStack stack, boolean block) {
@@ -104,7 +119,7 @@ public class SerializableItemStack implements Serializable {
 		if (block && stack.getType() == Material.FLINT_AND_STEEL) {
 			serialized.put("type", "FIRE");
 		}
-		
+
 		serialized.entrySet().removeIf(e -> !e.getKey().equalsIgnoreCase("v") && !e.getKey().equalsIgnoreCase("type") && !e.getKey().equalsIgnoreCase("damage"));
 		
 		SerializableItemStack serializableItemStack = new SerializableItemStack(serialized);

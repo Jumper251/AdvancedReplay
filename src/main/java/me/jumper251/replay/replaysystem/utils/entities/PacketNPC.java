@@ -245,7 +245,7 @@ public class PacketNPC implements INPC{
 	}
 	
 	public void animate(int id) {
-		if (id == 1 && VersionUtil.isAbove(VersionEnum.V1_21)) {
+		if (id == 1 && VersionUtil.isAbove(VersionEnum.V1_20)) {
 			hurt();
 			return;
 		}
