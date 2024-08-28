@@ -1,13 +1,10 @@
 package me.jumper251.replay.filesystem.saving;
 
-import io.minio.BucketExistsArgs;
-import io.minio.DownloadObjectArgs;
-import io.minio.MinioClient;
-import io.minio.UploadObjectArgs;
+import io.minio.*;
+import io.minio.messages.Item;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.replaysystem.Replay;
 import me.jumper251.replay.replaysystem.data.ReplayData;
-import me.jumper251.replay.replaysystem.data.ReplayInfo;
 import me.jumper251.replay.utils.fetcher.Consumer;
 
 import java.io.*;
@@ -23,7 +20,7 @@ public class S3ReplaySaver implements IReplaySaver {
     private String secretKey;
     private String bucketName;
 
-    private Map<String, ReplayInfo> replayCache;
+    private List<String> replayNameCache;
 
     private MinioClient minioClient;
 
@@ -32,16 +29,18 @@ public class S3ReplaySaver implements IReplaySaver {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
         this.bucketName = bucketName;
-        this.replayCache = new HashMap<>();
+        this.replayNameCache = new ArrayList<>();
     }
 
     public CompletableFuture<Boolean> connect() {
         return CompletableFuture.supplyAsync(() -> {
+            // 1. Connect to S3 backend
             minioClient = MinioClient.builder()
                     .endpoint(endpointUrl)
                     .credentials(accessKey, secretKey)
                     .build();
 
+            // 2. Check, if specified bucket exists
             try {
                 minioClient.bucketExists(
                         BucketExistsArgs.builder()
@@ -51,6 +50,24 @@ public class S3ReplaySaver implements IReplaySaver {
             } catch (Exception e) {
                 return false;
             }
+
+            // 3. Update cache
+            Iterable<Result<Item>> objects = minioClient.listObjects(
+                    ListObjectsArgs.builder()
+                            .bucket(bucketName)
+                            .build()
+            );
+            try {
+                for (Result<Item> itemResult : objects) {
+                    Item item = itemResult.get();
+                    if (item.objectName().contains(".replay")) {
+                        replayNameCache.add(item.objectName().split(".replay")[0]);
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
 
             return true;
         });
@@ -100,6 +117,9 @@ public class S3ReplaySaver implements IReplaySaver {
 
             // 3. Delete temporary local file
             localReplayFile.delete();
+
+            // 4. Add name to cache
+            replayNameCache.add(replay.getId());
         });
     }
 
@@ -155,16 +175,30 @@ public class S3ReplaySaver implements IReplaySaver {
 
     @Override
     public boolean replayExists(String replayName) {
-        return true;
+        // TODO: Change return type to CompletableFuture<Boolean>, to allow async checking of backend.
+        if (replayNameCache.contains(replayName))
+            return true;
+        return false;
     }
 
     @Override
     public void deleteReplay(String replayName) {
-
+        CompletableFuture.runAsync(() -> {
+            try {
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(replayName + ".replay")
+                                .build()
+                );
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
     }
 
     @Override
     public List<String> getReplays() {
-        return new ArrayList<>();
+        return replayNameCache;
     }
 }
