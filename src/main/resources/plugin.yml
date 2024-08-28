@@ -3,9 +3,6 @@ version: ${project.version}
 main: me.jumper251.replay.ReplaySystem
 author: Jumper251
 depend: [ProtocolLib]
-# TODO: Remove and find pre-1.16.5 compatible solution
-libraries:
-  - io.minio:minio:8.5.12
 commands:
   replay:
     description: Main Replay command

@@ -19,6 +19,11 @@
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
+        <!-- Libby repo -->
+        <repository>
+            <id>maven-snapshots</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -42,6 +47,13 @@
             <version>5.3.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Dependency resolver at runtime -->
+        <dependency>
+            <groupId>com.alessiodp.libby</groupId>
+            <artifactId>libby-bukkit</artifactId> <!-- Replace bukkit if you're using another platform -->
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- S3 storage backend -->
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
@@ -58,6 +70,30 @@
 
     <build>
         <finalName>Replay</finalName><!-- Match SpigotMC file name -->
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.alessiodp.libby</pattern>
+                            <shadedPattern>me.jumper251.replay.libs.com.alessiodp.libby</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
 
         <!-- Auto update plugin.yml version -->
         <resources>
