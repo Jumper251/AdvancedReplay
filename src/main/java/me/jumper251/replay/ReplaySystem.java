@@ -4,6 +4,7 @@ package me.jumper251.replay;
 import java.util.HashMap;
 
 
+import me.jumper251.replay.filesystem.saving.S3ReplaySaver;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -57,6 +58,20 @@ public class ReplaySystem extends JavaPlugin {
 			ReplaySaver.register(new DatabaseReplaySaver());
 			DatabaseRegistry.getDatabase().getService().getReplays().stream()
 					.forEach(info -> DatabaseReplaySaver.replayCache.put(info.getID(), info));
+		} else if (ConfigManager.USE_S3) {
+			S3ReplaySaver s3ReplaySaver = new S3ReplaySaver(
+					ConfigManager.sqlCfg.getString("endpoint_url"),
+					ConfigManager.sqlCfg.getString("access_key"),
+					ConfigManager.sqlCfg.getString("secret_key"),
+					ConfigManager.sqlCfg.getString("bucket_name")
+			);
+
+			s3ReplaySaver.connect().thenAccept(isConnected -> {
+				if (!isConnected)
+					getLogger().warning("Could not connect to S3 storage backend.");
+			});
+
+			ReplaySaver.register(s3ReplaySaver);
 		} else {
 			ReplaySaver.register(new DefaultReplaySaver());
 		}
