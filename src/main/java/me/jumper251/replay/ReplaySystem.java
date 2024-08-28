@@ -60,10 +60,10 @@ public class ReplaySystem extends JavaPlugin {
 					.forEach(info -> DatabaseReplaySaver.replayCache.put(info.getID(), info));
 		} else if (ConfigManager.USE_S3) {
 			S3ReplaySaver s3ReplaySaver = new S3ReplaySaver(
-					ConfigManager.sqlCfg.getString("endpoint_url"),
-					ConfigManager.sqlCfg.getString("access_key"),
-					ConfigManager.sqlCfg.getString("secret_key"),
-					ConfigManager.sqlCfg.getString("bucket_name")
+					ConfigManager.s3Cfg.getString("endpoint_url"),
+					ConfigManager.s3Cfg.getString("access_key"),
+					ConfigManager.s3Cfg.getString("secret_key"),
+					ConfigManager.s3Cfg.getString("bucket_name")
 			);
 
 			s3ReplaySaver.connect().thenAccept(isConnected -> {
