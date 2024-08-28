@@ -183,6 +183,7 @@ public class S3ReplaySaver implements IReplaySaver {
 
     @Override
     public void deleteReplay(String replayName) {
+        replayNameCache.remove(replayName);
         CompletableFuture.runAsync(() -> {
             try {
                 minioClient.removeObject(
