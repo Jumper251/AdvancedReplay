@@ -1,23 +1,20 @@
 package me.jumper251.replay.filesystem.saving;
 
 import io.minio.BucketExistsArgs;
+import io.minio.DownloadObjectArgs;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.replaysystem.Replay;
+import me.jumper251.replay.replaysystem.data.ReplayData;
 import me.jumper251.replay.replaysystem.data.ReplayInfo;
 import me.jumper251.replay.utils.fetcher.Consumer;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class S3ReplaySaver implements IReplaySaver {
@@ -108,12 +105,57 @@ public class S3ReplaySaver implements IReplaySaver {
 
     @Override
     public void loadReplay(String replayName, Consumer<Replay> consumer) {
+        CompletableFuture.runAsync(() -> {
+            // 1. Create temporary local file
+            File temporaryReplayFile = new File(
+                    ReplaySystem.getInstance().getDataFolder(),
+                    replayName + ".tmp"
+            );
 
+            if (temporaryReplayFile.exists())
+                temporaryReplayFile.delete();
+
+
+            // 2. Download from S3 into temporary local file
+            try {
+                minioClient.downloadObject(
+                        DownloadObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(replayName + ".replay")
+                                .filename(temporaryReplayFile.getAbsolutePath())
+                                .build()
+                );
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
+            // 3. Load replay from temporary local file
+            try {
+                FileInputStream fileInputStream = new FileInputStream(temporaryReplayFile);
+                GZIPInputStream gzipInputStream = new GZIPInputStream(fileInputStream);
+                ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
+
+                ReplayData replayData = (ReplayData) objectInputStream.readObject();
+
+                objectInputStream.close();
+                gzipInputStream.close();
+                fileInputStream.close();
+
+                consumer.accept(new Replay(replayName, replayData));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+            // 4. Delete temporary local file
+            temporaryReplayFile.delete();
+        });
     }
 
     @Override
     public boolean replayExists(String replayName) {
-        return false;
+        return true;
     }
 
     @Override
@@ -123,6 +165,6 @@ public class S3ReplaySaver implements IReplaySaver {
 
     @Override
     public List<String> getReplays() {
-        return null;
+        return new ArrayList<>();
     }
 }
