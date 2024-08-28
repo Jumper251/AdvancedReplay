@@ -50,7 +50,7 @@
         <!-- Dependency resolver at runtime -->
         <dependency>
             <groupId>com.alessiodp.libby</groupId>
-            <artifactId>libby-bukkit</artifactId> <!-- Replace bukkit if you're using another platform -->
+            <artifactId>libby-bukkit</artifactId>
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
         <!-- S3 storage backend -->
