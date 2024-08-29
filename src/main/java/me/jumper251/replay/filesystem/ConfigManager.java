@@ -20,7 +20,10 @@ public class ConfigManager {
 
 	public static File sqlFile = new File(ReplaySystem.getInstance().getDataFolder(), "mysql.yml");
 	public static FileConfiguration sqlCfg = YamlConfiguration.loadConfiguration(sqlFile);
-	
+
+	public static File s3File = new File(ReplaySystem.getInstance().getDataFolder(), "s3.yml");
+	public static FileConfiguration s3Cfg = YamlConfiguration.loadConfiguration(s3File);
+
 	public static File file = new File(ReplaySystem.getInstance().getDataFolder(), "config.yml");
 	public static FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 	
@@ -33,6 +36,8 @@ public class ConfigManager {
 	public static boolean WORLD_RESET;
 
 	public static boolean USE_XP_BAR;
+
+	public static boolean USE_S3;
 
 
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
@@ -55,6 +60,19 @@ public class ConfigManager {
 				e.printStackTrace();
 			}
 		}
+
+		if (!s3File.exists()) {
+			s3Cfg.set("endpoint_url", "https://example.com/");
+			s3Cfg.set("access_key", "123qwertz456");
+			s3Cfg.set("secret_key", "987yxcv654");
+			s3Cfg.set("bucket_name", "replays");
+
+			try {
+				s3Cfg.save(s3File);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		if (!file.exists()) {
 			LogUtils.log("Creating Config files...");
@@ -63,6 +81,7 @@ public class ConfigManager {
 			cfg.set("general.record_on_startup", false);
 			cfg.set("general.save_on_stop", false);
 			cfg.set("general.use_mysql", false);
+			cfg.set("general.use_s3", false);
 			cfg.set("general.use_offline_skins", false);
 			cfg.set("general.quality", "high");
 			cfg.set("general.cleanup_replays", -1);
@@ -124,6 +143,8 @@ public class ConfigManager {
 		RECORD_CHAT = cfg.getBoolean("recording.chat.enabled");
 
 		USE_XP_BAR = cfg.getBoolean("replaying.use_xp_bar", true);
+
+		USE_S3 = cfg.getBoolean("general.use_s3");
 
 		if (USE_DATABASE) {
 			
