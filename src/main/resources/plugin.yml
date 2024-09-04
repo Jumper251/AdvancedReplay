@@ -1,5 +1,5 @@
 name: AdvancedReplay
-version: ${project.version}
+version: '${version}'
 main: me.jumper251.replay.ReplaySystem
 author: Jumper251
 depend: [ProtocolLib]

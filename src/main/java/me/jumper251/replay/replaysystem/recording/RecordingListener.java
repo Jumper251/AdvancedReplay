@@ -344,7 +344,7 @@ public class RecordingListener extends AbstractListener {
 	public void onTNTPrime(PlayerInteractEvent e) {
 		//TNTPrimeEvent is bugged without paper, so we need to use PlayerInteractEvent instead
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-		if (e.getItem() == null || !(e.getItem().getType() == Material.FLINT_AND_STEEL || e.getItem().getType() == Material.FIREBALL))
+		if (e.getItem() == null || !(e.getItem().getType() == Material.FLINT_AND_STEEL || e.getItem().getType() == MaterialBridge.FIRE_CHARGE.toMaterial()))
 			return;
 		Block block = e.getClickedBlock();
 		if (block == null) return;

@@ -2,6 +2,7 @@ package me.jumper251.replay.replaysystem.utils.entities;
 
 import java.util.UUID;
 
+import me.jumper251.replay.utils.version.EntityBridge;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
@@ -32,7 +33,7 @@ public class FishingUtils {
 		
 		if (VersionUtil.isAbove(VersionEnum.V1_14)) {
 			packet.setObjectData(throwerID); // Object data index changed
-			packet.getHandle().getEntityTypeModifier().write(0, EntityType.FISHING_HOOK);
+			packet.getHandle().getEntityTypeModifier().write(0, EntityBridge.FISHING_BOBBER.toEntityType());
 		}
 
 		packet.setX(loc.getX());

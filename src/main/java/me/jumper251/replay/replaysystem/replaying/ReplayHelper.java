@@ -2,6 +2,7 @@ package me.jumper251.replay.replaysystem.replaying;
 
 import java.util.HashMap;
 
+import me.jumper251.replay.utils.MaterialBridge;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -69,7 +70,7 @@ public class ReplayHelper {
 		int index = 0;
 		
 		for (String name : replayer.getNPCList().keySet()) {
-			ItemStack stack = new ItemStack(Material.SKULL_ITEM,1,(short)3);
+			ItemStack stack = new ItemStack(MaterialBridge.PLAYER_HEAD.toMaterial(),1,(short)3);
 			SkullMeta meta = (SkullMeta) stack.getItemMeta();
 			meta.setDisplayName("§6" + name);
 			meta.setOwner(name);

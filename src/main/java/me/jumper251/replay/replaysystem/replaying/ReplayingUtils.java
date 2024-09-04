@@ -9,6 +9,7 @@ import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.MessageBuilder;
+import me.jumper251.replay.legacy.LegacyBlock;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.ReplayData;
@@ -21,6 +22,7 @@ import me.jumper251.replay.utils.MaterialBridge;
 import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+import me.jumper251.replay.utils.version.EntityBridge;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -512,7 +514,7 @@ public class ReplayingUtils {
 				packet.sendPacket(replayer.getWatchingPlayer());
 			} else {
 				WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity();
-				packet.getHandle().getEntityTypeModifier().write(0, EntityType.PRIMED_TNT);
+				packet.getHandle().getEntityTypeModifier().write(0, EntityBridge.TNT.toEntityType());
 				packet.setEntityID(tntSpawnData.getId());
 				packet.setUniqueId(UUID.randomUUID());
 				
@@ -529,7 +531,7 @@ public class ReplayingUtils {
 	}
 	
 	private void spawnProjectile(ProjectileData projData, FishingData fishing, World world, int id) {
-		if (projData != null && projData.getType() != EntityType.FISHING_HOOK) {
+		if (projData != null && projData.getType() != EntityBridge.FISHING_BOBBER.toEntityType()) {
 			
 			if (projData.getType() == EntityType.ENDER_PEARL && VersionUtil.isCompatible(VersionEnum.V1_8)) return;
 			
@@ -576,20 +578,20 @@ public class ReplayingUtils {
 				int id = blockChange.getAfter().getId();
 				int subId = blockChange.getAfter().getSubId();
 				
-				if (id == Material.STATIONARY_WATER.getId()) id = Material.WATER.getId();
-				if (id == Material.STATIONARY_LAVA.getId()) id = Material.LAVA.getId();
-				
+				if (id == MaterialBridge.WATER.toMaterial().getId()) id = Material.WATER.getId();
+				if (id == MaterialBridge.LAVA.toMaterial().getId()) id = Material.LAVA.getId();
+
 				if (ConfigManager.REAL_CHANGES) {
 					if (VersionUtil.isAbove(VersionEnum.V1_13)) {
 						loc.getBlock().setType(getBlockMaterial(blockChange.getAfter()), true);
 					} else {
-						loc.getBlock().setTypeIdAndData(id, (byte) subId, true);
+						LegacyBlock.setTypeIdAndData(loc.getBlock(), id, (byte) subId, true);
 					}
 				} else if (blockChange.doBlockChange()) {
 					if (VersionUtil.isAbove(VersionEnum.V1_13)) {
 						replayer.getWatchingPlayer().sendBlockChange(loc, getBlockMaterial(blockChange.getAfter()), (byte) subId);
 					} else {
-						replayer.getWatchingPlayer().sendBlockChange(loc, id, (byte) subId);
+						LegacyBlock.sendBlockChange(replayer.getWatchingPlayer(), loc, id, (byte) subId);
 					}
 				}
 				
@@ -674,7 +676,7 @@ public class ReplayingUtils {
 			if (VersionUtil.isAbove(VersionEnum.V1_13)) {
 				location.getBlock().setType(getBlockMaterial(itemData));
 			} else {
-				location.getBlock().setTypeIdAndData(itemData.getId(), (byte) itemData.getSubId(), true);
+				LegacyBlock.setTypeIdAndData(location.getBlock(), itemData.getId(), (byte) itemData.getSubId(), true);
 			}
 		});
 	}

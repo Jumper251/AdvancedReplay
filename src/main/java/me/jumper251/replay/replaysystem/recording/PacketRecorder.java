@@ -17,6 +17,7 @@ import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.replaysystem.utils.entities.EntityMappings;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+import me.jumper251.replay.utils.version.EntityBridge;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
@@ -155,14 +156,14 @@ public class PacketRecorder extends AbstractListener {
 						location = new LocationData(packet.getX(), packet.getY(), packet.getZ(), p.getWorld().getName());
 					}
 					
-					if (type == WrapperPlayServerSpawnEntity.ObjectTypes.ACTIVATED_TNT || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityType.PRIMED_TNT)) {
+					if (type == WrapperPlayServerSpawnEntity.ObjectTypes.ACTIVATED_TNT || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityBridge.TNT.toEntityType())) {
 						if (!spawnedTNT.contains(oldPacket.getEntityID())) {
 							spawnedTNT.add(oldPacket.getEntityID());
 							addData(p.getName(), new TNTSpawnData(oldPacket.getEntityID(), location));
 						}
 					}
 					
-					if ((type == 2 || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityType.DROPPED_ITEM)) && !spawnedItems.contains(packet.getEntityID())) {
+					if ((type == 2 || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityBridge.ITEM.toEntityType())) && !spawnedItems.contains(packet.getEntityID())) {
 						Entity en = packet.getEntity(p.getWorld());
 						if (en != null && en instanceof Item) {
 							Item item = (Item) en;
@@ -175,7 +176,7 @@ public class PacketRecorder extends AbstractListener {
 						
 						
 					}
-					if ((type == 90 || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityType.FISHING_HOOK)) && !spawnedHooks.contains(packet.getEntityID())) {
+					if ((type == 90 || (VersionUtil.isAbove(VersionEnum.V1_14) && event.getPacket().getEntityTypeModifier().read(0) == EntityBridge.FISHING_BOBBER.toEntityType())) && !spawnedHooks.contains(packet.getEntityID())) {
 						int throwerId = VersionUtil.isCompatible(VersionEnum.V1_8) ? oldPacket.getObjectData() : packet.getObjectData();
 						
 						String ownerName = Bukkit.getOnlinePlayers().stream()

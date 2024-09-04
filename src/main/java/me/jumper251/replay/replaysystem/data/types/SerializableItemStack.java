@@ -7,6 +7,7 @@ import java.util.Map;
 
 import me.jumper251.replay.utils.ReflectionHelper;
 import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.version.EnchantmentBridge;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -82,7 +83,7 @@ public class SerializableItemStack implements Serializable {
 	
 	public ItemStack toItemStack() {
 		ItemStack stack = ItemStack.deserialize(this.itemStack);
-		if (this.hasEnchantment) stack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+		if (this.hasEnchantment) stack.addUnsafeEnchantment(EnchantmentBridge.UNBREAKING.toEnchantment(), 1);
 		
 		if (this.hasColor) {
 			LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
