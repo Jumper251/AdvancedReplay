@@ -1,0 +1,73 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.0'
+}
+
+group = 'me.jumper251'
+version = '1.8.6'
+
+repositories {
+    mavenCentral()
+    maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+    // ProtocolLib repo
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
+    //maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    //maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    // Libby repo
+    maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+dependencies {
+    implementation project(':legacy')
+
+    compileOnly "org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT"
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.3.0-SNAPSHOT'
+
+    // Dependency resolver at runtime
+    implementation 'com.alessiodp.libby:libby-bukkit:2.0.0-SNAPSHOT'
+    // S3 storage backend
+    compileOnly 'io.minio:minio:8.5.12'
+}
+
+allprojects {
+    apply plugin: 'java'
+
+    def targetJavaVersion = 8
+    java {
+        def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
+        if (JavaVersion.current() < javaVersion) {
+            toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+            options.release = targetJavaVersion
+        }
+    }
+
+    compileJava {
+        options.encoding("UTF-8")
+    }
+}
+
+shadowJar {
+    archiveFileName = 'Replay.jar'
+
+    relocate 'com.alessiodp.libby', 'me.jumper251.replay.libs.com.alessiodp.libby'
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+build {
+    dependsOn shadowJar
+}

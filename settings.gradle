@@ -1,0 +1,10 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'AdvancedReplay'
+include 'legacy'
+include 'legacy'
+
