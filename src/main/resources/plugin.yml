@@ -3,6 +3,7 @@ version: '${version}'
 main: me.jumper251.replay.ReplaySystem
 author: Jumper251
 depend: [ProtocolLib]
+api-version: 1.13
 commands:
   replay:
     description: Main Replay command
