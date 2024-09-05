@@ -1,5 +1,7 @@
 package me.jumper251.replay.replaysystem.data.types;
 
+import org.bukkit.Material;
+
 public class BlockChangeData extends PacketData {
 	
 	/**
@@ -57,5 +59,12 @@ public class BlockChangeData extends PacketData {
 	
 	public void setDoBlockChange(boolean doBlockChange) {
 		this.doBlockChange = doBlockChange;
+	}
+
+	public boolean isBlockBreak() {
+		Material before = getBefore().toMaterial();
+		Material after = getAfter().toMaterial();
+
+		return !before.isAir() && after.isAir() && before.isBlock();
 	}
 }

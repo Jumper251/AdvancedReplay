@@ -109,8 +109,8 @@ public class RecordingListener extends AbstractListener {
 			if (e.getAction() == Action.LEFT_CLICK_BLOCK && p.getTargetBlock((Set<Material>) null, 5).getType() == Material.FIRE) {
 				LocationData location = LocationData.fromLocation(p.getTargetBlock((Set<Material>) null, 5).getLocation());
 				
-				ItemData before = new ItemData(Material.FIRE.getId(), 0);
-				ItemData after = new ItemData(0, 0);
+				ItemData before = ItemData.fromMaterial(Material.FIRE);
+				ItemData after = ItemData.air();
 				
 				this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 			}
@@ -259,7 +259,8 @@ public class RecordingListener extends AbstractListener {
 		Player p = e.getPlayer();
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			InvData data = NPCManager.copyFromPlayer(p, true, true);
-			if (data.getMainHand() != null && p.getItemInHand() != null && p.getItemInHand().getAmount() <= 1 && p.getItemInHand().getType() == MaterialBridge.fromID(data.getMainHand().getId())) {
+			// Check if item in hand is thrown
+			if (data.getMainHand() != null && p.getItemInHand() != null && p.getItemInHand().getAmount() <= 1 && p.getItemInHand().getType() == data.getMainHand().toMaterial()) {
 				data.setMainHand(null);
 			}
 			
@@ -301,8 +302,9 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlockPlaced().getLocation());
 
-            ItemData before = new ItemData(e.getBlockReplacedState().getType().getId(), e.getBlockReplacedState().getData().getData());
-			ItemData after = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromMaterial(MaterialBridge.getBlockDataMaterial(e.getBlockPlaced()))) : new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
+
+            ItemData before = VersionUtil.isAbove(VersionEnum.V1_13) ? ItemData.fromMaterial(e.getBlockReplacedState().getType()) : new ItemData(e.getBlockReplacedState().getType().getId(), e.getBlockReplacedState().getData().getData());
+			ItemData after = VersionUtil.isAbove(VersionEnum.V1_13) ? ItemData.fromMaterial(e.getBlockPlaced().getBlockData().getMaterial()) : new ItemData(e.getBlockPlaced().getType().getId(), e.getBlockPlaced().getData());
 
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 			
@@ -359,8 +361,8 @@ public class RecordingListener extends AbstractListener {
 	@SuppressWarnings("deprecation")
 	private void recordBlockBreak(Player p, Block block, boolean playEffect, boolean doBlockChange) {
 		LocationData location = LocationData.fromLocation(block.getLocation());
-		ItemData before = VersionUtil.isAbove(VersionEnum.V1_13) ? new ItemData(SerializableItemStack.fromMaterial(MaterialBridge.getBlockDataMaterial(block))) : new ItemData(block.getType().getId(), block.getData());
-		ItemData after = new ItemData(0, 0);
+		ItemData before = ItemData.fromBlock(block);
+		ItemData after = ItemData.air();
 		
 		this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after, playEffect, doBlockChange));
 	}
@@ -376,14 +378,15 @@ public class RecordingListener extends AbstractListener {
 		if (this.recorder.getPlayers().contains(p.getName())) {
 			LocationData location = LocationData.fromLocation(e.getBlockClicked().getLocation());
 			
-			ItemData before = new ItemData(e.getBlockClicked().getState().getType().getId(), e.getBlockClicked().getState().getData().getData());
-			ItemData after = new ItemData(0, 0);
+			ItemData before = ItemData.fromBlock(e.getBlockClicked());
+			ItemData after = ItemData.air();
 			
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 			
 			// Change PlayerItemInHand when fill bucket
 			ItemStack stack;
-			if (e.getBlockClicked().getState().getType().getId() == 10 || e.getBlockClicked().getState().getType().getId() == 11) {
+
+			if (e.getBlockClicked().getState().getType().equals(MaterialBridge.LAVA.toMaterial())) {
 				stack = new ItemStack(Material.LAVA_BUCKET, 1);
 			} else {
 				stack = new ItemStack(Material.WATER_BUCKET, 1);
@@ -400,9 +403,16 @@ public class RecordingListener extends AbstractListener {
 			Block block = e.getBlockClicked().getRelative(e.getBlockFace());
 			LocationData location = LocationData.fromLocation(block.getLocation());
 			
-			ItemData before = new ItemData(block.getType().getId(), block.getData());
-			ItemData after = new ItemData(e.getBucket() == Material.LAVA_BUCKET ? 11 : 9, 0);
-			
+			ItemData before = ItemData.fromBlock(block);
+			ItemData after;
+
+			if (VersionUtil.isAbove(VersionEnum.V1_13)) {
+				Material material = e.getBucket() == Material.LAVA_BUCKET ? Material.LAVA : Material.WATER;
+				after = ItemData.fromMaterial(material);
+			} else {
+                after = new ItemData(e.getBucket() == Material.LAVA_BUCKET ? 11 : 9, 0);
+            }
+
 			this.packetRecorder.addData(p.getName(), new BlockChangeData(location, before, after));
 			
 			// Change PlayerItemInHand

@@ -246,17 +246,15 @@ public class ReplayingUtils {
 				if (entityData.getAction() == 0 && !reversed) {
 					spawnItemStack(entityData);
 				} else if (entityData.getAction() == 1) {
-					if (itemEntities.containsKey(entityData.getId())) {
-						despawn(Arrays.asList(new Entity[]{itemEntities.get(entityData.getId())}), null);
-						
-						itemEntities.remove(entityData.getId());
-					}
+					despawnItem(entityData);
 				} else {
 					if (hooks.containsKey(entityData.getId())) {
 						despawn(null, new int[]{hooks.get(entityData.getId())});
 						
 						hooks.remove(entityData.getId());
 					}
+
+					despawnItem(entityData);
 				}
 			}
 			
@@ -389,7 +387,15 @@ public class ReplayingUtils {
 			
 		}
 	}
-	
+
+	private void despawnItem(EntityItemData entityData) {
+		if (itemEntities.containsKey(entityData.getId())) {
+			despawn(Arrays.asList(itemEntities.get(entityData.getId())), null);
+
+			itemEntities.remove(entityData.getId());
+		}
+	}
+
 	public void forward() {
 		boolean paused = this.replayer.isPaused();
 		
@@ -568,19 +574,25 @@ public class ReplayingUtils {
 			@Override
 			public void run() {
 				if (blockChange.doPlayEffect()) {
-					if (blockChange.getAfter().getId() == 0 && blockChange.getBefore().getId() != 0 && MaterialBridge.fromID(blockChange.getBefore().getId()) != Material.FIRE && blockChange.getBefore().getId() != 11 && blockChange.getBefore().getId() != 9 && blockChange.getBefore().getId() != 10 && blockChange.getBefore().getId() != 8) {
-						loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().getId(), 15);
+					if (blockChange.isBlockBreak()) {
+						if (VersionUtil.isAbove(VersionEnum.V1_13)) {
+							loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().toMaterial());
+						} else {
+							loc.getWorld().playEffect(loc, Effect.STEP_SOUND, blockChange.getBefore().getId(), 15);
+						}
 					}
 				} else if (blockChange.doBlockChange()) {
 					playTNTFuse(loc, blockChange);
 				}
 				
 				int id = blockChange.getAfter().getId();
-				int subId = blockChange.getAfter().getSubId();
-				
-				if (id == MaterialBridge.WATER.toMaterial().getId()) id = Material.WATER.getId();
-				if (id == MaterialBridge.LAVA.toMaterial().getId()) id = Material.LAVA.getId();
 
+				int subId = blockChange.getAfter().getSubId();
+
+				if (VersionUtil.isBelow(VersionEnum.V1_12)) {
+					if (id == MaterialBridge.WATER.toMaterial().getId()) id = Material.WATER.getId();
+					if (id == MaterialBridge.LAVA.toMaterial().getId()) id = Material.LAVA.getId();
+				}
 				if (ConfigManager.REAL_CHANGES) {
 					if (VersionUtil.isAbove(VersionEnum.V1_13)) {
 						loc.getBlock().setType(getBlockMaterial(blockChange.getAfter()), true);

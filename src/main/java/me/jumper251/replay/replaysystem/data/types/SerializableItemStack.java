@@ -52,6 +52,10 @@ public class SerializableItemStack implements Serializable {
 	public Map<String, Object> getItemStack() {
 		return itemStack;
 	}
+
+	public Material getMaterial() {
+		return Material.getMaterial((String) itemStack.get("type"));
+	}
 	
 	public int getColor() {
 		return color;
@@ -104,11 +108,7 @@ public class SerializableItemStack implements Serializable {
 			return fromItemStack(new ItemStack(mat), false);
 		} else {
 			Map<String, Object> serialized = new HashMap<>();
-            try {
-                serialized.put("type", ReflectionHelper.getInstance().getMaterialName(mat));
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+			serialized.put("type", mat.name());
 
 			return new SerializableItemStack(serialized);
 
