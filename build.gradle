@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.jumper251'
-version = '1.8.6'
+version = '1.8.9'
 
 repositories {
     mavenCentral()

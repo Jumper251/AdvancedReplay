@@ -600,7 +600,7 @@ public class ReplayingUtils {
 					}
 				} else if (blockChange.doBlockChange()) {
 					if (VersionUtil.isAbove(VersionEnum.V1_13)) {
-						replayer.getWatchingPlayer().sendBlockChange(loc, getBlockMaterial(blockChange.getAfter()), (byte) subId);
+						replayer.getWatchingPlayer().sendBlockChange(loc, getBlockMaterial(blockChange.getAfter()).createBlockData());
 					} else {
 						LegacyBlock.sendBlockChange(replayer.getWatchingPlayer(), loc, id, (byte) subId);
 					}
