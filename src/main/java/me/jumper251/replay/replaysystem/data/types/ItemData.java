@@ -2,6 +2,7 @@ package me.jumper251.replay.replaysystem.data.types;
 
 
 import me.jumper251.replay.legacy.LegacyMaterial;
+import me.jumper251.replay.utils.LogUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -43,7 +44,13 @@ public class ItemData extends PacketData{
 		if (itemStack != null) {
 			return itemStack.getMaterial();
 		}
-		System.out.println("item stack is null id, subid: " + id + ", " + subId);
+
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_13)) {
+			if (id != 0) {
+				LogUtils.log("Could not parse material by id on 1.13+");
+			}
+			return Material.AIR;
+		}
 
 		return LegacyMaterial.getMaterialById(id);
 	}

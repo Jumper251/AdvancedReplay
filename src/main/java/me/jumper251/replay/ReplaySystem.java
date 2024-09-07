@@ -56,7 +56,7 @@ public class ReplaySystem extends JavaPlugin {
 		
 		ConfigManager.loadConfigs();
 		ReplayManager.register();
-		
+
 		if (ConfigManager.USE_DATABASE) {
 			ReplaySaver.register(new DatabaseReplaySaver());
 			DatabaseRegistry.getDatabase().getService().getReplays().stream()

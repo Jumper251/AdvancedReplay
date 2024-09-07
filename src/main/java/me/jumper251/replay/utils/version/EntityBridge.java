@@ -17,8 +17,8 @@ public enum EntityBridge {
 
     static {
         EnumSet.allOf(EntityBridge.class).forEach(entityBridge -> {
-            EntityType type = Enums.getIfPresent(EntityType.class, entityBridge.name()).toJavaUtil()
-                    .orElse(EntityType.valueOf(entityBridge.getLegacyName()));
+            EntityType type = Enums.getIfPresent(EntityType.class, entityBridge.name())
+                    .or(EntityType.valueOf(entityBridge.getLegacyName()));
             entityTypeMap.put(entityBridge.name(), type);
         });
     }

@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import me.jumper251.replay.filesystem.ItemConfig;
 import me.jumper251.replay.filesystem.ItemConfigOption;
 import me.jumper251.replay.filesystem.ItemConfigType;
-import me.jumper251.replay.utils.MaterialBridge;
+import me.jumper251.replay.utils.version.MaterialBridge;
 import me.jumper251.replay.utils.ReflectionHelper;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;

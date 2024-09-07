@@ -1,6 +1,6 @@
 package me.jumper251.replay.replaysystem.utils;
 
-import me.jumper251.replay.utils.MaterialBridge;
+import me.jumper251.replay.utils.version.MaterialBridge;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 import org.bukkit.Material;

@@ -79,7 +79,6 @@ public class Replayer {
 		ReplayData data = this.replay.getData();
 		int duration = data.getDuration();
 		this.session.setStart(watcher.getLocation());
-		
 		if (data.getActions().containsKey(0)) {
 			for (ActionData startData : data.getActions().get(0)) {
 				if (startData.getPacketData() instanceof SpawnData) {
@@ -92,10 +91,10 @@ public class Replayer {
 			Optional<SpawnData> spawnData = findFirstSpawn(data);
 			if (spawnData.isPresent()) watcher.teleport(LocationData.toLocation(spawnData.get().getLocation()));
 		}
-		
+
 		
 		this.session.startSession();
-		
+
 		this.speed = 1;
 		
 		executeTick(0, ReplayingMode.PLAYING);
@@ -140,9 +139,9 @@ public class Replayer {
 
 			List<ActionData> list = data.getActions().get(tick);
 			for (ActionData action : list) {
-								
+
 				utils.handleAction(action, data, mode);
-				
+
 				if (action.getType() == ActionType.CUSTOM) {
 					if (ReplayAPI.getInstance().getHookManager().isRegistered()) {
 						for (IReplayHook hook : ReplayAPI.getInstance().getHookManager().getHooks()) {

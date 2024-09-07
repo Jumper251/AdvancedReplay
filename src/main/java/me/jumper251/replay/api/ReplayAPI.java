@@ -36,14 +36,12 @@ public class ReplayAPI {
 	
 	
 	public Replay recordReplay(String name, CommandSender sender, Player... players) {
-		List<Player> toRecord = new ArrayList<>();
+		List<Player> toRecord;
 		
 		if (players != null && players.length > 0) { 
 			toRecord = Arrays.asList(players);
 		} else {
-			for (Player all : Bukkit.getOnlinePlayers()) {
-				toRecord.add(all);
-			}
+            toRecord = new ArrayList<>(Bukkit.getOnlinePlayers());
 		}
 		
 		return recordReplay(name, sender, toRecord);
@@ -105,6 +103,10 @@ public class ReplayAPI {
 	
 	public void registerReplaySaver(IReplaySaver replaySaver) {
 		ReplaySaver.register(replaySaver);
+	}
+
+	public IReplaySaver getReplaySaver() {
+		return ReplaySaver.getReplaySaver();
 	}
 	
 	public HookManager getHookManager() {

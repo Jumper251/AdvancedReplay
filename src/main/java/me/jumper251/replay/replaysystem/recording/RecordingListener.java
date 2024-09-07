@@ -8,7 +8,7 @@ import me.jumper251.replay.replaysystem.data.ActionType;
 import me.jumper251.replay.replaysystem.data.types.*;
 import me.jumper251.replay.replaysystem.utils.ItemUtils;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
-import me.jumper251.replay.utils.MaterialBridge;
+import me.jumper251.replay.utils.version.MaterialBridge;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
 import org.bukkit.GameMode;

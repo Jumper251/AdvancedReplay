@@ -54,9 +54,10 @@ public class PacketNPC implements INPC{
 		this.uuid = uuid;
 		this.name = name;
 		this.tabMode = 1;
-		this.lastEquipment = new ArrayList<WrapperPlayServerEntityEquipment>();
+		this.lastEquipment = new ArrayList<>();
+		this.visible = new Player[]{};
 
-		if (VersionUtil.isAbove(VersionEnum.V1_20)) {
+        if (VersionUtil.isAbove(VersionEnum.V1_20)) {
 			this.spawnPacket = new NPCSpawnPacket(new WrapperPlayServerSpawnEntity());
 		} else {
 			this.spawnPacket = new NPCSpawnPacket(new WrapperPlayServerNamedEntitySpawn());
@@ -83,7 +84,7 @@ public class PacketNPC implements INPC{
 	
 		if(this.data != null) this.spawnPacket.setMetadata(this.data);
 		
-		for(Player player : Arrays.asList(players)) {
+		for(Player player : players) {
 			if(tabMode != 0) {
 				getInfoAddPacket().sendPacket(player);
 			}
@@ -101,7 +102,7 @@ public class PacketNPC implements INPC{
 		this.spawnPacket.setMetadata(this.data);
 		this.spawnPacket.setPosition(this.location.toVector());
 		
-		for (Player player : Arrays.asList(this.visible)) {
+		for (Player player : this.visible) {
 			this.spawnPacket.sendPacket(player);
 			
 			for (WrapperPlayServerEntityEquipment equipment : this.lastEquipment) {
@@ -119,7 +120,7 @@ public class PacketNPC implements INPC{
 			destroyPacket.setEntityIds(new int[] { this.id });
 		}		
 		
-		for (Player player : Arrays.asList(this.visible)) {
+		for (Player player : this.visible) {
 			if(player != null){				
 				destroyPacket.sendPacket(player);
 			}
@@ -130,9 +131,7 @@ public class PacketNPC implements INPC{
 	}
 	
 	public void remove() {
-		if(NPCManager.names.contains(this.name)) {
-			NPCManager.names.remove(this.name);
-		}
+        NPCManager.names.remove(this.name);
 		
 		WrapperPlayServerEntityDestroy destroyPacket = new WrapperPlayServerEntityDestroy();
 		
@@ -170,7 +169,7 @@ public class PacketNPC implements INPC{
 		packet.setYaw(loc.getYaw());
 		packet.setOnGround(onGround);
 		
-		for(Player player : Arrays.asList(this.visible)) {
+		for(Player player : this.visible) {
 			if(player != null) {
 				packet.sendPacket(player);
 			}
@@ -194,7 +193,7 @@ public class PacketNPC implements INPC{
 
 		this.location = loc;
 
-		for(Player player : Arrays.asList(this.visible)) {
+		for(Player player : this.visible) {
 			if(player != null) {
 				packet.sendPacket(player);
 				head.sendPacket(player);
@@ -213,7 +212,7 @@ public class PacketNPC implements INPC{
 		  lookPacket.setPitch(pitch);
 		  lookPacket.setYaw(yaw);
 		  
-		  for(Player player : Arrays.asList(this.visible)) {
+		  for(Player player : this.visible) {
 			  if(player != null) {
 				  lookPacket.sendPacket(player);
 				  head.sendPacket(player);
@@ -237,7 +236,7 @@ public class PacketNPC implements INPC{
 			packet.setMetadata(this.data.getWatchableObjects());
 		}
 		
-		for (Player player : Arrays.asList(this.visible)) {
+		for (Player player : this.visible) {
 			if (player != null) {
 				packet.sendPacket(player);
 			}
@@ -255,7 +254,7 @@ public class PacketNPC implements INPC{
 		packet.setEntityID(this.id);
 		packet.setAnimation(id);
 		
-		for (Player player : Arrays.asList(this.visible)) {
+		for (Player player : this.visible) {
 			if (player != null) {
 				packet.sendPacket(player);
 			}
@@ -279,7 +278,7 @@ public class PacketNPC implements INPC{
 		packet.setEntityID(this.id);
 		packet.setLocation(new BlockPosition(loc.toVector()));
 		
-		for (Player player : Arrays.asList(this.visible)) {
+		for (Player player : this.visible) {
 			if (player != null) {
 				packet.sendPacket(player);
 			}
@@ -292,35 +291,35 @@ public class PacketNPC implements INPC{
 		
 		packet.setName(team);
 		packet.setMode(Mode.PLAYERS_ADDED);
-		packet.setPlayers(Arrays.asList(new String[] { this.name }));
+		packet.setPlayers(Arrays.asList(this.name));
 		
-		for(Player player : Arrays.asList(this.visible)) {
+		for(Player player : this.visible) {
 			if(player != null) {
 				packet.sendPacket(player);
 			}
 		}
 	}
 	
-	private WrapperPlayServerPlayerInfo getInfoAddPacket() {
+	public WrapperPlayServerPlayerInfo getInfoAddPacket() {
 		WrapperPlayServerPlayerInfo infoPacket = new WrapperPlayServerPlayerInfo();
 		infoPacket.setAction(EnumWrappers.PlayerInfoAction.ADD_PLAYER);
 		
 		WrappedGameProfile profile = this.profile != null ? this.profile : new WrappedGameProfile(this.uuid, this.name);
 		PlayerInfoData data = new PlayerInfoData(profile, 1, EnumWrappers.NativeGameMode.CREATIVE, WrappedChatComponent.fromText(this.name));
-		List<PlayerInfoData> dataList = new ArrayList<PlayerInfoData>();
+		List<PlayerInfoData> dataList = new ArrayList<>();
 		dataList.add(data);
 		
 		infoPacket.setData(dataList);	
 		return infoPacket;
 	}
 
-	private WrapperPlayServerPlayerInfo getInfoRemovePacket() {
+	public WrapperPlayServerPlayerInfo getInfoRemovePacket() {
 		WrapperPlayServerPlayerInfo infoPacket = new WrapperPlayServerPlayerInfo();
 		infoPacket.setAction(EnumWrappers.PlayerInfoAction.REMOVE_PLAYER);
 
 		WrappedGameProfile profile = this.profile != null ? this.profile : new WrappedGameProfile(this.uuid, this.name);
 		PlayerInfoData data = new PlayerInfoData(profile, 1, EnumWrappers.NativeGameMode.CREATIVE, WrappedChatComponent.fromText(this.name));
-		List<PlayerInfoData> dataList = new ArrayList<PlayerInfoData>();
+		List<PlayerInfoData> dataList = new ArrayList<>();
 		dataList.add(data);
 
 		infoPacket.setData(dataList);

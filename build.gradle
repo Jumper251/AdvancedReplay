@@ -11,8 +11,6 @@ repositories {
     maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     // ProtocolLib repo
     maven { url "https://repo.dmulloy2.net/repository/public/" }
-    //maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-    //maven { url = 'https://oss.sonatype.org/content/repositories/central' }
     // Libby repo
     maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
 }
@@ -57,6 +55,7 @@ shadowJar {
     archiveFileName = 'Replay.jar'
 
     relocate 'com.alessiodp.libby', 'me.jumper251.replay.libs.com.alessiodp.libby'
+    relocate 'com.comphenix.packetwrapper', 'me.jumper251.replay.libs.com.comphenix.packetwrapper'
 }
 
 processResources {

@@ -5,6 +5,8 @@ package me.jumper251.replay.listener;
 import java.util.Arrays;
 
 
+import me.jumper251.replay.legacy.LegacyUtils;
+import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.Chunk;
 
 import org.bukkit.entity.Player;
@@ -131,8 +133,11 @@ public class ReplayListener extends AbstractListener {
 			Player p = (Player) e.getWhoClicked();
 			if (ReplayHelper.replaySessions.containsKey(p.getName())) {
 				e.setCancelled(true);
-				
-				if (e.getView().getTitle().equalsIgnoreCase("§7Teleporter")) {
+
+				// Avoid IncompatibleClassChangeError < 1.21
+				String title = VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21) ? e.getView().getTitle() : LegacyUtils.getInventoryTitle(e);
+
+				if (title.equalsIgnoreCase("§7Teleporter")) {
 					Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
 					
 					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getType().getId() == 397) {

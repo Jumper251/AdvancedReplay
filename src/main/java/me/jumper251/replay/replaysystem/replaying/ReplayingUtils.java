@@ -18,7 +18,7 @@ import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.replaysystem.utils.entities.*;
-import me.jumper251.replay.utils.MaterialBridge;
+import me.jumper251.replay.utils.version.MaterialBridge;
 import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
@@ -474,7 +474,6 @@ public class ReplayingUtils {
 		INPC npc = !VersionUtil.isCompatible(VersionEnum.V1_8) ? new PacketNPC(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName()) : new PacketNPCOld(MathUtils.randInt(10000, 20000), spawnData.getUuid(), action.getName());
 		this.replayer.getNPCList().put(action.getName(), npc);
 		this.replayer.getReplay().getData().getWatchers().put(action.getName(), new PlayerWatcher(action.getName()));
-		
 		Location spawn = LocationData.toLocation(spawnData.getLocation());
 		
 		if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
@@ -590,8 +589,8 @@ public class ReplayingUtils {
 				int subId = blockChange.getAfter().getSubId();
 
 				if (VersionUtil.isBelow(VersionEnum.V1_12)) {
-					if (id == MaterialBridge.WATER.toMaterial().getId()) id = Material.WATER.getId();
-					if (id == MaterialBridge.LAVA.toMaterial().getId()) id = Material.LAVA.getId();
+					if (id == 9) id = 8;
+					if (id == 11) id = 10;
 				}
 				if (ConfigManager.REAL_CHANGES) {
 					if (VersionUtil.isAbove(VersionEnum.V1_13)) {
@@ -625,7 +624,7 @@ public class ReplayingUtils {
 	
 	private Material getBlockMaterial(ItemData data) {
 		if (data.getItemStack() != null)
-			return MaterialBridge.getWithoutLegacy(String.valueOf(data.getItemStack().getItemStack().get("type")));
+			return data.toMaterial();
 		
 		return MaterialBridge.fromID(data.getId());
 	}

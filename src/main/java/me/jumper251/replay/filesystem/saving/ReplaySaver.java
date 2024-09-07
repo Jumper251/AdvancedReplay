@@ -57,4 +57,8 @@ public class ReplaySaver {
 			return new ArrayList<String>();
 		}
 	}
- }
+
+	public static IReplaySaver getReplaySaver() {
+		return replaySaver;
+	}
+}

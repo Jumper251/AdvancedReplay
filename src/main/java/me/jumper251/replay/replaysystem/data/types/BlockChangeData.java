@@ -1,5 +1,6 @@
 package me.jumper251.replay.replaysystem.data.types;
 
+import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.Material;
 
 public class BlockChangeData extends PacketData {
@@ -65,6 +66,6 @@ public class BlockChangeData extends PacketData {
 		Material before = getBefore().toMaterial();
 		Material after = getAfter().toMaterial();
 
-		return !before.isAir() && after.isAir() && before.isBlock();
+		return before != Material.AIR && after == Material.AIR && before.isBlock() && before != Material.FIRE && (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_13) || before.isSolid());
 	}
 }
