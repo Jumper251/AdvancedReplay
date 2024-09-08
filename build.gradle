@@ -1,10 +1,9 @@
 plugins {
     id 'java'
     id 'com.gradleup.shadow' version '8.3.0'
+    id 'maven-publish'
 }
 
-group = 'me.jumper251'
-version = '1.8.9'
 
 repositories {
     mavenCentral()
@@ -28,26 +27,30 @@ dependencies {
 }
 
 allprojects {
+    group = 'me.jumper251.replay'
+    version = '1.8.9'
+
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
-    def targetJavaVersion = 8
     java {
-        def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
-        if (JavaVersion.current() < javaVersion) {
-            toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-        }
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-            options.release = targetJavaVersion
-        }
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 
     compileJava {
         options.encoding("UTF-8")
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId project.group
+                artifactId project.name
+                version project.version
+                from components.java
+            }
+        }
     }
 }
 
