@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import me.jumper251.replay.legacy.LegacyUtils;
 import me.jumper251.replay.utils.VersionUtil;
+import me.jumper251.replay.utils.version.MaterialBridge;
 import org.bukkit.Chunk;
 
 import org.bukkit.entity.Player;
@@ -140,7 +141,7 @@ public class ReplayListener extends AbstractListener {
 				if (title.equalsIgnoreCase("§7Teleporter")) {
 					Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
 					
-					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getType().getId() == 397) {
+					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getType() == MaterialBridge.PLAYER_HEAD.toMaterial()) {
 						String owner = e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§6", "");
 						if (replayer.getNPCList().containsKey(owner)) {
 							INPC npc = replayer.getNPCList().get(owner);
