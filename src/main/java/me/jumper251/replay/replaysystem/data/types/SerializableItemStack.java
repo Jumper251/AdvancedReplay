@@ -12,6 +12,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 
@@ -30,6 +31,8 @@ public class SerializableItemStack implements Serializable {
 	private int color;
 	
 	private boolean hasColor;
+
+	private int customModelData;
 	
 	
 	public SerializableItemStack() {
@@ -64,7 +67,11 @@ public class SerializableItemStack implements Serializable {
 	public boolean hasEnchantment() {
 		return hasEnchantment;
 	}
-	
+
+	public int getCustomModelData() {
+		return customModelData;
+	}
+
 	public boolean hasColor() {
 		return hasColor;
 	}
@@ -84,7 +91,11 @@ public class SerializableItemStack implements Serializable {
 	public void setItemStack(Map<String, Object> itemStack) {
 		this.itemStack = itemStack;
 	}
-	
+
+	public void setCustomModelData(int customModelData) {
+		this.customModelData = customModelData;
+	}
+
 	public ItemStack toItemStack() {
 		ItemStack stack = ItemStack.deserialize(this.itemStack);
 		if (this.hasEnchantment) stack.addUnsafeEnchantment(EnchantmentBridge.UNBREAKING.toEnchantment(), 1);
@@ -92,6 +103,12 @@ public class SerializableItemStack implements Serializable {
 		if (this.hasColor) {
 			LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
 			meta.setColor(Color.fromRGB(this.color));
+			stack.setItemMeta(meta);
+		}
+
+		if (this.customModelData > 0) {
+			ItemMeta meta = stack.getItemMeta();
+			meta.setCustomModelData(this.customModelData);
 			stack.setItemMeta(meta);
 		}
 		
@@ -133,6 +150,12 @@ public class SerializableItemStack implements Serializable {
 				LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
 				serializableItemStack.setHasColor(true);
 				serializableItemStack.setColor(meta.getColor().asRGB());
+			}
+		}
+
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			if (stack.getItemMeta() != null && stack.getItemMeta().hasCustomModelData()) {
+				serializableItemStack.setCustomModelData(stack.getItemMeta().getCustomModelData());
 			}
 		}
 		
