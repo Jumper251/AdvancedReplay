@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import me.jumper251.replay.replaysystem.replaying.session.ReplaySession;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -103,7 +104,8 @@ public class Replayer {
 			
 			@Override
 			public void run() {
-				
+				updateProgress();
+
 				if (Replayer.this.paused) return;
 				
 				Replayer.this.tmpTicks += speed;
@@ -118,7 +120,6 @@ public class Replayer {
 
 					}
 					
-					updateXPBar();
 				} else {
 					
 					stop();
@@ -155,15 +156,9 @@ public class Replayer {
 			if (tick == 0) data.getActions().remove(tick);
 		}
 	}
-	
-	private void updateXPBar() {
-		if (!ConfigManager.USE_XP_BAR) return;
 
-		int level = currentTicks / 20;
-		float percentage = (float) currentTicks / this.replay.getData().getDuration();
-
-		this.watcher.setLevel(level);
-		this.watcher.setExp(percentage);
+	private void updateProgress() {
+		ConfigManager.PROGRESS_TYPE.update(this);
 	}
 	
 	private Optional<SpawnData> findFirstSpawn(ReplayData data) {

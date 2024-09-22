@@ -1,8 +1,11 @@
-package me.jumper251.replay.replaysystem.replaying;
+package me.jumper251.replay.replaysystem.replaying.session;
 
 import java.util.Arrays;
 import java.util.List;
 
+import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
+import me.jumper251.replay.replaysystem.replaying.ReplayPacketListener;
+import me.jumper251.replay.replaysystem.replaying.Replayer;
 import org.bukkit.Bukkit;
 
 import org.bukkit.GameMode;
@@ -126,7 +129,7 @@ public class ReplaySession {
 			player.setAllowFlight(false);
 		}
 
-		if (ConfigManager.USE_XP_BAR) {
+		if (ConfigManager.PROGRESS_TYPE == ReplayProgressType.XP_BAR) {
 			player.setLevel(level);
 			player.setExp(xp);
 		}

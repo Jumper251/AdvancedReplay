@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import me.jumper251.replay.replaysystem.replaying.session.ReplayProgressType;
+import me.jumper251.replay.replaysystem.replaying.session.ReplayProgression;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,7 +37,7 @@ public class ConfigManager {
 	public static boolean SAVE_STOP, RECORD_STARTUP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	public static boolean WORLD_RESET;
 
-	public static boolean USE_XP_BAR;
+	public static ReplayProgression PROGRESS_TYPE = ReplayProgressType.XP_BAR;
 
 	public static boolean USE_S3;
 
@@ -94,7 +96,7 @@ public class ConfigManager {
 			cfg.set("general.join_message", "&6{name} &7joined the game.");
 
 			cfg.set("replaying.world.reset_changes", false);
-			cfg.set("replaying.use_xp_bar", true);
+			cfg.set("replaying.progress_display", ReplayProgressType.getDefault().name().toLowerCase());
 
 			cfg.set("recording.blocks.enabled", true);
 			cfg.set("recording.blocks.real_changes", true);
@@ -142,7 +144,7 @@ public class ConfigManager {
 		RECORD_ENTITIES = cfg.getBoolean("recording.entities.enabled");
 		RECORD_CHAT = cfg.getBoolean("recording.chat.enabled");
 
-		USE_XP_BAR = cfg.getBoolean("replaying.use_xp_bar", true);
+		PROGRESS_TYPE = ReplayProgressType.valueOf(cfg.getString("replaying.progress_display", ReplayProgressType.getDefault().name()).toUpperCase());
 
 		USE_S3 = cfg.getBoolean("general.use_s3");
 
