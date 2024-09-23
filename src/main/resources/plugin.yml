@@ -13,16 +13,25 @@ commands:
 permissions:
   replay.command:
     description: Permission to use the replay command
-    children:
-      - replay.command.start
-      - replay.command.stop
-      - replay.command.info
-      - replay.command.play
-      - replay.command.reload
-      - replay.command.overview
-      - replay.command.list
-      - replay.command.migrate
-      - replay.command.delete
-      - replay.command.jump
+  replay.command.start:
+    default: op
+  replay.command.stop:
+    default: op
+  replay.command.info:
+    default: op
+  replay.command.play:
+    default: op
+  replay.command.reload:
+    default: op
+  replay.command.overview:
+    default: op
+  replay.command.list:
+    default: op
+  replay.command.migrate:
+    default: op
+  replay.command.delete:
+    default: op
+  replay.command.jump:
+    default: op
   replay.admin:
     description: Permission to receive update notifications
