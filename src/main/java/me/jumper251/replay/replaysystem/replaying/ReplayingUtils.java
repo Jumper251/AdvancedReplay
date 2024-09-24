@@ -18,6 +18,7 @@ import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import me.jumper251.replay.replaysystem.utils.MetadataBuilder;
 import me.jumper251.replay.replaysystem.utils.NPCManager;
 import me.jumper251.replay.replaysystem.utils.entities.*;
+import me.jumper251.replay.utils.LogUtils;
 import me.jumper251.replay.utils.version.MaterialBridge;
 import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.VersionUtil;
@@ -312,6 +313,10 @@ public class ReplayingUtils {
 			
 			if (action.getPacketData() instanceof WorldChangeData) {
 				WorldChangeData worldChange = (WorldChangeData) action.getPacketData();
+				if (!worldChange.getLocation().isValidWorld()) {
+					LogUtils.log("Skipping invalid world: " + worldChange.getLocation().getWorld());
+					return;
+				}
 				Location loc = LocationData.toLocation(worldChange.getLocation());
 				
 				npc.despawn();
@@ -319,7 +324,7 @@ public class ReplayingUtils {
 				npc.setLocation(loc);
 				
 				npc.respawn(replayer.getWatchingPlayer());
-				
+
 			}
 			
 			if (action.getPacketData() instanceof FishingData) {

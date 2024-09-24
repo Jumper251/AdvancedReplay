@@ -71,29 +71,36 @@ public class Replayer {
 		this.utils = new ReplayingUtils(this);
 		this.session = new ReplaySession(this);
 		this.paused = false;
-		
-		ReplayHelper.replaySessions.put(watcher.getName(), this);
 	}
 	
 	
-	public void start() {
+	public boolean start() {
 		ReplayData data = this.replay.getData();
 		int duration = data.getDuration();
 		this.session.setStart(watcher.getLocation());
+		SpawnData spawnData = null;
 		if (data.getActions().containsKey(0)) {
 			for (ActionData startData : data.getActions().get(0)) {
 				if (startData.getPacketData() instanceof SpawnData) {
-					SpawnData spawnData = (SpawnData) startData.getPacketData();
-					watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
+					spawnData = (SpawnData) startData.getPacketData();
 					break;
 				}
 			}
 		} else {
-			Optional<SpawnData> spawnData = findFirstSpawn(data);
-			if (spawnData.isPresent()) watcher.teleport(LocationData.toLocation(spawnData.get().getLocation()));
+			spawnData = findFirstSpawn(data).orElse(null);
 		}
 
-		
+		if (spawnData != null && !spawnData.getLocation().isValidWorld()) {
+			sendMessage("§cThe world for this Replay does not exist or is not loaded. (" + spawnData.getLocation().getWorld() + ")");
+			return false;
+		}
+
+		ReplayHelper.replaySessions.put(watcher.getName(), this);
+
+		if (spawnData != null) {
+			watcher.teleport(LocationData.toLocation(spawnData.getLocation()));
+		}
+
 		this.session.startSession();
 
 		this.speed = 1;
@@ -128,7 +135,8 @@ public class Replayer {
 		};
 		
 		this.run.runTaskTimerAsynchronously(ReplaySystem.getInstance(), 1, 1);
-		
+
+		return true;
 	}
 
 	public void executeTick(int tick, ReplayingMode mode) {

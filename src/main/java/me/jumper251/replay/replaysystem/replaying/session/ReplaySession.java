@@ -46,6 +46,8 @@ public class ReplaySession {
 	}
 	
 	public void startSession() {
+		this.packetListener.register();
+
 		this.content = this.player.getInventory().getContents();
 		if (this.start == null) {
 			this.start = this.player.getLocation();

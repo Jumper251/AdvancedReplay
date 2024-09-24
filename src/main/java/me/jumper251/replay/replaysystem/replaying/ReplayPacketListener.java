@@ -39,11 +39,12 @@ public class ReplayPacketListener extends AbstractListener {
 		this.spectating = new HashMap<Player, Integer>();
 		this.previous = -1;
 		
-		if (!isRegistered()) register();
 	}
 
 	@Override
 	public void register() {
+		if (isRegistered()) return;
+		
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.NORMAL, PacketType.Play.Client.USE_ENTITY, PacketType.Play.Server.ENTITY_DESTROY) {
 			
 			@SuppressWarnings("deprecation")
