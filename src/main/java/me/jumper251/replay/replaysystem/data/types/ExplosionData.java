@@ -8,10 +8,12 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedParticle;
 import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.Sound;
+import org.bukkit.util.Vector;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ExplosionData extends PacketData implements Serializable {
@@ -29,7 +31,7 @@ public class ExplosionData extends PacketData implements Serializable {
 	private EnumWrappers.Particle largeExplosionParticleId;
 	private String smallExplosionParticleData;
 	private String largeExplosionParticleData;
-	private Sound explosionSound;
+	private String explosionSound;
 	
 	public ExplosionData(LocationData location, float strength, List<BlockPositionData> affectedBlocks,
 						 float playerMotionX, float playerMotionY, float playerMotionZ, String blockInteraction,
@@ -37,7 +39,7 @@ public class ExplosionData extends PacketData implements Serializable {
 						 EnumWrappers.Particle largeExplosionParticleId,
 						 String smallExplosionParticleData,
 						 String largeExplosionParticleData,
-						 Sound explosionSound) {
+						 String explosionSound) {
 		this.location = location;
 		this.strength = strength;
 		this.affectedBlocks = affectedBlocks;
@@ -96,7 +98,7 @@ public class ExplosionData extends PacketData implements Serializable {
 		return largeExplosionParticleData;
 	}
 	
-	public Sound getExplosionSound() {
+	public String getExplosionSound() {
 		return explosionSound;
 	}
 	
@@ -143,11 +145,11 @@ public class ExplosionData extends PacketData implements Serializable {
 	public void setLargeExplosionParticleData(String largeExplosionParticleData) {
 		this.largeExplosionParticleData = largeExplosionParticleData;
 	}
-	
-	public void setExplosionSound(Sound explosionSound) {
+
+	public void setExplosionSound(String explosionSound) {
 		this.explosionSound = explosionSound;
 	}
-	
+
 	public static ExplosionData fromPacket(PacketEvent event) {
 		WrapperPlayServerExplosion wrapper = new WrapperPlayServerExplosion(event.getPacket());
 		LocationData location = new LocationData(wrapper.getX(), wrapper.getY(), wrapper.getZ(), event.getPlayer().getWorld().getName());
@@ -163,15 +165,19 @@ public class ExplosionData extends PacketData implements Serializable {
 			String blockInteraction = wrapper.getBblockInteractionAsString();
 			EnumWrappers.Particle smallExplosionParticleId = wrapper.getSmallExplosionParticleId();
 			EnumWrappers.Particle largeExplosionParticleId = wrapper.getLargeExplosionParticleId();
-			
-			WrappedParticle<?> smallExplosionParticleData = wrapper.getSmallExplosionParticles();
-			WrappedParticle<?> largeExplosionParticleData = wrapper.getLargeExplosionParticles();
-			
+
+			String largeParticle = null;
+
 			//We lose the particle data to serialize, but for explosions this is null anyway
+			WrappedParticle<?> smallExplosionParticleData = wrapper.getSmallExplosionParticles();
+			if (VersionUtil.isBelow(VersionUtil.VersionEnum.V1_20)) {
+				WrappedParticle<?> largeExplosionParticleData = wrapper.getLargeExplosionParticles();
+				largeParticle = largeExplosionParticleData.getParticle().name();
+			}
+
 			String smallParticle = smallExplosionParticleData.getParticle().name();
-			String largeParticle = largeExplosionParticleData.getParticle().name();
-			
-			Sound explosionSound = wrapper.getSound();
+
+			String explosionSound = wrapper.getSound() != null ? wrapper.getSound().name() : null;
 			return new ExplosionData(location, strength, affectedBlocks, playerMotionX, playerMotionY, playerMotionZ, blockInteraction,
 					smallExplosionParticleId, largeExplosionParticleId,
 					smallParticle, largeParticle,
@@ -184,39 +190,51 @@ public class ExplosionData extends PacketData implements Serializable {
 		WrapperPlayServerExplosion packet = new WrapperPlayServerExplosion();
 		
 		LocationData location = getLocation();
-		packet.setX(location.getX());
-		packet.setY(location.getY());
-		packet.setZ(location.getZ());
-		packet.setPower(getStrength());
-		packet.setToBlow(getAffectedBlocks().stream()
-				.map(bp -> new BlockPosition(bp.getX(), bp.getY(), bp.getZ()))
-				.collect(Collectors.toList()));
 		
-		//Viewer should not be effected
-		packet.setKnockbackX(0);
-		packet.setKnockbackY(0);
-		packet.setKnockbackZ(0);
+		if (VersionUtil.isBelow(VersionUtil.VersionEnum.V1_20)) {
+			packet.setX(location.getX());
+			packet.setY(location.getY());
+			packet.setZ(location.getZ());
+			packet.setPower(getStrength());
+			packet.setToBlow(getAffectedBlocks().stream()
+					.map(bp -> new BlockPosition(bp.getX(), bp.getY(), bp.getZ()))
+					.collect(Collectors.toList()));
+
+			//Viewer should not be effected
+			packet.setKnockbackX(0);
+			packet.setKnockbackY(0);
+			packet.setKnockbackZ(0);
+		} else {
+			packet.getHandle().getVectors().write(0, new Vector(location.getX(), location.getY(), location.getZ()));
+			packet.getHandle().getOptionalStructures().write(0, Optional.empty());
+		}
+
 		
 		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_20)) {
-			packet.setSound(getExplosionSound());
+			if (getExplosionSound() != null) {
+				packet.setSound(Sound.valueOf(getExplosionSound()));
+			}
 			packet.setSmallExplosionParticleId(getSmallExplosionParticleId());
-			packet.setLargeExplosionParticleId(getLargeExplosionParticleId());
 			try {
 				Class<?> particleClass = Class.forName("org.bukkit.Particle");
 				Enum<?> smallParticleEnum = Enum.valueOf((Class<Enum>) particleClass, getSmallExplosionParticleData());
-				Enum<?> largeParticleEnum = Enum.valueOf((Class<Enum>) particleClass, getLargeExplosionParticleData());
-				
+
 				// Use reflection to call the WrappedParticle.create method
 				Method createMethod = WrappedParticle.class.getMethod("create", particleClass, Object.class);
 				Object smallWrappedParticle = createMethod.invoke(null, smallParticleEnum, null);
-				Object largeWrappedParticle = createMethod.invoke(null, largeParticleEnum, null);
-				
+
 				packet.setSmallExplosionParticles((WrappedParticle<?>) smallWrappedParticle);
-				packet.setLargeExplosionParticles((WrappedParticle<?>) largeWrappedParticle);
+
+				if (VersionUtil.isBelow(VersionUtil.VersionEnum.V1_20)) {
+					Enum<?> largeParticleEnum = Enum.valueOf((Class<Enum>) particleClass, getLargeExplosionParticleData());
+					Object largeWrappedParticle = createMethod.invoke(null, largeParticleEnum, null);
+					packet.setLargeExplosionParticles((WrappedParticle<?>) largeWrappedParticle);
+					packet.setLargeExplosionParticleId(getLargeExplosionParticleId());
+					packet.setBlockInteractionFromString(getBlockInteraction());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			packet.setBlockInteractionFromString(getBlockInteraction());
 		}
 		
 		return packet;

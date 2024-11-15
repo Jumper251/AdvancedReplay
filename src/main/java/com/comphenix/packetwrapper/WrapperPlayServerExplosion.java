@@ -7,7 +7,9 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedParticle;
 import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.Sound;
+import org.bukkit.util.Vector;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,6 +24,8 @@ import java.util.List;
 public class WrapperPlayServerExplosion extends AbstractPacket {
 	
 	public static final PacketType TYPE = PacketType.Play.Server.EXPLOSION;
+
+	private Vector position;
 	
 	public WrapperPlayServerExplosion() {
 		super(new PacketContainer(TYPE), TYPE);
@@ -30,6 +34,10 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	
 	public WrapperPlayServerExplosion(PacketContainer packet) {
 		super(packet, TYPE);
+
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			this.position = handle.getVectors().read(0);
+		}
 	}
 	
 	/**
@@ -38,6 +46,10 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current X position.
 	 */
 	public double getX() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return position.getX();
+		}
+
 		return handle.getDoubles().read(0);
 	}
 	
@@ -56,6 +68,10 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current Y position.
 	 */
 	public double getY() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return position.getY();
+		}
+
 		return handle.getDoubles().read(1);
 	}
 	
@@ -74,6 +90,10 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current Z position.
 	 */
 	public double getZ() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return position.getZ();
+		}
+
 		return handle.getDoubles().read(2);
 	}
 	
@@ -85,6 +105,10 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	public void setZ(double value) {
 		handle.getDoubles().write(2, value);
 	}
+
+	public void setPosition(Vector position) {
+		handle.getVectors().write(0, position);
+	}
 	
 	/**
 	 * Retrieve the strength of the explosion.
@@ -92,6 +116,10 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current explosion strength.
 	 */
 	public float getPower() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return 0;
+		}
+
 		return handle.getFloat().read(0);
 	}
 	
@@ -110,6 +138,9 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The list of affected blocks.
 	 */
 	public List<BlockPosition> getToBlow() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return Collections.emptyList();
+		}
 		return handle.getBlockPositionCollectionModifier().read(0);
 	}
 	
@@ -128,6 +159,9 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current X motion.
 	 */
 	public float getKnockbackX() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return 0;
+		}
 		return handle.getFloat().read(1);
 	}
 	
@@ -146,6 +180,9 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current Y motion.
 	 */
 	public float getKnockbackY() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return 0;
+		}
 		return handle.getFloat().read(2);
 	}
 	
@@ -164,6 +201,9 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current Z motion.
 	 */
 	public float getKnockbackZ() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return 0;
+		}
 		return handle.getFloat().read(3);
 	}
 	
@@ -242,7 +282,7 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The current large explosion particle data.
 	 */
 	public WrappedParticle<?> getLargeExplosionParticles() {
-		if (VersionUtil.isBelow(VersionUtil.VersionEnum.V1_19)) return null;
+		if (VersionUtil.isBelow(VersionUtil.VersionEnum.V1_19) || VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) return null;
 		return handle.getNewParticles().read(1);
 	}
 	
@@ -298,7 +338,7 @@ public class WrapperPlayServerExplosion extends AbstractPacket {
 	 * @return The string representation of the block interaction type.
 	 */
 	public String getBblockInteractionAsString() {
-		if (VersionUtil.isBelow(VersionUtil.VersionEnum.V1_19)) return null;
+		if (VersionUtil.isBelow(VersionUtil.VersionEnum.V1_19) || VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) return null;
 		Enum<?> blockInteraction = getBlockInteraction();
 		return blockInteraction != null ? blockInteraction.name() : "UNKNOWN";
 	}
