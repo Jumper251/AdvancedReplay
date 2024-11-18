@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -51,39 +52,50 @@ public class ReplayListCommand extends SubCommand {
 			replays.sort(dateComparator());
 			
 			CommandPagination<String> pagination = new CommandPagination<>(replays, 9);
-			cs.sendMessage(ReplaySystem.PREFIX + "Available replays: §8(§6" + ReplaySaver.getReplays().size() + "§8) §7| Page: §e" + page + "§7/§e" + pagination.getPages());
+			Messages.REPLAY_LIST_HEADER
+					.arg("replays", ReplaySaver.getReplays().size())
+					.arg("page", page)
+					.arg("pages", pagination.getPages())
+					.send(cs);
 
-			pagination.printPage(page, new IPaginationExecutor<String>() {
+			pagination.printPage(page, element -> {
+				String message = Messages.REPLAY_LIST_ENTRY
+						.arg("date", (getCreationDate(element) != null ? format.format(getCreationDate(element)) : "")).arg("replay", element).build();
 
-				@Override
-				public void print(String element) {
-					String message = String.format(" §6§o%s    §e%s", (getCreationDate(element) != null ? format.format(getCreationDate(element)) : ""), element);
-					if (cs instanceof Player) {
-						BaseComponent[] comps;
-						if (DatabaseReplaySaver.getInfo(element) != null && DatabaseReplaySaver.getInfo(element).getCreator() != null) {
-							ReplayInfo info = DatabaseReplaySaver.getInfo(element);
+                if (cs instanceof Player) {
+                    BaseComponent[] comps;
+                    if (DatabaseReplaySaver.getInfo(element) != null && DatabaseReplaySaver.getInfo(element).getCreator() != null) {
+                        ReplayInfo info = DatabaseReplaySaver.getInfo(element);
 
-							comps = new ComponentBuilder(message)
-									.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder("§7Replay §e§l" + info.getID() + "\n\n§7Created by: §6" + info.getCreator() + "\n§7Duration: §6" + (info.getDuration() / 20) + " §8sec" + "\n\n§7Click to play!").create()))
-									.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + info.getID()))
-									.create();
-						} else {
-							comps = new ComponentBuilder(message)
-									.event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder("§7Replay §e§l" + element + "\n\n§7Click to play!").create()))
-									.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + element))
-									.create();
-						}
-						((Player) cs).spigot().sendMessage(comps);
-					} else {
-						cs.sendMessage(message);
-					}
-					
-				}
-			});
+							String hoverText = Messages.combined(Messages.REPLAY_LIST_HOVER_HEADER, Messages.REPLAY_LIST_HOVER_SPACE, Messages.REPLAY_LIST_HOVER_CREATOR,
+									Messages.REPLAY_LIST_HOVER_DURATION, Messages.REPLAY_LIST_HOVER_SPACE2, Messages.REPLAY_LIST_HOVER_ACTION)
+									.arg("replay", element)
+									.arg("creator", info.getCreator())
+									.arg("duration", (info.getDuration() / 20)).build();
+
+                        comps = new ComponentBuilder(message)
+                                .event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(hoverText).create()))
+                                .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + info.getID()))
+                                .create();
+                    } else {
+						String hoverText = Messages.combined(Messages.REPLAY_LIST_HOVER_HEADER, Messages.REPLAY_LIST_HOVER_SPACE, Messages.REPLAY_LIST_HOVER_ACTION)
+								.arg("replay", element).build();
+
+                        comps = new ComponentBuilder(message)
+                                .event(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(hoverText).create()))
+                                .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/replay play " + element))
+                                .create();
+                    }
+                    ((Player) cs).spigot().sendMessage(comps);
+                } else {
+                    cs.sendMessage(message);
+                }
+
+            });
 						
 			
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "§cNo replays found.");
+			Messages.REPLAY_LIST_NO_REPLAYS.send(cs);
 		}
 		return true;
 	}

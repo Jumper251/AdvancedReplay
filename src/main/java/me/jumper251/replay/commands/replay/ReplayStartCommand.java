@@ -3,6 +3,7 @@ package me.jumper251.replay.commands.replay;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,11 +36,11 @@ public class ReplayStartCommand extends SubCommand {
 			return false;
 		}
 		if (name.length() > 40) {
-			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay name is too long.");
+			Messages.REPLAY_START_TOO_LONG.send(cs);
 			return true;
 		}
 		if (ReplayManager.activeReplays.containsKey(name)) {
-			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay already exists.");
+			Messages.REPLAY_START_EXISTS.send(cs);
 			return true;
 		}
 		
@@ -60,10 +61,13 @@ public class ReplayStartCommand extends SubCommand {
 		ReplayAPI.getInstance().recordReplay(name, cs, toRecord);
 
 		if (duration <= 0) {
-			cs.sendMessage(ReplaySystem.PREFIX + "§aSuccessfully started recording §e" + name + "§7.\n§7Use §6/Replay stop " + name + "§7 to save it.");
+			Messages.REPLAY_START.arg("replay", name).send(cs);
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "§aSuccessfully started recording §e" + name + "§7.\n§7The Replay will be saved after §6" + duration + "§7 seconds");
-			
+			Messages.REPLAY_START_TIMED
+					.arg("replay", name)
+					.arg("duration", duration)
+					.send(cs);
+
 			new BukkitRunnable() {
 				
 				@Override
@@ -74,7 +78,7 @@ public class ReplayStartCommand extends SubCommand {
 		}
 		
 		if (args.length <= 2) {
-			cs.sendMessage("§7INFO: You are recording all online players.");
+			Messages.REPLAY_START_INFO.send(cs);
 		}
 		
 		return true;

@@ -6,6 +6,7 @@ package me.jumper251.replay.commands.replay;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,24 +35,21 @@ public class ReplayPlayCommand extends SubCommand {
 		final Player p = (Player)cs;	
 		
 		if (ReplaySaver.exists(name) && !ReplayHelper.replaySessions.containsKey(p.getName())) {
-			p.sendMessage(ReplaySystem.PREFIX + "Loading replay §e" + name + "§7...");
+			Messages.REPLAY_PLAY_LOAD.arg("replay", name).send(p);
+
 			try {
-				ReplaySaver.load(args[1], new Consumer<Replay>() {
-					
-					@Override
-					public void accept(Replay replay) {
-						p.sendMessage(ReplaySystem.PREFIX + "Replay loaded. Duration §e" + (replay.getData().getDuration() / 20) + "§7 seconds.");
-						replay.play(p);
-					}
-				});
+				ReplaySaver.load(args[1], replay -> {
+					Messages.REPLAY_PLAY.arg("duration", replay.getData().getDuration() / 20).send(p);
+                    replay.play(p);
+                });
 
 			} catch (Exception e) {
 				e.printStackTrace();
 				
-				p.sendMessage(ReplaySystem.PREFIX + "§cError while loading §o" + name + ".replay. §r§cCheck console for more details.");
+				Messages.REPLAY_PLAY_ERROR.arg("replay", name).send(p);
 			}
 		} else {
-			p.sendMessage(ReplaySystem.PREFIX + "§cReplay not found.");
+			Messages.REPLAY_NOT_FOUND.send(p);
 		}
 		
 		return true;

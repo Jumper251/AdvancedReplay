@@ -114,6 +114,7 @@ public class ConfigManager {
 		}
 			
 		ItemConfig.loadConfig();
+		Messages.loadMessages();
 		
 		loadData(true);
 		
@@ -172,6 +173,7 @@ public class ConfigManager {
 		try {
 			cfg.load(file);
 			ItemConfig.cfg.load(ItemConfig.file);
+			Messages.loadMessages();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

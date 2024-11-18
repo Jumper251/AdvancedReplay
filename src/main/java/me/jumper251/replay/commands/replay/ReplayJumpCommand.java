@@ -3,6 +3,7 @@ package me.jumper251.replay.commands.replay;
 
 
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,14 +35,14 @@ public class ReplayJumpCommand extends SubCommand {
 			if (MathUtils.isInt(args[1]) && Integer.valueOf(args[1]) > 0 && Integer.valueOf(args[1]) < duration) {
 				int seconds = Integer.valueOf(args[1]);
 				
-				p.sendMessage(ReplaySystem.PREFIX +"Jumping to §e" + seconds + " §7seconds...");
+				Messages.REPLAY_JUMP.arg("time", seconds).send(p);
 				ReplayAPI.getInstance().jumpToReplayTime(p, seconds);
 			} else {
-				p.sendMessage(ReplaySystem.PREFIX + "§cTime has to be between 1 and " + (duration - 1));
+				Messages.REPLAY_JUMP_INVALID.arg("duration", (duration - 1)).send(cs);
 			}
 			
 		} else {
-			p.sendMessage(ReplaySystem.PREFIX + "§cYou need to play a Replay first");
+			Messages.REPLAY_JUMP_NOT_IN_REPLAY.send(cs);
 		}
 		
 		return true;

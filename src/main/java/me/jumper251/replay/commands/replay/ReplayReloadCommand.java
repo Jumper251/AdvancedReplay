@@ -2,6 +2,7 @@ package me.jumper251.replay.commands.replay;
 
 
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -19,7 +20,7 @@ public class ReplayReloadCommand extends SubCommand {
 	@Override
 	public boolean execute(CommandSender cs, Command cmd, String label, String[] args) {
 		ConfigManager.reloadConfig();
-		cs.sendMessage(ReplaySystem.PREFIX + "§aSuccessfully reloaded the configuration.");
+		Messages.REPLAY_RELOAD.send(cs);
 		return true;
 	}
 

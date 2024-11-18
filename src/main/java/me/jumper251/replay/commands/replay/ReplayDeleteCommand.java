@@ -4,6 +4,7 @@ package me.jumper251.replay.commands.replay;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -27,9 +28,9 @@ public class ReplayDeleteCommand extends SubCommand {
 		
 		if (ReplaySaver.exists(name)) {
 			ReplaySaver.delete(name);
-			cs.sendMessage(ReplaySystem.PREFIX + "§aSuccessfully deleted replay.");
+			Messages.REPLAY_DELETE.send(cs);
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay not found.");
+			Messages.REPLAY_NOT_FOUND.send(cs);
 		}
 		
 		return true;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -39,22 +40,30 @@ public class ReplayStopCommand extends SubCommand {
 			if (isNoSave || replay.getRecorder().getData().getActions().size() == 0) {
 				replay.getRecorder().stop(false);
 
-				cs.sendMessage(ReplaySystem.PREFIX + "§7Successfully stopped replay §e" + name);
+				Messages.REPLAY_STOP_NO_SAVE.arg("replay", name).send(cs);
 			} else {
 				if (ReplaySaver.exists(name) && !isForce) {
-					cs.sendMessage(ReplaySystem.PREFIX + "§cReplay already exists. Use §o-force §r§cto overwrite or §o-nosave §r§cto discard the recording.");
+					Messages.REPLAY_STOP_EXISTS.arg("replay", name).send(cs);
 					return true;
 				}
 				
-				cs.sendMessage(ReplaySystem.PREFIX + "Saving replay §e" + name + "§7...");
+				Messages.REPLAY_STOP_SAVING.arg("replay", name).send(cs);
 				replay.getRecorder().stop(true);
 			
 				String path = ReplaySaver.replaySaver instanceof DefaultReplaySaver ? ReplaySystem.getInstance().getDataFolder() + "/replays/" + name + ".replay" : null;
-				cs.sendMessage(ReplaySystem.PREFIX + "§7Successfully saved replay" + (path != null ? " to §o" + path : ""));
+
+				if (path == null) {
+					Messages.REPLAY_STOP_SAVED.arg("replay", name).send(cs);
+				} else {
+					Messages.REPLAY_STOP_SAVED_TO
+							.arg("replay", name)
+							.arg("path", path)
+							.send(cs);
+				}
 			}
 			
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay not found.");
+			Messages.REPLAY_NOT_FOUND.send(cs);
 		}
 		
 		return true;

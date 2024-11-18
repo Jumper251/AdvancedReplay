@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
@@ -47,18 +48,18 @@ public class ReplayMigrateCommand extends SubCommand {
 
 				migrationSaver = new DatabaseReplaySaver();
 			} else {
-				cs.sendMessage(ReplaySystem.PREFIX + "§cYou can't migrate to the same system.");
+				Messages.REPLAY_MIGRATE_ERROR.send(cs);
 				return true;
 			}
-			
-			cs.sendMessage(ReplaySystem.PREFIX + "§7Migrating replays to §e" + option);
+
+			Messages.REPLAY_MIGRATE.arg("option", option).send(cs);
 			for (String replayName : ReplaySaver.getReplays()) {
 				this.migrate(replayName, migrationSaver);
 			}
 			
 			
 		} else {
-			cs.sendMessage(ReplaySystem.PREFIX + "§cInvalid argument. " + options.stream().collect(Collectors.joining("|", "<", ">")));
+			Messages.REPLAY_MIGRATE_INVALID.arg("options", options.stream().collect(Collectors.joining("|", "<", ">"))).send(cs);
 		}
 		
 		return true;

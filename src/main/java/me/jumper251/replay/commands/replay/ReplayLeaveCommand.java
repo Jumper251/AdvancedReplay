@@ -3,6 +3,7 @@ package me.jumper251.replay.commands.replay;
 
 
 
+import me.jumper251.replay.filesystem.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class ReplayLeaveCommand extends SubCommand {
 			replayer.stop();
 			
 		} else {
-			p.sendMessage(ReplaySystem.PREFIX + "§cYou need to play a Replay first");
+			Messages.REPLAY_LEAVE.send(cs);
 		}
 		
 		return true;

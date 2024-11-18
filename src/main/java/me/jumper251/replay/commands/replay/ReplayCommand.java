@@ -4,6 +4,7 @@ import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.commands.AbstractCommand;
 import me.jumper251.replay.commands.MessageFormat;
 import me.jumper251.replay.commands.SubCommand;
+import me.jumper251.replay.filesystem.Messages;
 
 public class ReplayCommand extends AbstractCommand {
 
@@ -14,10 +15,10 @@ public class ReplayCommand extends AbstractCommand {
 	@Override
 	protected MessageFormat setupFormat() {
 		return new MessageFormat()
-				.overview("§6/{command} {args} §7 - {desc}")
-				.syntax(ReplaySystem.PREFIX + "Usage: §6/{command} {args}")
-				.permission(ReplaySystem.PREFIX + "§cInsufficient permissions")
-				.notFound(ReplaySystem.PREFIX + "§7Command not found.");
+				.overview(Messages.COMMAND_OVERVIEW.getFullMessage())
+				.syntax(Messages.COMMAND_SYNTAX.getFullMessage())
+				.permission(Messages.COMMAND_NO_PERMISSION.getFullMessage())
+				.notFound(Messages.COMMAND_NOTFOUND.getFullMessage());
 	}
 
 	@Override
