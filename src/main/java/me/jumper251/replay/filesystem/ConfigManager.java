@@ -44,7 +44,7 @@ public class ConfigManager {
 
 	public static ReplayQuality QUALITY = ReplayQuality.HIGH;
 	
-	public static String DEATH_MESSAGE, LEAVE_MESSAGE, CHAT_FORMAT, JOIN_MESSAGE;
+	public static String CHAT_FORMAT;
 	
 	public static void loadConfigs() {
 		if(!sqlFile.exists()){
@@ -90,10 +90,6 @@ public class ConfigManager {
 			cfg.set("general.hide_players", false);
 			cfg.set("general.add_new_players", false);	
 			cfg.set("general.update_notifications", true);
-			
-			cfg.set("general.death_message", "&6{name} &7died.");
-			cfg.set("general.quit_message", "&6{name} &7left the game.");
-			cfg.set("general.join_message", "&6{name} &7joined the game.");
 
 			cfg.set("replaying.world.reset_changes", false);
 			cfg.set("replaying.progress_display", ReplayProgressType.getDefault().name().toLowerCase());
@@ -131,10 +127,6 @@ public class ConfigManager {
 		ADD_PLAYERS = cfg.getBoolean("general.add_new_players");
 		UPDATE_NOTIFY = cfg.getBoolean("general.update_notifications");
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
-
-		DEATH_MESSAGE = cfg.getString("general.death_message");
-		LEAVE_MESSAGE = cfg.getString("general.quit_message");
-		JOIN_MESSAGE = cfg.getString("general.join_message");
 		
 		WORLD_RESET = cfg.getBoolean("replaying.world.reset_changes", false);
 		

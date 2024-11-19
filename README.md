@@ -3,7 +3,8 @@
 AdvancedReplay is a Minecraft 1.8 & 1.21 Replay plugin. It can record players on your Server and save the recorded data to a file or database, so you can watch the replays at any time. Currently it records almost every action a player does and can be easily controlled with commands or the API.
 
 ## Downloads
-Spigot: https://www.spigotmc.org/resources/advancedreplay-1-8-1-21.52849/
+**Modrinth**: https://modrinth.com/plugin/advancedreplay  
+**Spigot**: https://www.spigotmc.org/resources/advancedreplay-1-8-1-21.52849/
 
 ## API
 ### Maven

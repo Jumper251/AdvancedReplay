@@ -9,6 +9,7 @@ import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.MessageBuilder;
+import me.jumper251.replay.filesystem.Messages;
 import me.jumper251.replay.legacy.LegacyBlock;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
@@ -367,13 +368,9 @@ public class ReplayingUtils {
 				this.lastSpawnActions.addLast(new ActionData(0, ActionType.SPAWN, action.getName(), oldSpawnData));
 
 				if (action.getType() == ActionType.DESPAWN) {
-					replayer.sendMessage(new MessageBuilder(ConfigManager.LEAVE_MESSAGE)
-							.set("name", action.getName())
-							.build());
+					replayer.sendMessage(Messages.REPLAYING_PLAYER_LEAVE.arg("name", action.getName()));
 				} else {
-					replayer.sendMessage(new MessageBuilder(ConfigManager.DEATH_MESSAGE)
-							.set("name", action.getName())
-							.build());
+					replayer.sendMessage(Messages.REPLAYING_PLAYER_DEATH.arg("name", action.getName()));
 				}
 
 			} else {

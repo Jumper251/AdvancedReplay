@@ -18,11 +18,20 @@ public class Messages {
 
     public static final ConfigMessage COMMAND_SYNTAX = new ConfigMessage("command.syntax", "Usage: &6/{command} {args}");
     public static final ConfigMessage COMMAND_OVERVIEW = new ConfigMessage("command.overview", "&6/{command} {args} &7 - {desc}", false);
-    public static final ConfigMessage COMMAND_NOTFOUND = new ConfigMessage("command.notfound", "&7Command not found.");
+    public static final ConfigMessage COMMAND_NOTFOUND = new ConfigMessage("command.not_found", "&7Command not found.");
     public static final ConfigMessage COMMAND_NO_PERMISSION = new ConfigMessage("command.no_permission", "&cInsufficient permissions");
 
-    public static final ConfigMessage REPLAY_NOT_FOUND = new ConfigMessage("replay.not_found", "&cReplay not found.");
+    public static final ConfigMessage QUALITY_LOW = new ConfigMessage("general.quality_low", "&cLow", false);
+    public static final ConfigMessage QUALITY_MEDIUM = new ConfigMessage("general.quality_medium", "&eMedium", false);
+    public static final ConfigMessage QUALITY_HIGH = new ConfigMessage("general.quality_high", "&aHigh", false);
 
+    public static final ConfigMessage REPLAYING_WORLD_NOT_FOUND = new ConfigMessage("replaying.world_not_found", "&cThe world for this Replay does not exist or is not loaded. ({world})");
+    public static final ConfigMessage REPLAYING_FINISHED_WATCHING = new ConfigMessage("replaying.finish_watching", "Replay finished.");
+    public static final ConfigMessage REPLAYING_PLAYER_DEATH = new ConfigMessage("replaying.player_death", "&6{name} &7died.");
+    public static final ConfigMessage REPLAYING_PLAYER_LEAVE = new ConfigMessage("replaying.player_leave", "&6{name} &7left the game.");
+    public static final ConfigMessage REPLAYING_PLAYER_JOIN = new ConfigMessage("replaying.player_leave", "&6{name} &7joined the game.", false);
+
+    public static final ConfigMessage REPLAY_NOT_FOUND = new ConfigMessage("replay.not_found", "&cReplay not found.");
 
     public static final ConfigMessage REPLAY_START = new ConfigMessage("replay.start", "&aSuccessfully started recording &e{replay}&7.\n&7Use &6/Replay stop {replay}&7 to save it.");
     public static final ConfigMessage REPLAY_START_TIMED = new ConfigMessage("replay.start_timed", "&aSuccessfully started recording &e{replay}&7.\n&7The Replay will be saved after &6{duration}&7 seconds");
@@ -120,6 +129,7 @@ public class Messages {
                 entry.getValue().setMessage(cfg.getString(entry.getKey()));
             } else {
                 cfg.set(entry.getKey(), entry.getValue().getDefaultMessage());
+                entry.getValue().setMessage(entry.getValue().getDefaultMessage());
                 update = true;
             }
         }

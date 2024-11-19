@@ -1,7 +1,7 @@
 package me.jumper251.replay.replaysystem.recording;
 
 import me.jumper251.replay.filesystem.ConfigManager;
-import me.jumper251.replay.filesystem.MessageBuilder;
+import me.jumper251.replay.filesystem.Messages;
 import me.jumper251.replay.listener.AbstractListener;
 import me.jumper251.replay.replaysystem.data.ActionData;
 import me.jumper251.replay.replaysystem.data.ActionType;
@@ -230,7 +230,7 @@ public class RecordingListener extends AbstractListener {
 			this.recorder.getPlayers().add(p.getName());
 			this.recorder.getData().getWatchers().put(p.getName(), new PlayerWatcher(p.getName()));
 			this.recorder.createSpawnAction(p, p.getLocation(), false);
-			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(new MessageBuilder(ConfigManager.JOIN_MESSAGE).set("name", p.getName()).build())));
+			this.recorder.addData(this.recorder.getCurrentTick(), new ActionData(this.recorder.getCurrentTick(), ActionType.MESSAGE, p.getName(), new ChatData(Messages.REPLAYING_PLAYER_JOIN.arg("name", p.getName()).build())));
 			
 		}
 	}

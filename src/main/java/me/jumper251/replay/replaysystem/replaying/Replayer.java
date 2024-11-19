@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import me.jumper251.replay.filesystem.MessageBuilder;
+import me.jumper251.replay.filesystem.Messages;
 import me.jumper251.replay.replaysystem.replaying.session.ReplaySession;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -91,7 +93,7 @@ public class Replayer {
 		}
 
 		if (spawnData != null && !spawnData.getLocation().isValidWorld()) {
-			sendMessage("§cThe world for this Replay does not exist or is not loaded. (" + spawnData.getLocation().getWorld() + ")");
+			sendMessage(Messages.REPLAYING_WORLD_NOT_FOUND.arg("world", spawnData.getLocation().getWorld()));
 			return false;
 		}
 
@@ -178,7 +180,7 @@ public class Replayer {
 	}
 	
 	public void stop() {
-		sendMessage("Replay finished.");
+		sendMessage(Messages.REPLAYING_FINISHED_WATCHING.getBuilder());
 		
 		this.run.cancel();
 		this.getReplay().getData().getActions().clear();
@@ -260,7 +262,13 @@ public class Replayer {
 	
 	public void sendMessage(String message) {
 		if (message != null) {
-			this.watcher.sendMessage(ReplaySystem.PREFIX + message);
+			this.watcher.sendMessage(Messages.PREFIX.getFullMessage() + message);
+		}
+	}
+
+	public void sendMessage(MessageBuilder message) {
+		if (message != null) {
+			message.send(this.watcher);
 		}
 	}
 }

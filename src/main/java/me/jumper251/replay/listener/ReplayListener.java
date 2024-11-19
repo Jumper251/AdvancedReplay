@@ -5,6 +5,7 @@ package me.jumper251.replay.listener;
 import java.util.Arrays;
 
 
+import me.jumper251.replay.filesystem.*;
 import me.jumper251.replay.legacy.LegacyUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.version.MaterialBridge;
@@ -32,10 +33,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 
 import me.jumper251.replay.ReplaySystem;
-import me.jumper251.replay.filesystem.ConfigManager;
-import me.jumper251.replay.filesystem.ItemConfig;
-import me.jumper251.replay.filesystem.ItemConfigOption;
-import me.jumper251.replay.filesystem.ItemConfigType;
 import me.jumper251.replay.replaysystem.replaying.ReplayHelper;
 import me.jumper251.replay.replaysystem.replaying.ReplayPacketListener;
 import me.jumper251.replay.replaysystem.replaying.Replayer;
@@ -309,7 +306,7 @@ public class ReplayListener extends AbstractListener {
 		
 		if(ConfigManager.UPDATE_NOTIFY){
 			if(ReplaySystem.updater.isVersionAvailable() && p.hasPermission("replay.admin")){
-				p.sendMessage(ReplaySystem.PREFIX + "An update is available: https://www.spigotmc.org/resources/advancedreplay-1-8-1-15.52849/");
+				p.sendMessage(Messages.PREFIX.getFullMessage() + "An update is available: https://www.spigotmc.org/resources/advancedreplay-1-8-1-15.52849/");
 			}
 		}
 	}

@@ -46,7 +46,7 @@ public class ConfigMessage {
         return message == null || message.isEmpty();
     }
 
-    private MessageBuilder getBuilder() {
+    public MessageBuilder getBuilder() {
         return new MessageBuilder(getMessage(), prefixed);
     }
 
