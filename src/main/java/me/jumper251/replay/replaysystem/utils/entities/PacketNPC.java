@@ -6,6 +6,7 @@ import java.util.*;
 import com.comphenix.packetwrapper.*;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.InternalStructure;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
 import com.google.common.collect.Lists;
@@ -20,7 +21,7 @@ import me.jumper251.replay.utils.MathUtils;
 import me.jumper251.replay.utils.StringUtils;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
-
+import org.bukkit.util.Vector;
 
 
 public class PacketNPC implements INPC{
@@ -162,11 +163,19 @@ public class PacketNPC implements INPC{
 		WrapperPlayServerEntityTeleport packet = new WrapperPlayServerEntityTeleport();
 
 		packet.setEntityID(this.id);
-		packet.setX(loc.getX());
-		packet.setY(loc.getY());
-		packet.setZ(loc.getZ());
-		packet.setPitch(loc.getPitch());
-		packet.setYaw(loc.getYaw());
+		if (VersionUtil.isAbove(VersionEnum.V1_21)) {
+			InternalStructure internalStructure = packet.getHandle().getStructures().getValues().get(0);
+			internalStructure.getVectors().write(0, new Vector(loc.getX(), loc.getY(), loc.getZ()));
+			internalStructure.getFloat().write(0, loc.getYaw());
+			internalStructure.getFloat().write(1, loc.getPitch());
+		} else {
+			packet.setX(loc.getX());
+			packet.setY(loc.getY());
+			packet.setZ(loc.getZ());
+
+			packet.setPitch(loc.getPitch());
+			packet.setYaw(loc.getYaw());
+		}
 		packet.setOnGround(onGround);
 		
 		for(Player player : this.visible) {

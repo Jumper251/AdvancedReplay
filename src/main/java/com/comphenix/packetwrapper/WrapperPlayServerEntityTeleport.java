@@ -18,6 +18,7 @@
  */
 package com.comphenix.packetwrapper;
 
+import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
@@ -26,8 +27,15 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
 public class WrapperPlayServerEntityTeleport extends AbstractPacket {
-	public static final PacketType TYPE =
+	public static PacketType TYPE =
 			PacketType.Play.Server.ENTITY_TELEPORT;
+
+	static {
+		// Temporary fix
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			TYPE = new PacketType(PacketType.Protocol.PLAY, PacketType.Sender.SERVER, 0x20, "EntityPositionSync");
+		}
+	}
 
 	public WrapperPlayServerEntityTeleport() {
 		super(new PacketContainer(TYPE), TYPE);
