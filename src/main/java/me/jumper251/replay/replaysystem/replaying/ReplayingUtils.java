@@ -716,9 +716,17 @@ public class ReplayingUtils {
 	private void setBlocks(Map<Location, ItemData> changes) {
 		changes.forEach((location, itemData) -> {
 			if (VersionUtil.isAbove(VersionEnum.V1_13)) {
-				location.getBlock().setType(getBlockMaterial(itemData));
+				if (!ConfigManager.REAL_CHANGES) {
+					replayer.getWatchingPlayer().sendBlockChange(location, getBlockMaterial(itemData).createBlockData());
+				} else {
+					location.getBlock().setType(getBlockMaterial(itemData));
+				}
 			} else {
-				LegacyBlock.setTypeIdAndData(location.getBlock(), itemData.getId(), (byte) itemData.getSubId(), true);
+				if (!ConfigManager.REAL_CHANGES) {
+					LegacyBlock.sendBlockChange(replayer.getWatchingPlayer(), location, itemData.getId(), (byte) itemData.getSubId());
+				} else {
+					LegacyBlock.setTypeIdAndData(location.getBlock(), itemData.getId(), (byte) itemData.getSubId(), true);
+				}
 			}
 		});
 	}
