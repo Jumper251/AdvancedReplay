@@ -73,6 +73,10 @@ public class PacketRecorder extends AbstractListener {
 		if (VersionUtil.isBelow(VersionEnum.V1_18)) {
 			RECORDED_PACKETS.add(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
 		}
+
+		if (VersionUtil.isAbove(VersionEnum.V1_21)) {
+			RECORDED_PACKETS.add(WrapperPlayServerEntityTeleport.TYPE);
+		}
 		
 		this.packetAdapter = new PacketAdapter(ReplaySystem.getInstance(), ListenerPriority.HIGHEST, RECORDED_PACKETS) {
 			@Override
@@ -311,9 +315,10 @@ public class PacketRecorder extends AbstractListener {
 						
 					}
 				}
-				if (event.getPacketType() == PacketType.Play.Server.ENTITY_TELEPORT) {
+
+				if (event.getPacketType().equals(WrapperPlayServerEntityTeleport.TYPE)) {
 					WrapperPlayServerEntityTeleport packet = new WrapperPlayServerEntityTeleport(event.getPacket());
-					
+
 					if (entityLookup.containsKey(packet.getEntityID()) && entityLookup.get(packet.getEntityID()).equalsIgnoreCase(p.getName())) {
 						Location loc = checkEntityLocation(packet.getEntity(p.getWorld()));
 						

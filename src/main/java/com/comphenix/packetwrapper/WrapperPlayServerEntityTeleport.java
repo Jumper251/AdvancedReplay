@@ -18,6 +18,7 @@
  */
 package com.comphenix.packetwrapper;
 
+import com.comphenix.protocol.events.InternalStructure;
 import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -25,6 +26,8 @@ import org.bukkit.entity.Entity;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.util.Vector;
+
 
 public class WrapperPlayServerEntityTeleport extends AbstractPacket {
 	public static PacketType TYPE =
@@ -55,9 +58,25 @@ public class WrapperPlayServerEntityTeleport extends AbstractPacket {
 		return handle.getIntegers().read(0);
 	}
 
+
+	/**
+	 * Retrieve the position of the entity.
+	 * Only works on 1.21.2 and above
+	 *
+	 * @return The current position
+	 */
+	public Vector getPosition() {
+		return getStructure().getVectors().read(0);
+	}
+
+
+	public InternalStructure getStructure() {
+		return handle.getStructures().getValues().get(0);
+	}
+
 	/**
 	 * Set entity ID.
-	 * 
+	 *
 	 * @param value - new value.
 	 */
 	public void setEntityID(int value) {
@@ -114,6 +133,10 @@ public class WrapperPlayServerEntityTeleport extends AbstractPacket {
 	 * @return The current Yaw
 	 */
 	public float getYaw() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return getStructure().getFloat().read(0);
+		}
+
 		return (handle.getBytes().read(0) * 360.F) / 256.0F;
 	}
 
@@ -132,6 +155,10 @@ public class WrapperPlayServerEntityTeleport extends AbstractPacket {
 	 * @return The current pitch
 	 */
 	public float getPitch() {
+		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
+			return getStructure().getFloat().read(1);
+		}
+
 		return (handle.getBytes().read(1) * 360.F) / 256.0F;
 	}
 
