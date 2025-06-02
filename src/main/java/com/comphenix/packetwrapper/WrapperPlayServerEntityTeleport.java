@@ -36,7 +36,7 @@ public class WrapperPlayServerEntityTeleport extends AbstractPacket {
 	static {
 		// Temporary fix
 		if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21)) {
-			TYPE = new PacketType(PacketType.Protocol.PLAY, PacketType.Sender.SERVER, 0x20, "EntityPositionSync");
+			TYPE = new PacketType(PacketType.Protocol.PLAY, PacketType.Sender.SERVER, 0x1F, "EntityPositionSync");
 		}
 	}
 
