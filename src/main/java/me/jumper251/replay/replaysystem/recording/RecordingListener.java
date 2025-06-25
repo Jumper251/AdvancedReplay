@@ -1,5 +1,6 @@
 package me.jumper251.replay.replaysystem.recording;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import me.jumper251.replay.filesystem.ConfigManager;
 import me.jumper251.replay.filesystem.Messages;
 import me.jumper251.replay.listener.AbstractListener;
@@ -431,6 +432,16 @@ public class RecordingListener extends AbstractListener {
 			this.packetRecorder.addData(p.getName(), new WorldChangeData(location));
 		}
 		
+	}
+
+	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onSneak(PlayerToggleSneakEvent e) {
+		Player p = e.getPlayer();
+		if (VersionUtil.isAbove(VersionEnum.V1_21) && this.recorder.getPlayers().contains(p.getName())) {
+
+			EnumWrappers.PlayerAction action = e.isSneaking() ? EnumWrappers.PlayerAction.START_SNEAKING : EnumWrappers.PlayerAction.STOP_SNEAKING;
+			this.packetRecorder.addData(p.getName(), new EntityActionData(action));
+		}
 	}
 	
 	public void itemInHand(Player p, ItemStack stack) {
