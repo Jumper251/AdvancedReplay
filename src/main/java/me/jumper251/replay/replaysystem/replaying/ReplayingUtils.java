@@ -479,7 +479,7 @@ public class ReplayingUtils {
 		if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).resetValue().getData());
 		} else if (VersionUtil.isAbove(VersionEnum.V1_20)) {
-			npc.setData(new WrappedDataWatcher());
+			npc.setData(new MetadataBuilder().getData());
 		} else {
 			npc.setData(new MetadataBuilder(this.replayer.getWatchingPlayer()).setArrows(0).resetValue().getData());
 		}
@@ -501,6 +501,7 @@ public class ReplayingUtils {
 		
 		npc.spawn(spawn, tabMode, this.replayer.getWatchingPlayer());
 		npc.look(spawnData.getLocation().getYaw(), spawnData.getLocation().getPitch());
+		npc.updateMetadata();
 	}
 	
 	private void spawnTNT(TNTSpawnData tntSpawnData) {
