@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.jumper251.replay.filesystem.Messages;
+import me.jumper251.replay.filesystem.saving.DefaultReplaySaver;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,12 @@ public class ReplayStartCommand extends SubCommand {
 			Messages.REPLAY_START_TOO_LONG.send(cs);
 			return true;
 		}
+
+		if (!DefaultReplaySaver.isValidName(name)) {
+			Messages.REPLAY_START_INVALID_NAME.send(cs);
+			return true;
+		}
+
 		if (ReplayManager.activeReplays.containsKey(name)) {
 			Messages.REPLAY_START_EXISTS.send(cs);
 			return true;

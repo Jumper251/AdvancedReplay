@@ -38,6 +38,7 @@ public class Messages {
     public static final ConfigMessage REPLAY_START_INFO = new ConfigMessage("replay.start_info", "&7INFO: You are recording all online players.", false);
     public static final ConfigMessage REPLAY_START_EXISTS = new ConfigMessage("replay.start_exists", "&cReplay already exists.");
     public static final ConfigMessage REPLAY_START_TOO_LONG = new ConfigMessage("replay.start_too_long", "&cReplay name is too long.");
+    public static final ConfigMessage REPLAY_START_INVALID_NAME = new ConfigMessage("replay.start_name_invalid", "&cReplay name contains invalid characters.");
 
     public static final ConfigMessage REPLAY_DELETE = new ConfigMessage("replay.delete", "&aSuccessfully deleted replay.");
 
