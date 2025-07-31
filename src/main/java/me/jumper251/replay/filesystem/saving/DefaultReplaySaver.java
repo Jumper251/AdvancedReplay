@@ -44,18 +44,15 @@ public class DefaultReplaySaver implements IReplaySaver {
         try {
             if (!file.exists()) file.createNewFile();
 
-            FileOutputStream fileOut = new FileOutputStream(file);
-            GZIPOutputStream gOut = new GZIPOutputStream(fileOut);
-            ObjectOutputStream objectOut = new ObjectOutputStream(gOut);
+            try (FileOutputStream fileOut = new FileOutputStream(file);
+                 GZIPOutputStream gOut = new GZIPOutputStream(fileOut);
+                 ObjectOutputStream objectOut = new ObjectOutputStream(gOut)) {
 
-            objectOut.writeObject(replay.getData());
-            objectOut.flush();
+                objectOut.writeObject(replay.getData());
+                objectOut.flush();
+            }
 
-            gOut.close();
-            fileOut.close();
-            objectOut.close();
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -69,24 +66,18 @@ public class DefaultReplaySaver implements IReplaySaver {
 
             @Override
             public Replay getValue() {
-                try {
 
-                    File file = new File(DIR, replayName + ".replay");
+                File file = new File(DIR, replayName + ".replay");
 
-                    FileInputStream fileIn = new FileInputStream(file);
-                    GZIPInputStream gIn = new GZIPInputStream(fileIn);
-                    ObjectInputStream objectIn = new ObjectInputStream(gIn);
+                try (FileInputStream fileIn = new FileInputStream(file);
+                     GZIPInputStream gIn = new GZIPInputStream(fileIn);
+                     ObjectInputStream objectIn = new ObjectInputStream(gIn)) {
 
                     ReplayData data = (ReplayData) objectIn.readObject();
 
-                    objectIn.close();
-                    gIn.close();
-                    fileIn.close();
-
-
                     return new Replay(replayName, data);
 
-                } catch (Exception e) {
+                } catch (ClassNotFoundException | IOException e) {
                     if (!reformatting) e.printStackTrace();
                 }
 
@@ -158,7 +149,7 @@ public class DefaultReplaySaver implements IReplaySaver {
         List<String> files = new ArrayList<>();
 
         if (DIR.exists()) {
-            for (File file : Arrays.asList(DIR.listFiles())) {
+            for (File file : DIR.listFiles()) {
                 if (file.isFile() && file.getName().endsWith(".replay")) {
                     files.add(file.getName().replaceAll("\\.replay", ""));
                 }
