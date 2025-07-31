@@ -39,9 +39,9 @@ public class PacketRecorder extends AbstractListener {
 	private Map<String, List<PacketData>> packetData;
 	
 	private List<Integer> spawnedItems;
-	private HashMap<Integer, EntityData> spawnedEntities;
-	private HashMap<Integer, String> entityLookup;
-	private HashMap<Integer, Entity> idLookup;
+	private Map<Integer, EntityData> spawnedEntities;
+	private Map<Integer, String> entityLookup;
+	private Map<Integer, Entity> idLookup;
 	private List<Integer> spawnedHooks;
 	private List<Integer> spawnedTNT;
 	
@@ -55,12 +55,12 @@ public class PacketRecorder extends AbstractListener {
 	public PacketRecorder(Recorder recorder) {
 		super();
 		this.packetData = new ConcurrentHashMap<>();
-		this.spawnedItems = new ArrayList<Integer>();
-		this.spawnedEntities = new HashMap<Integer, EntityData>();
-		this.entityLookup = new HashMap<Integer, String>();
-		this.idLookup = new HashMap<Integer, Entity>();
-		this.spawnedHooks = new ArrayList<Integer>();
-		this.spawnedTNT = new ArrayList<Integer>();
+		this.spawnedItems = new ArrayList<>();
+		this.spawnedEntities = new HashMap<>();
+		this.entityLookup = new HashMap<>();
+		this.idLookup = new HashMap<>();
+		this.spawnedHooks = new ArrayList<>();
+		this.spawnedTNT = new ArrayList<>();
 		this.recorder = recorder;
 		this.optimizer = new ReplayOptimizer();
 		
@@ -367,7 +367,7 @@ public class PacketRecorder extends AbstractListener {
 	}
 	
 	public void addData(String name, PacketData data) {
-		if (!optimizer.shouldRecord(data)) return;
+		if (!optimizer.shouldRecord(name, data)) return;
 		
 		this.packetData.computeIfAbsent(name, k -> new ArrayList<>()).add(data);
 	}
@@ -376,7 +376,7 @@ public class PacketRecorder extends AbstractListener {
 		return packetData;
 	}
 	
-	public HashMap<Integer, String> getEntityLookup() {
+	public Map<Integer, String> getEntityLookup() {
 		return entityLookup;
 	}
 	
