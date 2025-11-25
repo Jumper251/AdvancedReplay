@@ -1,6 +1,7 @@
 package me.jumper251.replay.utils;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 
 import org.bukkit.Bukkit;
@@ -63,11 +64,12 @@ public class VersionUtil {
 		V1_18(11),
 		V1_19(12),
 		V1_20(13),
-		V1_21(14);
+		V1_21(14),
+        V1_21_10(15);
 
 		
 		private int order;
-		
+
 		VersionEnum(int order) {
 			this.order = order;
 		}
@@ -76,11 +78,25 @@ public class VersionUtil {
 			return order;
 		}
 
+        public int getPatch() {
+            String[] parts = this.name().split("_");
+            if (parts.length == 3) {
+                return Integer.parseInt(parts[2]);
+            }
+            return 0;
+        }
+
 		public static VersionEnum parseVersion() {
 			String version = Bukkit.getBukkitVersion().split("-")[0];
-			String majorMinor = version.split("\\.")[0] + "_" + version.split("\\.")[1];
+            String[] parts = version.split("\\.");
+			String majorMinor = parts[0] + "_" + parts[1];
+			String majorMinorPatch = parts[0] + "_" + parts[1] + "_" + parts[2];
 
-			return VersionEnum.valueOf("V" + majorMinor);
+            return Arrays.stream(VersionEnum.values())
+                    .filter(v -> v.toString().equals("V" + majorMinorPatch)
+                            || (v.getPatch() != 0 && v.getPatch() < Integer.parseInt(parts[2])))
+                    .findAny()
+                    .orElse(VersionEnum.valueOf("V" + majorMinor));
 		}
 
 	}

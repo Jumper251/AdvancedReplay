@@ -348,9 +348,7 @@ public class ReplayingUtils {
 				if (entID != -1) {
 					WrapperPlayServerEntityVelocity packet = new WrapperPlayServerEntityVelocity();
 					packet.setEntityID(entID);
-					packet.setVelocityX(velocity.getX());
-					packet.setVelocityY(velocity.getY());
-					packet.setVelocityZ(velocity.getZ());
+                    packet.setVelocity(velocity.toVector());
 
 					packet.sendPacket(replayer.getWatchingPlayer());
 				}

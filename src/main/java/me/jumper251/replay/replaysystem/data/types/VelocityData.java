@@ -1,5 +1,7 @@
 package me.jumper251.replay.replaysystem.data.types;
 
+import org.bukkit.util.Vector;
+
 public class VelocityData extends PacketData {
 
 	/**
@@ -30,5 +32,9 @@ public class VelocityData extends PacketData {
 	public double getZ() {
 		return z;
 	}
+
+    public Vector toVector() {
+        return new Vector(x, y, z);
+    }
 
 }

@@ -18,16 +18,20 @@
  */
 package com.comphenix.packetwrapper;
 
+import me.jumper251.replay.utils.VersionUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.util.Vector;
 
 public class WrapperPlayServerEntityVelocity extends AbstractPacket {
 	public static final PacketType TYPE =
 			PacketType.Play.Server.ENTITY_VELOCITY;
+
+    private Vector velocity;
 
 	public WrapperPlayServerEntityVelocity() {
 		super(new PacketContainer(TYPE), TYPE);
@@ -36,6 +40,10 @@ public class WrapperPlayServerEntityVelocity extends AbstractPacket {
 
 	public WrapperPlayServerEntityVelocity(PacketContainer packet) {
 		super(packet, TYPE);
+
+        if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21_10)) {
+            this.velocity = packet.getVectors().read(0);
+        }
 	}
 
 	/**
@@ -78,12 +86,31 @@ public class WrapperPlayServerEntityVelocity extends AbstractPacket {
 		return getEntity(event.getPlayer().getWorld());
 	}
 
-	/**
+    /**
+     * Set the velocity vector.
+     *
+     * @param velocity - new velocity.
+     */
+    public void setVelocity(Vector velocity) {
+        if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21_10)) {
+            this.velocity = velocity;
+            handle.getVectors().write(0, velocity);
+        } else {
+            setVelocityX(velocity.getX());
+            setVelocityY(velocity.getY());
+            setVelocityZ(velocity.getZ());
+        }
+    }
+
+    /**
 	 * Retrieve the velocity in the x axis.
 	 * 
 	 * @return The current velocity X
 	 */
 	public double getVelocityX() {
+        if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21_10)) {
+            return velocity.getX();
+        }
 		return handle.getIntegers().read(1) / 8000.0D;
 	}
 
@@ -102,6 +129,9 @@ public class WrapperPlayServerEntityVelocity extends AbstractPacket {
 	 * @return The current velocity y
 	 */
 	public double getVelocityY() {
+        if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21_10)) {
+            return velocity.getY();
+        }
 		return handle.getIntegers().read(2) / 8000.0D;
 	}
 
@@ -120,6 +150,9 @@ public class WrapperPlayServerEntityVelocity extends AbstractPacket {
 	 * @return The current velocity z
 	 */
 	public double getVelocityZ() {
+        if (VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21_10)) {
+            return velocity.getZ();
+        }
 		return handle.getIntegers().read(3) / 8000.0D;
 	}
 

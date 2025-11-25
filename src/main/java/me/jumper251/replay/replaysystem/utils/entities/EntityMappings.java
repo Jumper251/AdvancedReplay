@@ -115,6 +115,7 @@ public class EntityMappings {
         entityLookup.put("BOGGED", 119);
         entityLookup.put("CREAKING", 120);
         entityLookup.put("HAPPY_GHAST", 121);
+        entityLookup.put("COPPER_GOLEM", 122);
     }
 
 }

@@ -103,9 +103,12 @@ public class MetadataBuilder {
         byte skinFlags = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40;
         if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
             return setValue(10, skinFlags);
+        } else if (VersionUtil.isBetween(VersionEnum.V1_9, VersionEnum.V1_21)) {
+            return setByte(17, skinFlags);
+        } else {
+            return setByte(16, skinFlags);
         }
 
-        return setByte(17, skinFlags);
     }
 
     public WrappedDataWatcher getData() {
