@@ -87,6 +87,9 @@ public class Messages {
 
     public static final ConfigMessage REPLAY_RELOAD = new ConfigMessage("replay.reload", "&aSuccessfully reloaded the configuration.");
 
+    public static final ConfigMessage GUI_TELEPORTER_NEXT_PAGE = new ConfigMessage("gui.teleporter.next_page", "&aNext Page", false);
+    public static final ConfigMessage GUI_TELEPORTER_PREVIOUS_PAGE = new ConfigMessage("gui.teleporter.previous_page", "&aPrevious Page", false);
+
 
     private static final Map<String, ConfigMessage> MESSAGES = new LinkedHashMap<>();
 

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import me.jumper251.replay.filesystem.ItemConfig;
 import me.jumper251.replay.filesystem.ItemConfigOption;
 import me.jumper251.replay.filesystem.ItemConfigType;
+import me.jumper251.replay.filesystem.Messages;
 import me.jumper251.replay.utils.version.MaterialBridge;
 import me.jumper251.replay.utils.ReflectionHelper;
 import me.jumper251.replay.utils.VersionUtil;
@@ -24,9 +25,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 
 public class ReplayHelper {
@@ -74,12 +73,25 @@ public class ReplayHelper {
         return createItem(ItemConfig.getItem(ItemConfigType.RESUME));
     }
 
-    public static void createTeleporter(Player player, Replayer replayer) {
-        Inventory inv = Bukkit.createInventory(null, ((int) replayer.getNPCList().size() / 9) > 0 ? ((int) Math.floor(replayer.getNPCList().size() / 9)) * 9 : 9, "§7Teleporter");
+    public static void createTeleporter(Player player, Replayer replayer, int page) {
+        List<String> npcNames = new ArrayList<>(replayer.getNPCList().keySet());
+        int size = (int) Math.ceil(npcNames.size() / 9.0) * 9;
+
+        int pageSize = 9 * 5;
+        int pages = (int) Math.ceil((double) size / pageSize);
+        if (size <= (9 * 6)) {
+            pages = 1;
+            pageSize = size;
+        }
+
+        List<String> elements = npcNames.subList((page - 1) * pageSize, Math.min(page * pageSize, npcNames.size()));
+
+        int inventorySize = pages > 1 ? pageSize + 9 : pageSize;
+        Inventory inv = Bukkit.createInventory(null, inventorySize, "§7Teleporter");
 
         int index = 0;
 
-        for (String name : replayer.getNPCList().keySet()) {
+        for (String name : elements) {
             ItemStack stack = new ItemStack(MaterialBridge.PLAYER_HEAD.toMaterial(), 1, (short) 3);
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setDisplayName("§6" + name);
@@ -90,6 +102,22 @@ public class ReplayHelper {
 
             index++;
         }
+
+        if (page < pages) {
+            ItemStack nextPage = new ItemStack(Material.ARROW, page + 1);
+            ItemMeta nextMeta = nextPage.getItemMeta();
+            nextMeta.setDisplayName(Messages.GUI_TELEPORTER_NEXT_PAGE.getFullMessage());
+            nextPage.setItemMeta(nextMeta);
+            inv.setItem(inventorySize - 1, nextPage);
+        }
+        if (page > 1) {
+            ItemStack previousPage = new ItemStack(Material.ARROW, page - 1);
+            ItemMeta previousMeta = previousPage.getItemMeta();
+            previousMeta.setDisplayName(Messages.GUI_TELEPORTER_PREVIOUS_PAGE.getFullMessage());
+            previousPage.setItemMeta(previousMeta);
+            inv.setItem(inventorySize - 9, previousPage);
+        }
+
 
         player.openInventory(inv);
     }

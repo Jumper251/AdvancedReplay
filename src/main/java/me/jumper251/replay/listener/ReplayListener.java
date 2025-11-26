@@ -11,6 +11,7 @@ import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.version.MaterialBridge;
 import org.bukkit.Chunk;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -105,7 +106,7 @@ public class ReplayListener extends AbstractListener {
 				}
 				
 				if (itemType == ItemConfigType.TELEPORT) {
-					ReplayHelper.createTeleporter(p, replayer);
+					ReplayHelper.createTeleporter(p, replayer, 1);
 				}
 				
 				ItemConfigOption pauseResume = ItemConfig.getItem(ItemConfigType.RESUME);
@@ -127,30 +128,41 @@ public class ReplayListener extends AbstractListener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
-		if (e.getWhoClicked() instanceof Player) {
-			Player p = (Player) e.getWhoClicked();
-			if (ReplayHelper.replaySessions.containsKey(p.getName())) {
-				e.setCancelled(true);
+        if (e.getWhoClicked() instanceof Player) {
+            Player p = (Player) e.getWhoClicked();
+            if (ReplayHelper.replaySessions.containsKey(p.getName())) {
+                e.setCancelled(true);
 
-				// Avoid IncompatibleClassChangeError < 1.21
-				String title = VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21) ? e.getView().getTitle() : LegacyUtils.getInventoryTitle(e);
+                // Avoid IncompatibleClassChangeError < 1.21
+                String title = VersionUtil.isAbove(VersionUtil.VersionEnum.V1_21) ? e.getView().getTitle() : LegacyUtils.getInventoryTitle(e);
 
-				if (title.equalsIgnoreCase("§7Teleporter")) {
-					Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
-					
-					if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null && e.getCurrentItem().getType() == MaterialBridge.PLAYER_HEAD.toMaterial()) {
-						String owner = e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§6", "");
-						if (replayer.getNPCList().containsKey(owner)) {
-							INPC npc = replayer.getNPCList().get(owner);
-							p.teleport(npc.getLocation());
-						}
-					}
-				}
-				
-				
-			}
-		}
-	}
+                if (title.equalsIgnoreCase("§7Teleporter")) {
+                    Replayer replayer = ReplayHelper.replaySessions.get(p.getName());
+
+                    if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && e.getCurrentItem().getItemMeta().getDisplayName() != null) {
+                        if (e.getCurrentItem().getType() == MaterialBridge.PLAYER_HEAD.toMaterial()) {
+                            String owner = e.getCurrentItem().getItemMeta().getDisplayName().replaceAll("§6", "");
+                            if (replayer.getNPCList().containsKey(owner)) {
+                                INPC npc = replayer.getNPCList().get(owner);
+                                p.teleport(npc.getLocation());
+                            }
+                        } else if (e.getCurrentItem().getType() == Material.ARROW) {
+                            if (e.getSlot() == e.getInventory().getSize() - 1) {
+                                int nextPage = e.getCurrentItem().getAmount();
+                                ReplayHelper.createTeleporter(p, replayer, nextPage);
+                            } else if (e.getSlot() == e.getInventory().getSize() - 9) {
+                                int previousPage = e.getCurrentItem().getAmount();
+                                ReplayHelper.createTeleporter(p, replayer, previousPage);
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        }
+    }
+
 	
 	@EventHandler
 	public void onFood(FoodLevelChangeEvent e){
