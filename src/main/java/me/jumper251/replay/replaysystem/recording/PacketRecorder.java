@@ -21,6 +21,7 @@ import me.jumper251.replay.utils.version.EntityBridge;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -192,7 +193,8 @@ public class PacketRecorder extends AbstractListener {
 						if (VersionUtil.isCompatible(VersionEnum.V1_8)) {
 							addData(p.getName(), new FishingData(oldPacket.getEntityID(), location, oldPacket.getOptionalSpeedX(), oldPacket.getOptionalSpeedY(), oldPacket.getOptionalSpeedZ(), ownerName));
 						} else {
-							addData(p.getName(), new FishingData(packet.getEntityID(), location, packet.getOptionalSpeedX(), packet.getOptionalSpeedY(), packet.getOptionalSpeedZ(), ownerName));
+                            Vector velocity = packet.getVelocity();
+							addData(p.getName(), new FishingData(packet.getEntityID(), location, velocity.getX(), velocity.getY(), velocity.getZ(), ownerName));
 						}
 						spawnedHooks.add(packet.getEntityID());
 					}

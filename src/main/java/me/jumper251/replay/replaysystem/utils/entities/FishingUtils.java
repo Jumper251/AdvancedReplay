@@ -12,6 +12,7 @@ import me.jumper251.replay.replaysystem.data.types.FishingData;
 import me.jumper251.replay.replaysystem.data.types.LocationData;
 import me.jumper251.replay.utils.VersionUtil;
 import me.jumper251.replay.utils.VersionUtil.VersionEnum;
+import org.bukkit.util.Vector;
 
 public class FishingUtils {
 
@@ -26,10 +27,9 @@ public class FishingUtils {
 			packet.setType(90);
 		}
 		packet.setUniqueId(UUID.randomUUID());
-		
-		packet.setOptionalSpeedX(fishing.getX());
-		packet.setOptionalSpeedY(fishing.getY());
-		packet.setOptionalSpeedZ(fishing.getZ());
+
+        Vector velocity = new Vector(fishing.getX(), fishing.getY(), fishing.getZ());
+        packet.setVelocity(velocity);
 		
 		if (VersionUtil.isAbove(VersionEnum.V1_14)) {
 			packet.setObjectData(throwerID); // Object data index changed
