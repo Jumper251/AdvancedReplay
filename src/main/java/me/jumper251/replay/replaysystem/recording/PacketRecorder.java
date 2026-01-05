@@ -371,7 +371,7 @@ public class PacketRecorder extends AbstractListener {
 	public void addData(String name, PacketData data) {
 		if (!optimizer.shouldRecord(name, data)) return;
 		
-		this.packetData.computeIfAbsent(name, k -> new ArrayList<>()).add(data);
+		this.packetData.computeIfAbsent(name, k -> Collections.synchronizedList(new ArrayList<>())).add(data);
 	}
 	
 	public Map<String, List<PacketData>> getPacketData() {

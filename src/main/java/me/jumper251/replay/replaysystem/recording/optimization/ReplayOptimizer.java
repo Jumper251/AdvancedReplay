@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class ReplayOptimizer {
@@ -23,10 +24,10 @@ public class ReplayOptimizer {
     private Map<Integer, Integer> velocityCounters;
 
     public ReplayOptimizer() {
-        this.lastMovements = new HashMap<>();
-        this.playerMoveCounters = new HashMap<>();
-        this.entityMovementCounters = new HashMap<>();
-        this.velocityCounters = new HashMap<>();
+        this.lastMovements = new ConcurrentHashMap<>();
+        this.playerMoveCounters = new ConcurrentHashMap<>();
+        this.entityMovementCounters = new ConcurrentHashMap<>();
+        this.velocityCounters = new ConcurrentHashMap<>();
     }
 
     public static ReplayStats analyzeReplay(Replay replay) {
