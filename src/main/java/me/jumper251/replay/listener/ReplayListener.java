@@ -58,7 +58,7 @@ public class ReplayListener extends AbstractListener {
 				ItemConfigType itemType = ItemConfig.getByIdAndName(p.getItemInHand().getType(), meta.getDisplayName().replaceAll("§", "&"));
 				
 				if (itemType == ItemConfigType.PAUSE) {
-					replayer.setPaused(!replayer.isPaused());
+					replayer.setPaused(!replayer.isPaused(), true);
 					ReplayHelper.sendTitle(p, " ", "§c❙❙", 20);
 				}
 					
@@ -75,7 +75,7 @@ public class ReplayListener extends AbstractListener {
 				
 				
 				if (itemType == ItemConfigType.RESUME) {
-					replayer.setPaused(!replayer.isPaused());
+					replayer.setPaused(!replayer.isPaused(), true);
 					ReplayHelper.sendTitle(p, " ", "§a➤", 20);
 
 				}

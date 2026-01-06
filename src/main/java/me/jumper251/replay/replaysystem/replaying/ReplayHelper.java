@@ -1,13 +1,11 @@
 package me.jumper251.replay.replaysystem.replaying;
 
+import com.comphenix.packetwrapper.WrapperPlayServerTickState;
 import com.comphenix.packetwrapper.WrapperPlayServerTitle;
 import com.comphenix.protocol.wrappers.EnumWrappers.TitleAction;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.gson.Gson;
-import me.jumper251.replay.filesystem.ItemConfig;
-import me.jumper251.replay.filesystem.ItemConfigOption;
-import me.jumper251.replay.filesystem.ItemConfigType;
-import me.jumper251.replay.filesystem.Messages;
+import me.jumper251.replay.filesystem.*;
 import me.jumper251.replay.utils.version.MaterialBridge;
 import me.jumper251.replay.utils.ReflectionHelper;
 import me.jumper251.replay.utils.VersionUtil;
@@ -169,6 +167,18 @@ public class ReplayHelper {
             profile.setTextures(textures);
             meta.setOwnerProfile(profile);
         }
+    }
+
+    public static void sendClientPause(Player player, boolean pause) {
+        if (VersionUtil.isBelow(VersionEnum.V1_21) || !ConfigManager.USE_MODERN_PAUSE) {
+            return;
+        }
+
+        WrapperPlayServerTickState packet = new WrapperPlayServerTickState();
+        packet.setTickRate(20f);
+        packet.setFrozen(pause);
+
+        packet.sendPacket(player);
     }
 
 }

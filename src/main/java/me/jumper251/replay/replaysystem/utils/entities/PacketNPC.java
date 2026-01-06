@@ -102,6 +102,8 @@ public class PacketNPC implements INPC{
 		this.visible = players;
 		this.spawnPacket.setMetadata(this.data);
 		this.spawnPacket.setPosition(this.location.toVector());
+        this.spawnPacket.setYaw(this.yaw);
+        this.spawnPacket.setPitch(this.pitch);
 		
 		for (Player player : this.visible) {
 			this.spawnPacket.sendPacket(player);
@@ -110,6 +112,9 @@ public class PacketNPC implements INPC{
 				equipment.sendPacket(player);
 			}
 		}
+
+        this.look(this.yaw, this.pitch);
+        this.updateMetadata();
 	}
 	
 	public void despawn() {
@@ -201,6 +206,8 @@ public class PacketNPC implements INPC{
 		packet.setYaw(yaw);
 
 		this.location = loc;
+        this.yaw = yaw;
+        this.pitch = pitch;
 
 		for(Player player : this.visible) {
 			if(player != null) {

@@ -75,12 +75,16 @@ public class NPCSpawnPacket {
     public void setYaw(float yaw) {
         if (isOld()) {
             spawnNamedEntity.setYaw(yaw);
+        } else {
+            spawnEntity.setYaw(yaw);
         }
     }
 
     public void setPitch(float pitch) {
         if (isOld()) {
             spawnNamedEntity.setPitch(pitch);
+        } else {
+            spawnEntity.setPitch(pitch);
         }
     }
 

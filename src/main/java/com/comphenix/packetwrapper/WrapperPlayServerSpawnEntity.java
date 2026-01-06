@@ -259,7 +259,7 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
      * @return The current pitch.
      */
     public float getPitch() {
-        return (handle.getIntegers().read(4) * 360.F) / 256.0F;
+        return (handle.getBytes().read(0) * 360.F) / 256.0F;
     }
 
     /**
@@ -268,7 +268,7 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
      * @param value - new pitch.
      */
     public void setPitch(float value) {
-        handle.getIntegers().write(4, (int) (value * 256.0F / 360.0F));
+        handle.getBytes().write(0, (byte) (value * 256.0F / 360.0F));
     }
 
     /**
@@ -277,7 +277,7 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
      * @return The current Yaw
      */
     public float getYaw() {
-        return (handle.getIntegers().read(5) * 360.F) / 256.0F;
+        return (handle.getBytes().read(1) * 360.F) / 256.0F;
     }
 
     /**
@@ -286,7 +286,7 @@ public class WrapperPlayServerSpawnEntity extends AbstractPacket {
      * @param value - new yaw.
      */
     public void setYaw(float value) {
-        handle.getIntegers().write(5, (int) (value * 256.0F / 360.0F));
+        handle.getBytes().write(1, (byte) (value * 256.0F / 360.0F));
     }
 
     /**

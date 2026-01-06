@@ -193,7 +193,7 @@ public class Replayer {
 			entity.remove();
 		}
 		
-		this.utils.despawn(new ArrayList<Entity>(this.utils.getEntities().values()), null);
+		this.utils.despawn(new ArrayList<>(this.utils.getEntities().values()), null);
 				
 		this.npcs.clear();
 		
@@ -202,6 +202,10 @@ public class Replayer {
 		if (ConfigManager.WORLD_RESET) this.utils.resetChanges(this.blockChanges);
 
 		this.session.stopSession();
+
+        if (isPaused()) {
+            ReplayHelper.sendClientPause(watcher, false);
+        }
 	}
 	
 	public HashMap<String, INPC> getNPCList() {
@@ -235,10 +239,20 @@ public class Replayer {
 	public boolean isPaused() {
 		return paused;
 	}
-	
+
+    public void setPaused(boolean paused, boolean updateClient) {
+        if (updateClient) {
+            ReplayHelper.sendClientPause(watcher, paused);
+        }
+
+        this.paused = paused;
+    }
+
 	public void setPaused(boolean paused) {
-		this.paused = paused;
+        this.setPaused(paused, false);
 	}
+
+
 	
 	public void setSpeed(double speed) {
 		this.tmpTicks = 1;

@@ -36,6 +36,7 @@ public class ConfigManager {
 	public static boolean RECORD_CHAT;
 	public static boolean SAVE_STOP, RECORD_STARTUP, USE_OFFLINE_SKINS, HIDE_PLAYERS, UPDATE_NOTIFY, USE_DATABASE, ADD_PLAYERS;
 	public static boolean WORLD_RESET;
+    public static boolean USE_MODERN_PAUSE;
 
 	public static ReplayProgression PROGRESS_TYPE = ReplayProgressType.XP_BAR;
 
@@ -91,7 +92,8 @@ public class ConfigManager {
 			cfg.set("general.add_new_players", false);	
 			cfg.set("general.update_notifications", true);
 
-			cfg.set("replaying.world.reset_changes", false);
+            cfg.set("replaying.use_modern_pause", true);
+            cfg.set("replaying.world.reset_changes", false);
 			cfg.set("replaying.progress_display", ReplayProgressType.getDefault().name().toLowerCase());
 
 			cfg.set("recording.blocks.enabled", true);
@@ -129,6 +131,7 @@ public class ConfigManager {
 		if (initial ) USE_DATABASE = cfg.getBoolean("general.use_mysql");
 		
 		WORLD_RESET = cfg.getBoolean("replaying.world.reset_changes", false);
+        USE_MODERN_PAUSE = cfg.getBoolean("replaying.use_modern_pause", true);
 		
 		CHAT_FORMAT = cfg.getString("recording.chat.format");
 		RECORD_BLOCKS = cfg.getBoolean("recording.blocks.enabled");
