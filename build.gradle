@@ -17,7 +17,7 @@ repositories {
 dependencies {
     implementation project(':legacy')
 
-    compileOnly "org.spigotmc:spigot-api:1.21.9-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.21.11-R0.1-SNAPSHOT"
     compileOnly 'net.dmulloy2:ProtocolLib:5.4.0'
 
     // Dependency resolver at runtime
@@ -28,7 +28,7 @@ dependencies {
 
 allprojects {
     group = 'me.jumper251.replay'
-    version = '1.8.17'
+    version = '1.8.18'
 
     apply plugin: 'java'
     apply plugin: 'maven-publish'
